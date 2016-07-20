@@ -1,0 +1,16 @@
+modules:
+  - name: 'testlab'
+
+
+wrap: true
+optimize: none
+
+shim:
+  desmos:
+    exports: 'Desmos'
+
+  underscore:
+    exports: '_'
+
+  mathquill:
+    exports: 'mathquill'

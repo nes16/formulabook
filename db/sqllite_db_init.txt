@@ -1,0 +1,18 @@
+'CREATE TABLE IF NOT EXISTS "properties" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "dims" varchar, "user_id" integer, "shared" boolean);',
+'CREATE TABLE IF NOT EXISTS "units" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "property_id" integer, "name" varchar, "system" varchar, "baseunit" boolean, "symbol" varchar, "prefix" varchar, "extend" varchar, "definition" varchar, "description" varchar, "approx" boolean, "factor" varchar, "repeat" integer, "user_id" integer, "shared" boolean);',
+'CREATE TABLE IF NOT EXISTS "formulas" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "latex" varchar, "name" varchar, "symbol" varchar, "unit_id" integer, "property_id" integer, "user_id" integer, "shared" boolean, "category_id" integer);',
+'CREATE TABLE IF NOT EXISTS "favorites" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer, "favoritable_id" integer, "favoritable_type" varchar);',
+'CREATE TABLE IF NOT EXISTS "globals" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "symbol" varchar, "name" varchar, "unit_id" integer, "value" varchar, "user_id" integer, "shared" boolean, "category_id" integer);',
+'CREATE TABLE IF NOT EXISTS "formulas_globals" ("formula_id" integer NOT NULL, "global_id" integer NOT NULL);',
+'CREATE TABLE IF NOT EXISTS "variables" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "symbol" varchar, "name" varchar, "unit_id" integer, "formula_id" integer, "property_id" integer);',
+'CREATE TABLE IF NOT EXISTS "categories" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "parent_id" integer);'
+'CREATE TABLE IF NOT EXISTS "offline_log" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "resource_type" integer, "resource_id" integer, "update_time" datetime, "op_type" integer);'
+
+rsource_type:
+Index of the table list in Dataservice
+
+op_type:
+1.Create
+2.Update
+3.Delete
+

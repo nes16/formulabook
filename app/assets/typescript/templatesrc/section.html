@@ -1,0 +1,45 @@
+<% if (renderShell) { %>
+
+<div class="tlab-do-not-blur tlab-sectionitem tlab-sectiontext tlab-shell">
+  <div class='tlab-shell'></div>
+</div>
+
+
+<% } else { %>
+
+
+<div class="tlab-do-not-blur tlab-sectiontext tlab-sectionitem">
+  <div class='tlab-fade-container'>
+
+    <span class="tlab-main">
+      <div class="tlab-smart-textarea-placeholder"></div>
+    </span>
+    <i class="tlab-icon-remove tlab-top-level-delete tlab-action-delete" handleEvent="true"></i>
+
+  </div>
+
+  <span class="tlab-tab tlab-action-drag"
+        handleevent="true"
+        tapboundary="true"
+        disablescroll="true"
+  >
+    <span class='tlab-num tlab-variable-index'></span>
+    <div class='tlab-tab-interior'></div>
+    <i class='tlab-icon-text'></i>
+  </span>
+
+  <span class='tlab-sec-actions'>
+    <span
+      class="tlab-action-delete tlab-delete-btn tlab-tooltip"
+      handleEvent="true"
+      tooltip="<%=( t('Delete') ) %>"
+    >
+      <i class='tlab-icon-remove'></i>
+    </span>
+  </span>
+
+</div>
+
+<% } %>
+
+  

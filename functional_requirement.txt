@@ -1,0 +1,302 @@
+Folder and parameter:
+	Each folder contains one or more items.
+	It can have one name
+	The purpose of the folder is to group related parameters
+
+Parameter:
+	There are three type of parameter
+	1.Root Parameter
+	2.Sub Parameter
+	 The purpose of sub parameter is to calculate properties from different meter readings.
+	3.Global parameter
+	 The purpose of global paremeter is to store physical constants, mathes constants like
+	 pi, g, density of water, electron volt, speed of light etc
+	 The list of global parameters are added in the settings - 'Globals', when a new test is created by the user.
+	4.Meter constants
+	 These parameters are stored with measureing instruments.
+
+Search Order:
+	The order inwhich the symbols in the formula are searched is
+	1.Meter constants
+	2.Subparameter
+	3.Test
+	4.Global variables
+
+Versioning of parameter:
+	This feature is moved to release 2.0
+
+Details for a normal parameter:
+	Name:
+	Symbol:
+	Type:Measured/Caluclated/Constants
+	Property:
+	Unit:
+	Curves Ids(Readonly):Reference to list of curves and its axis 
+	Measured:
+		IsControlling:
+		Measurement Method:
+			2 Watt Meter 
+			
+			If the measurement is direct value use {}
+		
+			If it is a constant value enter them like 240, 0.5 mV
+
+	Calculated:
+		Formula:
+			Refers sub parameter, constants like (W1 + W2 ) * Wc. Allows the user to create sub parameters
+	
+
+Measurement Methods:
+	For each property the measurement techniques and meter with its constant value if any can be stored.
+	Voltage
+		3 Phase
+		1 Phase
+	Current 
+		3 Phase
+		1 Phase
+	Power
+		2 watt meter method
+		Wattmeter
+	Discharge
+		1.Venturi me
+		2.Collection
+		3.Flow meter
+	Pressure
+		1.Pressure Gauge
+		2.Vaccum gauge
+		3.Vertical column
+
+Sample Parameter and folders for a pump performance test:
+	Global Constants:
+	These values are shared/private
+	It can be real/integer expression interms of other constant
+
+	g
+	e
+
+	Specifications:
+	Please enter any information related to test item like name plate details, specification, declared values etc.
+
+
+
+	Test1:
+	Pump performance test
+	For various pump discharge measure following parameters and calculate the
+	rated total head, rated efficiency.    
+
+
+	Test Observation:
+	sample observation:
+	max of param with in the range of param2
+	projected value of paramX for param1=10,param2=10 (param1=0, param2=0)
+	if any one of the param is 0 then the line is projected perpenticular
+	to the given parameter
+
+	param2 @ param1
+
+	Conveting above as formula
+	maxCur = max(hd1, hd2)
+	obsHd 	= project(decHd, decQty)
+	obsQty 	= project(decHd, decQty)
+	obsCur =  project(obsQty, 0)
+	Each observed parameter refers result parameter
+	Result Parameter: Total Head
+	Instead of selecting x or y co-ordinate, specify  the parameter itself.
+
+
+Units:
+	Each parameter has unit in which the results of  formula are converted, entered values are converted and displayed.
+
+	The formula default units is SI default unit of the property unless specified
+
+	Each formula can be expressed interms of parameters and its units expected in the formula
+
+	Example
+
+	1.Calculation Discharge
+
+	Discharge -  l * w * h/t   cum/sec 
+
+	l - 40 ft
+	w - 30 ft
+	h - 20 ft
+	t - 30
+
+	here L W h are defined in ft
+
+	t is defined in default unit for time i.e sec
+
+	The discharge is defined in gal/hr
+
+	First the l, w, h are converted into m and sub
+	the result is m
+
+	if l or w or h are mentioned in different than default SI unit then they should be
+	declared below the formula
+
+
+
+	2.Calculation of total head
+	HdTot = Hd1  + Z  + HdVel   mWC
+
+	Hd1 = 12.2 Kgf/Cm2
+	Z = 10 mWC
+	HdVel = v^2/2g mWC
+
+Different views:
+	1.Dependent view
+		Show the depentant items in the formula. Allows the user to create parameter for it
+	2.Hirarchy view
+		Show the depentant parameters before the parameters with their unit in the formula
+	3.Sub parameter view
+
+	4.Graph view
+
+Major Tasks:
+	Formula parsing, Handling 2D informations in formula.
+	Global variables
+	Mathquill to formula
+	Mathquill to symbol
+
+Boundary Conditions:
+	Rules for symbol and name:
+	Should start with physical property - Dia, Head, No, Velocity
+	The subscripted with attributes - Inlet, Total, Poles, Outlet  
+	Maximum 4 Main chars + 4 subscript char
+	Allowed char : Main symbol start with alpha,OtherPlaces alphanumeric,_
+	For name, it is 15 chars, start with alpha and Alphanumeric spaces allowed in other places
+	Parameter  symbol and name must be unique across different folder
+	The subparameter name can be unique within the parameter.
+
+
+	Rules for formula
+	1.Operations allowed
+		Arithmetic operations
+		Sqrt, Sqr, power, log, ln, e, trigonometric
+
+	2.Graph operations:
+		Project(CurveId, x1, y1, x2, y2) returns list of points intersected by line.
+		MaxY(CurveId, range1, range2)
+
+		The system finds error if the x and y is of different property.
+
+Schema:
+	Unit : favoritable
+	Formula : favoritable => (user, name, latex, share)
+	Variable => (user, name,  symbol, unit, formula, lhs, share)
+	Favorites=> (user, favoritable_id, favoritable_type)
+	AttributeName => (name)
+	VariableAttribute => (variable, attribute, value)
+
+	Sample table entries for Discharge calculation
+		D_f = (W * L * H)/T_c
+		Attribute:
+			Method = Collection Tank
+		
+		D_f => Discharge of fluid = m3.s-1
+		W => Width of collection tank = m
+		L => Length of collection tank = m
+		H => Height of collection = m
+		T_c => Time for collection = sec
+		
+
+
+
+
+Measurement Method
+Name:
+Quantity: Discharge
+Formula:
+Parameters:
+	Shape = square
+
+
+Math Operators and keys requirement
+===================================
+	Numbers 0-9         - 10
+	dot				    - 1
+	Arithmedic(+,-,/,*) - 4
+	Sqr,Sqr Root		- 2
+	Super 	-           - 1
+	equal				- 1
+	bracket				- 2
+	Modulas				- 1
+	Symbols (pi/theta)  - 2
+	
+	sub script          - 1
+	letters				- 26
+	shift				- 1 
+	
+	del/back/for/enter  - 4
+	Page switch         - 1
+
+		total 			- 57
+
+	List of functions:
+		sin/cos/tan     - 9
+	Misc
+		log/ln/cubroot  - 3
+
+		Total - 12
+
+
+	Page wise group:
+		Math operators  - 11
+		Num, dot		- 11 
+		symbol 			- 2
+				total 	- 24
+
+		letters         - 26
+		sub scri        - 1
+		shift           - 1
+
+				total   - 28
+
+		commonm cur,page- 5 - 4,1
+
+		
+
+Key Id Not required:
+====================
+lt gt
+le ge
+pipes comma
+
+
+enter
+
+brackets colon squarebrackets twiddle
+
+functions =>stats tab all
+
+function => misc otherthan(cuberoot exp ln  log loga)
+
+Operators not available or to be modified in jison
+==================================================
+sqrt,log_ with argument for cuberoot ect.
+
+
+Unit symbol consolidation
+=========================
+
+all sq, square, cubic, cu should be converted to power of number.
+Provide concrete name: like Torque no Torque or Moment of force.
+The properties name should have alias: create seperate table
+
+Errors in unit:
+solid angle:
+sq.deg 
+
+Provide information about the properties and unit symbol on hover.
+
+Provide selection mode for unit screen, which allows the user to select
+multiple unit for action
+
+Remove units without symbols or '-' symbol.
+
+Create category of units.
+SI units
+MS 
+Measurement of liquid/solid/food
+
+

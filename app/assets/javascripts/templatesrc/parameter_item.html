@@ -1,0 +1,59 @@
+ <% if (renderShell) { %>
+
+<div class="tlab-do-not-blur tlab-parameteritem tlab-shell">
+  <div class='tlab-shell'></div>
+</div>
+
+
+<% } else { %>
+
+
+<div class="tlab-do-not-blur tlab-parameteritem tlab-mathitem">
+  <div class='tlab-fade-container'>
+
+    <div class="tlab-fadeout-left"></div>
+    
+    <span class="tlab-main">
+      <div class=" tlab-variable-invalid tlab-testlab-input-container">
+          <div class="tlab-parameter-inputs">
+              <span class="tlab-parameter-name">Name(Symbol): \MathQuillMathField[tlab-parameter-input-name]{}(\MathQuillMathField[tlab-parameter-input-symbol]{})</span>
+            </br>
+              <span class="tlab-parameter-property">Property(Unit): \MathQuillMathField[tlab-parameter-input-property]{}(\MathQuillMathField[tlab-parameter-input-unit]{})</span>
+              </br>  
+              <span class="tlab-parameter-formula">Formula: \MathQuillMathField[tlab-parameter-input-formula]{}</span>
+          </div>
+      </div>
+
+    </span>
+
+    <span class="tlab-fadeout"></span>
+    <i class="tlab-icon-remove tlab-top-level-delete tlab-action-delete" handleEvent="true"></i>
+
+    <div class="tlab-template-bottom-container tlab-fixed-width-element">
+      <div class="tlab-template-bottom"></div>
+    </div>
+  </div>
+
+  <span class="tlab-tab tlab-action-drag tlab-action-icon-touch"
+        handleevent="true"
+        tapboundary="true"
+        disablescroll="true"
+  >
+    <span class="tlab-num tlab-variable-index"></span>
+    <span class="tlab-tab-interior tlab-action-icon-mouse">
+      <span class="template-paramicon"></span>
+    </span>
+  </span>
+
+
+  <span class="tlab-param-actions">
+    <span class="tlab-graphic" handleEvent="true"></span>
+    <nobr>
+      <span class="tlab-action-delete tlab-delete-btn tlab-tooltip" handleEvent="true" tooltip="<%=( t('Delete') ) %>"><i class='tlab-icon-remove'></i></span>
+      <span class="tlab-action-duplicate tlab-duplicate-btn tlab-tooltip" handleEvent="true" tooltip="<%=( t('Duplicate') ) %>"><i class='tlab-icon-duplicate'></i></span>
+    </nobr>
+  </span>
+</div>
+
+
+<% } %>

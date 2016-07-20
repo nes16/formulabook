@@ -1,0 +1,88 @@
+<div id="edit-account-dialog" class="modal_section">
+  
+ 
+<%  _.each(errors, function(error) {  %>
+
+    <div class="errors">
+      <span><%= ( error.message ) %></span>
+    </div>
+ 
+<% }) %>
+
+  
+  <form class="tlab-action-submit">
+   
+<%  if (user) {  %>
+
+      <h1><%= ( t('Edit Account') ) %>
+</h1>
+      <label>
+        <span><%= ( t('Name:') ) %></span>
+        <input type="text"
+          name="name"
+          class="input"
+          id="edit_name"
+          autofocus="autofocus"
+          required="required"
+          value="<%= ( user.name ) %>"
+        />
+      </label>
+      <div class="tlab-description">
+        <%= ( t("This is the name we'll use if we feature one of your graphs.") ) %>
+
+      </div>
+  
+     
+<%  if(!user.isEdmodoUser && !user.isDriveUser) {  %>
+
+        <h1><%= ( t('Update Password') ) %>
+</h1>
+        <div id="update-password-fields">
+          <label>
+            <span><%= ( t('Current Password:') ) %></span>
+            <input type="password"
+              name="old_pass"
+              class="input"
+            />
+          </label>
+  
+          <label>
+            <span><%= ( t('New Password:') ) %></span>
+            <input type="password"
+              name="new_pass"
+              class="input"
+            />
+          </label>
+  
+          <label>
+            <span><%= ( t('Repeat Password:') ) %></span>
+            <input type="password"
+              name="repeat_new_pass"
+              class="input"
+            />
+          </label>
+        </div>
+     
+<%  }  %>
+
+      <br />
+      
+     
+<%  if (spinning) {  %>
+
+        <div class="progress_indicator progress"></div>
+     
+<%  } else {  %>
+
+        <button type="submit" class='tlab-btn tlab-btn-green' id='save_graph_btn' style="float:right; margin-right: 45px">
+          <%= ( t('Update Account') ) %>
+
+        </button>
+     
+<%  }  %>
+
+   
+<%  }  %>
+
+  </form>
+</div>

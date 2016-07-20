@@ -1,0 +1,33 @@
+Ask user to create profile
+	Register
+
+Tour
+
+List/Create Parameter
+	Select/create Property/Unit
+	Name
+	Symbol
+	Measurement
+		Name
+		Meter
+		Create Parameters
+	Formula
+		Select parameters
+		Unit
+		Expression
+List/Create Test Definition
+
+Run Test
+	Create Reading Method	
+
+List/Create Report
+	Text Report
+		Header:
+		Section:Table/FV
+		Footer:
+	Graph Report:
+		Graph Type:
+		Params/Axis
+		Graph Interpretation:
+			Max Range
+			Project

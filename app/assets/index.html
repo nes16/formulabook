@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TestLab Application</title>
+    <meta name="viewport" content="width=624">
+    <link rel="stylesheet" media="all" href="/assets/tests.css" data-turbolinks-track="true" />
+    <script src="/assets/require.js"></script><script>require.config({"baseUrl":"/assets","shim":{"desmos":{"exports":"Desmos"},"underscore":{"exports":"_"},"mathquill":{"exports":"mathquill"}}}); require(["testlab"]);</script>
+    <meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="EAGE0QiHXvSVUjTKdGh4nXlxl6xR1UlV4C74J7w1S/PAkzjRzyeYeWnLGJHWvfA0LVeoy09ciszLHiE/QFfEdw==" />
+    <!--[if lt IE 9]>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js">
+  </script>
+<![endif]-->
+  </head>
+  <body class="tlab-tap-container" data-load-data='{"test": null, "seed": "722787916a284a1db165a2b5e726062e", "user": null}'>
+    <p class="notice"></p>
+    <p class="alert"></p>
+    
+    <div id="modal_background"></div>
+    
+    <div class="modal" id="state-modals">
+      <span class="close-modal dcg-icon-remove"></span>
+    </div>
+    
+    <div class="tlab-sliding-interior">
+    <!-- this is where the tools go. leaving div in because I like it aesthetically during load-up -->
+    <div class="tlab-header"></div>
+
+    <div style="position:absolute; top:50%; width:100%; text-align:center" class="tlab-loading-div">
+
+      loading...
+
+    </div>
+    <div id="test-container"></div>
+  </div>
+  
+  <!-- 1pixel white image for printing in FF -->
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAAXNSR0IArs4c6QAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wLEhYhKmtn2wYAAAAidEVYdENvbW1lbnQAQ3JlYXRlZCB3aXRoIEdJTVAgb24gYSBNYWOHqHdDAAAADElEQVQI12P4//8/AAX+Av7czFnnAAAAAElFTkSuQmCC" id="whitebg">
+ <!-- 1 white pixel for printing in FF -->
+  
+
+
+<script type="text/javascript">
+  if(!window.TLab) window.TLab = {};
+  window.TLab.config = {};
+</script>
+ <!-- Pull config information, and include it in testlab.config -->
+  <!-- TODO - get console and pushstate into regular .js files -->
+  <script type="text/javascript">
+  if(!window.console) window.console = {};
+  if(!window.console.log) window.console.log = function(){};
+</script>
+ <!-- Make sure console.log is defined -->
+<script type="text/javascript">
+  if(window.location.protocol === 'file:')
+    window.history.pushState = function(){};
+</script>
+ <!-- Make sure we don't use pushstate on file protocol -->
+
+
+ <script>
+    require(['testlab'], function (testlab) { });
+</script>
+
+  </body>
+</html>

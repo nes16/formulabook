@@ -1,0 +1,59 @@
+var request = new XMLHttpRequest();
+request.open("POST", "http://localhost:4000/api/v1/auth/sign_in.json");
+request.setRequestHeader("Content-Type", "application/json");
+request.overrideMimeType("text/plain");
+request.send('{"email": "user9@a.com", "password": "password"}');
+
+var request = new XMLHttpRequest();
+request.open("GET", "http://localhost:4000/api/v1/formulas.json");
+request.setRequestHeader("Content-Type", "application/json");
+request.setRequestHeader("Content-Type", "application/json");
+request.setRequestHeader("Content-Type", "application/json");
+request.setRequestHeader("Content-Type", "application/json");
+request.setRequestHeader("access-token","30PPjKi1OpqFEcDewII91w");
+request.setRequestHeader("client", "2G_toWpqkBcvbuNadm1T8A");
+request.setRequestHeader("token-type", "Bearer");
+request.setRequestHeader("uid","user1@a.com");
+
+request.send()
+<ion-content>
+   <form [ngFormModel]="login" (submit)="login123($event, login.)">
+    <ion-list>
+      <ion-item>
+          <ion-label stacked>Emailid</ion-label>
+          <ion-input type="text" ngControl="emailId"></ion-input>
+      </ion-item>
+      
+      
+      <ion-item>
+          <ion-label stacked>Password</ion-label>
+          <ion-input type="password" ngControl="pwd"></ion-input>
+      </ion-item>
+      <ion-item>
+          <button block type="submit" [disabled]="!login.valid">Login</button>
+      </ion-item>
+    </ion-list>
+  </form>
+  <ion-list>
+  <div class="row">
+      <div class="col">
+          <button class="button button-block button-positive" (click)="option ='register'">Register</button>
+      </div>
+      <div class="col">
+          <button class="button button-block button-assertive" (click)="option='forgot'">Forgot Password</button>
+      </div>
+  </div>
+  <div class="row">
+      <div class="col">
+          <button class="button button-block button-positive" (click)="option ='facebooklogin'">Facebook Login</button>
+      </div>
+      <div class="col">
+          <button class="button button-block button-assertive" (click)="option='googlelogin'">Google Login</button>
+      </div>
+  </div>
+  </ion-list>
+  </ion-content>
+
+
+  FACEBOOK_KEY:"1621563771428506"
+  FACEBOOK_SECRET:"6b8797e6925e6bcba2e0720092713e5c"

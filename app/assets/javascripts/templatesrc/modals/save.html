@@ -1,0 +1,46 @@
+<div id="save-dialog" class="modal_section">
+    <h1>
+      <%=( t('Save This Graph!') ) %>    </h1>
+
+    <label class='input-label'>
+      <div class='graph-title-title'><%=( t('Title:') ) %> &nbsp; </div>
+      <input class="title-input"
+             name="title"
+             placeholder="[<%=( t('Untitled Graph') ) %>]"
+             value="<%=( title ) %>"
+      >
+    </label>
+
+   
+<%  if (user.isDriveUser) {  %>
+
+    <div>
+      <label class="send-to-drive">
+        <input type="checkbox" name="push_to_drive" />
+        <%=( t('Send a Copy to Google Drive') ) %>      </label>
+    </div>
+   
+<%  }  %>
+
+    <br><br>
+
+    <div>
+   
+<%  if (title) {  %>
+
+
+      <button type="submit" class="tlab-btn tlab-btn-green pull-right tlab-action-save-as"><%=( t('Save a New Copy') ) %></button>
+      <button type="submit" class="tlab-btn tlab-btn-light-gray pull-right tlab-action-save"><%=( t('Rename Graph') ) %></button>
+
+
+   
+<%  } else {  %>
+
+
+    <button type="submit" class="tlab-btn tlab-btn-green pull-right tlab-action-save-as"><%=( t('Save Graph') ) %></button>
+
+   
+<%  }  %>
+
+    </div>
+</div>';

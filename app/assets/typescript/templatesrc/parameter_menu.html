@@ -1,0 +1,26 @@
+<div class="tla-param-options-menu tla-options-menu "
+<% if (styles.length === 0) { %>
+	tla-colors-only
+<% } %>
+  >
+  <div class='tla-triangle'></div>
+<% if (styles.length > 0) { %>
+    <div class='tla-styles-div'>
+      <div class='tla-styles-menu'>
+        <div class='tla-title'>style:</div>
+        <div class='tla-styles-menu'>
+<% _.each(styles, function (style) { %>
+      <span class="tla-style-option tla-graph-icon tla-graph-<%= ( style ) %>"
+        draw-style="<%= ( style ) %>"  style=""
+        handleevent="true">
+      </span>
+<% }) %>
+        </div>
+      </div>
+    </div>
+ <% } %> 
+  <div class='tla-colors-div'>
+    <div class='tla-title'>color:</div>
+    <div class="template-colorsview"></div>
+  </div>
+</div>

@@ -1,0 +1,609 @@
+*name(comma seperated):system1,'',SI or SI_base):symbol1, sym2, extend:def,extend:description:factor
+Length
+ångström:_:Å:_:_:1E-10
+astronomical unit:_:AU:_:Distance from Earth to Sun:approx,149597870700
+bohr,atomic unit of length:_:a_0:_:_:approx,5.2917721092E-11
+cable length:imperial:_:608 ft:_:approx,185.3184
+cable length:International:_:1/10 nmi:_:185.2
+cable length:US Customary:_:720 ft:_:219.456
+chain:Gunter's,US Survey:ch:66 ft:_:approx,20.11684
+chain:Gunter's,International:ch:66 ft:_:20.1168
+fathom:_:fm:6 ft:_:1.8288
+fermi:_:fm:1E-15 m:_:1E-15
+finger:_:_:7/8 in:_:0.022225
+finger:cloth:_:4 1/2 in:_:0.1143
+foot:International:ft:0.3048 m:_:0.3048
+foot:US Survey:ft:1200/3937 m:_:approx,0.304800610
+french,charriere:_:F:1/3 mm:_:0.3E-3,1
+furlong:_:fur:660 ft:_:201.168
+hand:_:_:1/3 ft:_:0.1016
+inch:International:in:1/12 ft:_:0.0254
+league:land:lea:_:1 hour walk:approx,4828 m
+light-day:_:_:24 light-hour:_:2.59020683712E13
+light-hour:_:_:60 light-minute:_:1.0792528488E12
+light-minute:_:_:60 light-second:_:1.798754748E10
+light-second:_:_:299792458 m:Distance light travels in one second in vacuum:299792458
+light-year:_:ly:9.4607304725808E15 m:Distance light travels in vacuum in 365.25 days:9.4607304725808E15
+line:_:ln:1/12 in:_:0.002116,1
+link:Gunter's,International:lnk:1/100 ch:_:0.201168
+link:Gunter's,US Survey:lnk:1/100 ch:_:approx,0.2011684
+link:Ramsden's,Engineer's:lnk:1 ft:_:0.3048
+metre:SI_base:m:_:Distance light travels in 1/299792458 of a second in vacuum:1
+mickey:_:_:1/200 in:_:1.27E-4
+micron:_:µ:_:_:1E-6
+mil,thou:_:mil:1E-3 in:_:2.54E-5
+mil:Sweden,Norway:mil:10 km:_:10000
+mile:International:mi:5280 ft:_:1609.344
+mile:tactical,data:mi:6000 ft:_:1828.8
+mile:US Survey:mi:5280 ft:_:approx,1609.347219
+nail:cloth:_:2 1/4 in:_:0.05715
+nautical league:_:nl:3 nmi:_:5556
+nautical mile:Admiralty:nmi:6080 ft:_:1853.184
+nautical mile:International:nmi:1852 m:_:1852
+pace:_:_:2.5 ft:_:0.762
+palm:_:_:3 in:_:0.0762
+parsec:_:pc:_:Distance of star with parallax shift of one arc second from a base of one astronomical unit:approx,3.08567782E16
+pica:American,English:_:12 pt:_:approx,0.0042174
+pica:Didot,European:_:12 pt:_:approx,0045112782
+pica:PostScript:_:12 pt:_:0.0042324
+pica:TeX:_:12 pt:_:0.0042175176
+point:American,English:pt:1/72.272 in:_:approx,0.000351450
+point:Didot,European:pt:5/133 cm:_:approx,0.00037593985
+point:PostScript:pt:1/72 in:_:0.0003527,1
+point:TeX:pt:1/72.27 in:_:0.0003514598,8
+quarter:_:_:1/4 yd:_:0.2286
+shaku:Japan:_:_:_:0.3030
+spat:_:_:_:_:1E12
+stigma,bicron:picometre:pm:_:_:1E-12
+twip:_:twp:1/1440 in:_:1.7638E-5,1
+x unit,siegbahn:_:xu:_:_:approx,1.0021E-13
+yard:International:yd:3 ft:_:0.9144
+
+Area dims-m2,m2 kg s−3[J/s]
+acre:International:ac:1 ch × 10 ch:_:4046.8564224
+acre:US Survey:ac:10 ch2:_:approx,4046.873
+are:_:a:100 m2:_:100
+barn:_:b:1E-28 m2:_:1E-28
+barony:_:_:4000 ac:_:approx,1.618742E7
+board:_:bd:1 in × 1 ft:_:7.74192E-3
+boiler horsepower equivalent direct radiation:_:bhp EDR:1 ft2 × 1 bhp / 240 BTU_IT/h:_:approx,12.958174
+circular inch:_:circ in:pi/4 in2:_:approx,5.067075E-4
+circular mil,circular thou:_:circ mil:pi/4 mil2:_:approx,5.067075E-10
+cord:_:_:192 bd:_:1.48644864
+cuerda:PR Survey:cda:1 cda:_:3930.395625
+dunam:_:_:1000 m2:_:1000
+guntha:_:_:121 yd2:_:approx,101.17
+hectare:_:ha:10000 m2:_:10000
+hide:_:_:approx,120 ac:_:approx,5E5
+rood:_:ro:1/4 ac:_:1011.7141056
+section:_:_:1 mi × 1 mi:_:2.589988110336E6
+shed:_:_:1E-52 m2:_:1E-52
+square:roofing:_:10 ft × 10 ft:_:9.290304
+square chain:International:ch2:66 ft × 66 ft:_:404.68564224
+square chain:US Survey:ch2:66 ft × 66 ft:_:approx,404.6873
+square foot:_:ft2:1 ft × 1 ft:_:9.290304E-2
+square foot:US Survey:ft2:1 ft × 1 ft:_:approx,9.2903411613275E-2
+square inch:_:in2:1 in × 1 in:_:6.4516E-4
+square kilometre:_:km2:1 km × 1 km:_:1E6
+square link:Gunter's,International:lnk2:1 lnk × 1 lnk:_:4.0468564224E-2
+square link:Gunter's,US Survey:lnk2:1 lnk × 1 lnk:_:approx,4.046872E-2
+square link:Ramsden's:lnk2:1 lnk × 1 lnk:_:0.09290304
+square metre:SI:m2:1 m × 1 m:_:1
+square mil,square thou:_:mil2:1 mil × 1 mil:_:6.4516E-10
+square mile:International:mi2:1 mi × 1 mi:_:2.589988110336E6
+square mile:US Survey:mi2:1 mi × 1 mi:_:approx,2.58999847E6
+square yard:International:yd2:1 yd × 1 yd:_:0.83612736
+stremma:_:_:1000 m2:_:1000
+township:US Survey:_:36 mi2:_:approx,9.323994E7
+yardland:_:_:approx,30 ac:_:approx,1.2E5
+
+
+Volume dims-m3
+acre-foot:_:ac ft:1 ac x 1 ft:_:1233.48183754752 
+acre-inch:_:_:1 ac × 1 in:_:102.79015312896 
+barrel:imperial:bl:36 gal:_:0.16365924 
+barrel:petroleum:bl,bbl:42 gal(US fluid):_:0.158987294928 
+barrel:US dry:bl:105 qt:_:0.115628198985075 
+barrel:US fluid:fl bl:31 1/2 gal:_:0.119240471196 
+board-foot:_:fbm:144 in3:_:2.359737216E-3 
+bucket:imperial:bkt:4 gal:_:0.01818436 
+bushel:imperial:bu:8 gal:_:0.03636872
+bushel:US dry heaped:bu:1 1/4 bu((US dry level): 1.25 times of bushel US dry level:0.0440488377086
+bushel:US dry level:bu:2150.42 in3:_:0.03523907016688 
+butt,pipe:wine:_:126 gal(wine):_:0.476961884784
+coomb:imperial:_:4 bu(imperial):_:0.14547488 
+cord:firewood:_:8 ft × 4 ft × 4 ft:_:3.624556363776 
+cord-foot:_:_:16 ft3:_:0.453069545472 
+cubic fathom:_:fm3:1 fm × 1 fm × 1 fm:_:6.116438863872 
+cubic foot:_:ft3:1 ft × 1 ft × 1 ft:_:0.028316846592
+cubic inch:_:in3:1 in × 1 in × 1 in:_:16.387064E-6 
+cubic metre:SI_base:m3:1 m × 1 m × 1 m:_:1 
+cubic mile:_:mi3:1 mi × 1 mi × 1 mi:_:4168181825.440579584 
+cubic yard:_:yd3:27 ft3:_:0.764554857984 
+cup:breakfast::10 fl oz(imperial):_:284.130625E-6 
+cup:Canadian:c:8 fl oz(imperial):_:227.3045E-6 
+cup:metric:c:250.0E-6 m3:_:250.0E-6
+cup:US customary:c:8 fl oz(US fluid):_:236.5882365E-6 
+cup:US food nutrition labeling:c:_:240 mL:2.4E-4 
+dash:imperial:_:1/2 pinch:_:36.9961751302E-8
+dash:US fluid:_:1/2 pinch:_:30.8057599687E-8
+dessertspoon:imperial:_:1/12 gi:_:11.8387760416E-6 
+*drop:imperial:gtt:1/288 fl oz:_:98.6564670138E-9 
+*drop:imperial,alt:gtt:1/1824 gi:_:approx,77.886684E-9 
+*drop:medical:_:1/12 ml:_:83.3E-9 
+*drop:metric:_:1/20 mL:_:50.0E-9 
+*drop:US fluid:gtt:1/360 fl oz:_:82.14869322916E-9 
+*drop:US fluid,alt:gtt:1/456 fl oz:_:approx,64.85423149671E-9 
+*drop:US fluid,alt:gtt:1/576 fl oz:_:approx,51.34293326823E-9 
+fifth:US fluid:_:1/5 gal(US fluid):_:750E-6 
+firkin:_:_:9 gal(imperial):_:0.04091481 
+fluid drachm:imperial:fl dr:1/8 fl oz:_:3.5516328125E-6 
+fluid dram:US fluid:fl dr:1/8 fl oz:_:3.6966911953125E-6 
+fluid scruple:imperial:fl s:1/24 fl oz:_:1.18387760416E-6 
+gallon:beer:beer gal:282 in3:_:4.621152048E-3 
+gallon:imperial:gal:4.54609 L:_:4.54609E-3 
+gallon:US dry:gal:1/8 bu(US dry level):_:4.40488377086E-3 
+gallon:US fluid,wine:gal:231 in3:_:3.785411784E-3 
+gill:imperial,Noggin:gi,nog:5 fl oz:_:142.0653125E-6 
+gill:US fluid:gi:4 fl oz:_:118.29411825E-6 
+hogshead:imperial:hhd:2 bl:_:0.32731848 
+hogshead:US fluid:hhd:2 fl bl:_:0.238480942392 
+jigger:bartending:_:1 1/2 fl oz(US fluid):_:approx,44.36E-6 
+kilderkin:_:_:18 gal(imperial):_:0.08182962 
+lambda:_:λ:1 mm3:_:1E-9 
+last:_:_:80 bu(imperial):_:2.9094976 
+litre,liter:_:L:1 dm3:_:0.001 
+load:_:_:50 ft3:_:1.4158423296
+minim:imperial:min:1/60 fl dr:_:59.1938802083E-9 
+minim:US fluid:min:1/60 fl dr:_:61.611519921875E-9 
+ounce:imperial:fl oz (imp):1/160 gal:_:28.4130625E-6 
+ounce:US fluid:1 fl oz:1/128 gal:_:29.5735295625E-6 
+ounce:fluid US food nutrition labeling:US fl oz:30 mL:_:3E-5 
+peck:imperial:pk:2 gal:_:9.09218E-3 
+peck:US dry level:pk:1/4 bu:_:8.80976754172E-3 
+perch:_:per:16 1/2 ft × 1 1/2 ft × 1 ft:_:0.700841953152 
+pinch:imperial:_:1/8 tsp:_:73.9923502604E-8
+pinch:US fluid:_:1/8 tsp:_:61.6115199375E-8
+pint:imperial:pt:1/8 gal:_:5.6826125E-4
+pint:US dry:pt:1/8 gal:_:5.50610471357E-4 
+pint:US fluid:pt:1/8 gal:_:4.73176473E-4
+pony:US fluid:_:3/4 fl oz:_:22.180147171875E-6 
+pottle,quartern:_:_:1/2 gal(imperial):_:2.273045E-3 
+quart:imperial:qt:1/4 gal:_:1.1365225E-3
+quart:US dry,US fluid:qt:1/4 gal:_:1.101220942715E-3
+quart:US fluid:qt:1/4 gal:_:946.352946E-6
+quarter,pail:_:_:8 bu(imperial):_:0.29094976
+register ton:_:_:100 ft3:_:2.8316846592 
+sack,bag:imperial:_:3 bu:_:0.10910616
+sack:_:_:3 bu(US dry level):_:0.10571721050064 
+seam:_:_:8 bu(US dry level):_:0.28191256133504
+shot:US fluid:_:1.5 fl oz:_:approx,44E-6 
+strike:imperial:_:2 bu:_:0.07273744 
+strike:US dry level:_:2 bu:_:0.07047814033376
+tablespoon:Australian metric:_:_:_:20.0E-6 
+tablespoon:Canadian:tbsp:1/2 fl oz(imperial):_:14.20653125E-6 
+tablespoon:imperial:tbsp:5/8 fl oz:_:17.7581640625E-6 
+tablespoon:metric:_:_:_:5.0E-6
+tablespoon:US fluid:tbsp:1/2 fl oz:_:14.7867647825E-6 
+tablespoon:US food nutrition labeling:tbsp:15 mL:_:1.5E-5 
+teaspoon:Canadian:tsp:1/6 fl oz(imperial):_:4.735510416E-6
+teaspoon:imperial:tsp:1/24 gi:_:5.91938802083E-6 
+teaspoon:metric:_:5.0E-6 m3:_:5.0E-6
+teaspoon:US fluid:tsp:1/6 fl oz:_:4.928921595E-6 
+teaspoon:US food nutrition labeling:tsp:5 mL:_:5E-6 
+timber foot:_:_:1 ft3:_:0.028316846592
+ton:displacement:_:35 ft3:_:0.99108963072 
+ton:freight:_:40 ft3:_:1.13267386368 
+ton:water:_:28 bu:_:1.01832416 
+tun:_:_:252 gal(wine):_:0.953923769568
+wey:US dry level:_:40 bu:_:1.4095628066752
+
+
+Plane angle dims-m/m
+angular mil:_:µ:2×PI/6400 rad:_:approx,0.981748E-3
+arcminute:_:':1°/60:_:approx,0.290888E-3
+arcsecond:_:":1°/3600:_:approx,4.848137E-6
+centesimal minute of arc:_:':1 grad/100:_:approx,0.157080E-3
+centesimal second of arc:_:":1 grad/10000:_:approx,1.570796E-6
+degree:_:°:PI/180 rad:_:approx,17.453 293E-3
+grad,gradian,gon:_:grad:1/400 revolution,2×PI/400 rad,0.9°:_:approx,15.707963E-3
+octant:_:_:45°:_:approx,0.785398
+quadrant:_:_:90°:_:approx,1.570796
+radian:SI:rad:_:The angle subtended at the center of a circle by an arc whose length is equal to the circle's radius. One full revolution encompasses 2π radians:1
+sextant:_:_:60°:_:approx,1.047198
+sign:_:_:30°:_:approx,0.52399
+
+
+Solid angle dims-m2/m2
+square degree:_:deg2:(PI/180)^2 sr:_:approx,0.30462E-3
+steradian:SI:sr:_:The solid angle subtended at the center of a sphere of radius r by a portion of the surface of the sphere having an area r2. A sphere encompasses 4π sr:1
+
+
+Mass
+unified atomic mass unit:_:AMU:_:_:approx,1.66053873E-27
+atomic unit of mass, electron rest mass:_:m_e,m_e:_:_:approx,9.10938215E-31
+bag:coffee:_:60 kg:_:60
+bag:Portland cement:_:94 lb(avoirdupois):_:42.63768278
+barge:_:_:22 1/2 sh tn:_:20411.65665
+carat:_:kt:3 1/6 gr:_:approx,0.205196548333×10-3
+carat:metric:ct:200 mg:_:200×10-6
+dalton:_:Da:_:_:approx,1.66090210E-27
+dram:troy:dr:60 gr:_:3.8879346×10-3
+dram:avoirdupois:dr:27 11/32 gr:_:1.7718451953125×10-3
+gamma:_:γ:1 μg:_:1×10-9
+grain:avoirdupois:gr:1/7000 lb:_:64.79891×10-6
+grave:_:G:_:grave was the original name of the kilogram:1
+hundredweight:long:long cwt,cwt:112 lb(avoirdupois):_:50.80234544
+hundredweight:short,cental:sh cwt:100 lb(avoirdupois):_:45.359237
+kilogram:SI_base:kg:_:mass of the prototype near Paris (approx,mass of 1L of water):1
+kip:avoirdupois:kip:1000 lb:_:453.59237
+mark:troy:_:8 oz:_:248.8278144×10-3
+mite:_:_:1/20 gr:_:3.2399455×10-6
+mite:metric:_:1/20 g:_:50×10-6
+ounce:apothecary,troy:oz:1/12 lb t:_:31.1034768×10-3
+ounce:avoirdupois:oz:1/16 lb:_:28.349523125×10-3
+ounce:US food nutrition labeling:oz:28 g:_:28×10-3
+pennyweight:troy:dwt,pwt:1/20 oz:_:1.55517384×10-3
+point:_:_:1/100 ct:_:2×10-6
+pound:_:lb:slug·ft/s2:_:0.45359237
+pound:avoirdupois:lb:0.45359237 kg =,7000 grains:_:0.45359237
+pound:metric:_:500 g:_:500×10-3
+pound:troy:lb:5760 gr:_:0.3732417216
+quarter:imperial:_:1/4 long cwt =,2 st =,28 lb av:_:12.70058636
+quarter:informal:_:1/4 short tn:_:226.796185
+quarter long:informal:_:1/4 long tn:_:254.0117272
+quintal:metric:q:100 kg:_:100
+scruple:apothecary:s:20 gr:_:1.2959782×10-3
+sheet:_:_:1/700 lb(avoirdupois):_:647.9891×10-6
+slug,geepound,hyl:avoirdupois:slug:1 gee × 1 lb × 1 s2/ft:_:approx,14.593903
+stone:avoirdupois:st:14 lb:_:6.35029318
+assay ton:long:AT:1 mg × 1 long tn / 1 oz(troy):_:approx,32.666667×10-3
+assay ton:short:AT:1 mg × 1 sh tn / 1 oz(troy):_:approx,29.166667×10-3
+ton long:_:long tn,ton:2240 lb:_:1016.0469088
+ton short:_:sh tn:2000 lb:_:907.18474
+tonne:mts unit:t:1000 kg:_:1000
+
+
+
+Density dims-kg/m3
+gram per millilitre:_:g/mL:g/mL:_:1000
+kilogram per cubic metre:SI:kg/m3:kg/m3:_:1
+kilogram per litre:_:kg/L:kg/L:_:1000
+ounce per cubic foot:_:oz/ft3:oz/ft3:_:approx,1.001153961
+ounce per cubic inch:_:oz/in3:oz/in3:_:approx,1.729994044E3
+ounce per gallon:_:oz/gal:oz/gal:_:approx,7.489151707
+pound per cubic foot:_:lb/ft3:lb/ft3:_:approx,16.01846337
+pound per cubic inch:_:lb/in3:lb/in3:_:approx,2.767990471E4
+pound per gallon:_:lb/gal:lb/gal:_:approx,119.8264273
+slug per cubic foot:_:slug/ft3:slug/ft3:_:approx,515.3788184
+
+
+Time
+atomic unit of time:_:au:a0/(α·c):_:approx,2.418884254E-17
+Callippic cycle:_:_:441 mo (hollow) + 499 mo (full):_:2.3983776E9
+century:common:c:100 a:_:3153600000
+century:Gregorian:c:100 a:_:3155695200
+century:Julian:c:100 a:_:3155760000
+century:leap:c:100 a:_:3162240000
+century:mean:c:100 a:_:3155692500
+century:sidereal:c:100 a:_:3155814976.32
+day:_:d:24 h:_:86400
+day:sidereal:d:_:Time needed for the Earth to rotate once around its axis, determined from successive transits of a very distant astronomical object across an observer's meridian (International Celestial Reference Frame):approx,86164.1
+decade:common:dec:10 a:_:315360000
+decade:Gregorian:dec:10 a:_:315569520
+decade:Julian:dec:10 a:_:315576000
+decade:leap:dec:10 a:_:316224000
+decade:mean:dec:10 a:_:315569250
+decade:sidereal:dec:10 a:_:315581497.632
+fortnight:_:fn:2 wk:_:1209600
+helek:_:_:1/1080 h:_:3.3
+Hipparchic cycle:_:_:4 Callippic cycles - 1 d:_:9.593424E9
+hour:_:h:60 min:_:3600
+jiffy:_:j:1/60 s:_:0.016
+jiffy:alternate:ja:1/100 s:_:1×10-2
+ke:quarter of an hour:_:1/4 h:_:900
+ke:traditional:_:1/100 d:_:864
+lustre,lustrum:_:_:5 × 365 d:_:1.5768E8
+Metonic cycle,enneadecaeteris:_:_:110 mo (hollow) + 125 mo (full), 6940 d:_:5.99616×108
+milliday:_:md:1/1000 d:_:86.4
+minute:_:min:60 s:_:60
+moment:_:_:90 s:_:90
+month:full:mo:30 d:_:2592000
+month:Greg. av.:mo:365.2425 d / 12:_:approx,2.6297E6
+month:hollow:mo:29 d:_:2505600
+month:synodic:mo:approx,29.530589 d:Cycle time of moon phases:approx,2.551E6
+octaeteris:_:_:48 mo (full) + 48 mo (hollow) + 3 mo (full):_:2.524608E8
+Planck time:_:_:sqrt(G × ℏ / c5):_:approx,1.351211868E-43
+second:SI_base:s:_:time of 9192631770 periods of the radiation corresponding to the transition between the 2 hyperfine levels of the ground state of the caesium 133 atom at 0 K[8] (but other seconds are sometimes used in astronomy). Also that time it takes for light to travel a distance of 299,792,458 meters:1
+shake:_:_:1E-8 s:_:1E-8
+sigma:_:_:1E-6 s:_:1E-6
+Sothic cycle:_:_:1461 a:_:4.6074096E10
+svedberg:_:S:1E-13 s:_:1E-13
+week:_:_:7 d:_:604800
+year:common:yr:365 d:_:31536000
+year:Gregorian:yr:365.2425 d:calculated from common years (365 d) plus leap years (366 d) on most years divisible by 4. See leap year for details.:31556952
+year:Julian:yr:365.25 d:calculated from common years (365 d) plus one leap year (366 d) every four years:31557600
+year:leap:yr:366 d:_:31622400
+year:mean tropical:yr:_:Conceptually, length of time it takes for the Sun to return to the same position in the cycle of seasons:approx,31556925
+year:sidereal:yr:_:time taken for Sun to return to the same position with respect to the stars of the celestial sphere:approx,31558149.7632
+
+
+Frequency dims-s-1
+hertz:SI:Hz:1/s:Number of cycles per second:1
+revolutions per minute:_:rpm:_:One unit rpm equals one rotation completed around a fixed axis in one minute of time:approx,0.0166
+
+
+
+Velocity dims-m/s
+foot per hour:_:fph:1 ft/h:_:approx,8.466667E-5
+foot per minute:_:fpm:1 ft/min:_:5.08E-3
+foot per second:_:fps:1 ft/s:_:3.048E-1
+furlong per fortnight:_:furlong/fortnight:_:_:approx,1.663095E-4
+inch per hour:_:iph:1 in/hr:_:approx,7.05556E-6
+inch per minute:_:ipm:1 in/min:_:approx,4.23333E-4
+inch per second:_:ips:1 in/s:_:2.54E-2
+kilometre per hour:_:km/h:1 km/h:_:approx,2.777778E-1
+knot:_:kn:1 nmi/h =,1.852 km/h:_:approx,0.514444
+knot:Admiralty:kn:1 NM/h:_:0.514773
+metre per second:SI:m/s:1 m/s:_:1
+mile per hour:_:mph:1 mi/h:_:0.44704
+mile per minute:_:mpm:1 mi/min:_:26.8224
+mile per second:_:mps:1 mi/s:_:1609.344
+speed of light in vacuum:_:c:299792458 m/s:_:299792458
+speed of sound in air:_:s:Varies especially with temperature. About 1225 km/h (761 mph) in air at sea level to about 1062 km/h (660 mph) at jet altitudes:_:approx,340
+
+
+
+Flow dims-m3/s
+cubic foot per minute:_:CFM:1 ft3/min:_:4.719474432E-4
+cubic foot per second:_:ft3/s:1 ft3/s:_:0.028316846592
+cubic inch per minute:_:in3/min:1 in3/min:_:2.7311773E-7
+cubic inch per second:_:in3/s:1 in3/s:_:1.6387064E-5
+cubic metre per second:SI:m3/s:m3/s:_:1
+gallon per day:_:GPD:1 gal/d:_:4.381263638E-8
+gallon per hour:_:GPH:1 gal/h:_:1.051503273E-6
+gallon per minute:_:GPM:1 gal/min:_:6.30901964E-5
+litre per minute:_:LPM:1 L/min:_:1.6E-5
+
+Acceleration dims-m/s2
+foot per hour per second:_:fph/s:1 ft/h·s:_:approx,8.466667E-5
+foot per minute per second:_:fpm/s:1 ft/min·s:_:5.08E-3
+foot per second squared:_:fps2:1 ft/s2:_:3.048E-1
+gal; galileo:_:Gal:1 cm/s2:_:1E-2
+inch per minute per second:_:ipm/s:1 in/min·s:_:approx,4.233333E-4
+inch per second squared:_:ips2:1 in/s2:_:2.54E-2
+knot per second:_:kn/s:1 kn/s:_:approx,5.144444E-1
+metre per second squared:SI:m/s2:1 m/s2:_:1
+mile per hour per second:_:mph/s:1 mi/h·s:_:4.4704E-1
+mile per minute per second:_:mpm/s:1 mi/min·s:_:26.8224
+mile per second squared:_:mps2:1 mi/s2:_:1.609344E3
+standard gravity:_:g:9.80665 m/s2:_:9.80665
+
+
+Force dims-m kg s-2
+atomic unit of force:_:_:me·α2·c2/a0:_:approx,8.23872206E-8
+dyne:cgs unit:dyn:g·cm/s2:_:1E-5
+kilogram-force,kilopond,grave-force:_:kgf,kp,Gf:g × 1 kg:_:9.80665
+kip,kip-force:_:kip,kipf:g × 1000 lb:_:4.4482216152605E3
+milligrave-force,gravet-force:_:mGf,gf:g × 1 g:_:0.00980665
+newton:SI:N:kg·m/s2:A force capable of giving a mass of one kg an acceleration of one metre per second, per second:1
+ounce-force:_:ozf:g × 1 oz:_:0.27801385095378125
+pound-force:_:lbf:g × 1 lb:_:4.4482216152605
+poundal:_:pdl:1 lb·ft/s2:_:0.138254954376
+sthene:mts unit:sn:1 t·m/s2:_:1E3
+ton-force:_:tnf:g × 1 sh tn:_:8.896443230521E3
+
+
+Pressure dims-m-1 kg s-2, m[substance]
+atmosphere:standard:atm:_:_:101325
+atmosphere:technical:at:1 kgf/cm2:_:9.80665E4
+bar:_:bar:_:_:105
+barye:cgs unit:_:1 dyn/cm2:_:0.1
+centimetre of mercury:_:cmHg:13595.1 kg/m3 × 1 cm × g:_:approx,1.33322E3
+centimetre of water (4 °C):_:cmH2O:approx,999.972 kg/m3 × 1 cm × g:_:approx,98.0638
+foot of mercury:conventional:ftHg:13595.1 kg/m3 × 1 ft × g:_:approx,40.63666E3
+foot of water (39.2 °F):_:ftH2O:approx,999.972 kg/m3 × 1 ft × g:_:approx,2.98898E3
+inch of mercury :conventional:inHg:13595.1 kg/m3 × 1 in × g:_:approx,3.386389E3
+inch of water (39.2 °F):_:inH2O:999.972 kg/m3 × 1 in × g:_:approx,249.082
+kilogram-force per square millimetre:_:kgf/mm2:1 kgf/mm2:_:9.80665E6
+kip per square inch:_:ksi:1 kipf/in2:_:approx,6.894757E6
+micrometre of mercury:_:μmHg:13595.1 kg/m3 × 1 μm × g :_:approx,0.1333224
+millimetre of mercury:_:mmHg:13595.1 kg/m3 × 1 mm × g :_:approx,133.3224
+millimetre of water (3.98 °C):_:mmH2O:_:_:9.80638
+pascal:SI:Pa:N/m2:_:1
+pièze:mts unit:pz:_:_:1000
+pound per square foot:_:psf:1 lbf/ft2:_:approx,47.88026
+pound per square inch:_:psi:1 lbf/in2:_:approx,6.894757E3
+poundal per square foot:_:pdl/ft2:1 pdl/ft2:_:approx,1.488164
+short ton per square foot:_:_:1 sh tn × g / 1 ft2:_:approx,95.760518E3
+torr:_:torr:101325/760 Pa:_:approx,133.3224
+
+
+Torque, moment of force dims-m2 kg s-2
+foot-pound force:_:ft lbf:g × 1 lb × 1 ft:_:1.3558179483314004
+foot-poundal:_:ft pdl:1 lb·ft2/s2:_:4.21401100938048E-2
+inch-pound force:_:in lbf:g × 1 lb × 1 in:_:0.1129848290276167
+metre kilogram:_:m kg:N × m / g:_:approx,0.101971621
+Newton metre:SI:N m:N m:_:1
+
+Energy dims-m2 kg s-2
+barrel of oil equivalent:_:boe:approx,5.8E6 BTU59 °F:_:approx,6.12E9
+British thermal unit:ISO:BTUISO:1.0545E3 J:_:1.0545E3
+British thermal unit:International Table:BTUIT:_:_:1.05505585262E3
+British thermal unit:mean:BTUmean:_:_:approx,1.05587E3
+British thermal unit:thermochemical:BTUth:_:_:approx,1.054350E3
+British thermal unit (39 °F):_:BTU39 °F:_:_:approx,1.05967E3
+British thermal unit (59 °F):_:BTU59 °F:1.054804E3 J:_:1.054804E3
+British thermal unit (60 °F):_:BTU60 °F:_:_:approx,1.05468E3
+British thermal unit (63 °F):_:BTU63 °F:_:_:approx,1.0546E3
+calorie:International Table:calIT:4.1868 J:_:4.1868
+calorie:mean:calmean:_:1/100 of the energy required to warm one gram of air-free water from 0 °C to 100 °C @ 1 atm:approx,4.19002
+calorie:thermochemical:calth:4.184 J:_:4.184
+Calorie:US, FDA:Cal:1 kcal:_:4184
+calorie (3.98 °C):_:cal3.98 °C:_:_:approx,4.2045
+calorie (15 °C):_:cal15 °C:4.1855 J:_:4.1855
+calorie (20 °C):_:cal20 °C:_:_:approx,4.1819
+Celsius heat unit:International Table:CHUIT:1 BTUIT × 1 K/°R:_:1.899100534716E3
+cubic centimetre of atmosphere,standard cubic centimetre:_:cc atm,scc:1 atm × 1 cm3:_:0.101325
+cubic foot of atmosphere,standard cubic foot:_:ft3 atm,scf:1 atm × 1 ft3:_:2.8692044809344E3
+cubic foot of natural gas:_:_:1000 BTUIT:_:1.05505585262E6
+cubic yard of atmosphere,standard cubic yard:_:yd3 atm,scy:1 atm × 1 yd3:_:77.4685209852288E3
+electronvolt:_:eV:e × 1 V:_:approx,1.60217733E-19
+erg:cgs unit:erg:1 g·cm2/s2:_:1E-7
+foot-pound force:_:ft lbf:g × 1 lb × 1 ft:_:1.3558179483314004
+foot-poundal:_:ft pdl:1 lb·ft2/s2:_:4.21401100938048E-2
+gallon-atmosphere:imperial:gal atm:1 atm × 1 gal:_:460.63256925
+gallon-atmosphere:US:gal atm:1 atm × 1 gal:_:383.5568490138
+hartree, atomic unit of energy:_:Eh:me×α2×c2:_:approx,4.359744E-18
+horsepower-hour:_:hp·h:1 hp × 1 h:_:2.684519537696172792E6
+inch-pound force:_:in lbf:g × 1 lb × 1 in:_:0.1129848290276167
+joule:SI:J:N m:The work done when a force of one newton moves the point of its application a distance of one metre in the direction of the force:1
+kilocalorie,large calorie:_:kcal,Cal:1000 calIT:_:4.1868E3
+kilowatt-hour,Board of Trade Unit:_:kW h,B.O.T.U.:1 kW × 1 h:_:3.6E6
+litre-atmosphere:_:l atm,sl:1 atm × 1 L:_:101.325
+quad:_:1015 BTUIT:_:_:1.05505585262E18
+rydberg:_:Ry:R∞·ℎ·c:_:approx,2.179872E-18
+therm:E.C.:_:100000 BTUIT:_:105.505585262E6
+therm:US:_:100000 BTU59 °F:_:105.4804E6
+thermie:_:th:1 McalIT:_:4.1868E6
+ton of coal equivalent:_:TCE:7 Gcalth:_:29.288E9
+ton of oil equivalent:_:TOE:10 Gcalth:_:41.84E9
+ton of TNT:_:tTNT:1 Gcalth:_:4.184E9
+
+
+Power,Heat flow rate dims-m2 kg s-3
+atmosphere-cubic centimetre per minute:_:atm ccm:1 atm × 1 cm3/min:_:1.68875E-3
+atmosphere-cubic centimetre per second:_:atm ccs:1 atm × 1 cm3/s:_:0.101325
+atmosphere-cubic foot per hour:_:atm cfh:1 atm × 1 ft3/h:_:0.797001244704
+atmosphere-cubic foot per minute:_:atm·cfm:1 atm × 1 ft3/min:_:47.82007468224
+atmosphere-cubic foot per second:_:atm cfs:1 atm × 1 ft3/s:_:2.8692044809344E3
+BTU International Table per hour:_:BTUIT/h:1 BTUIT/h:_:approx,0.293071
+BTU International Table per minute:_:BTUIT/min:1 BTUIT/min:_:approx,17.584264
+BTU International Table per second:_:BTUIT/s:1 BTUIT/s:_:1.05505585262E3
+calorie (International Table) per second:_:calIT/s:1 calIT/s:_:4.1868
+erg per second:_:erg/s:1 erg/s:_:1E-7
+foot-pound-force per hour:_:ft lbf/h:1 ft lbf/h:_:approx,3.766161E-4
+foot-pound-force per minute:_:ft lbf/min:1 ft lbf/min:_:2.259696580552334E-2
+foot-pound-force per second:_:ft lbf/s:1 ft lbf/s:_:1.3558179483314004
+horsepower:boiler:bhp:approx,34.5 lb/h × 970.3 BTUIT/lb:_:approx,9.810657E3
+horsepower:European electrical:hp:75 kp·m/s:_:736
+horsepower:imperial electrical:hp:746 W:_:746
+horsepower:imperial mechanical:hp:550 ft lbf/s:_:745.69987158227022
+horsepower:metric:hp:75 m kgf/s:_:735.49875
+litre-atmosphere per minute:_:L·atm/min:1 atm × 1 L/min:_:1.68875
+litre-atmosphere per second:_:L·atm/s:1 atm × 1 L/s:_:101.325
+lusec:_:lusec:1 L·µmHg/s:_:approx,1.333E-4
+poncelet_::p:100 m kgf/s:_:980.665
+square foot equivalent direct radiation:_:ft2 EDR:240 BTUIT/h:_:approx,70.337057
+ton of air conditioning:_:_:_:2000 lbs of ice melted / 24 h:approx,3504
+ton of refrigeration:imperial:_:2240 lb × iceIT / 24 h:_:approx,3.938875E3
+ton of refrigeration:IT:_:200 lbs × iceIT / 24 h: iceIT =,144° × 2326 J/kg.°F:approx,3.516853E3
+watt:SI:W:J/s:The power which in one second of time gives rise to one joule of energy:1
+
+
+Dynamic viscosity dims-m-1 kg s-1
+pascal second:SI:Pa s:N s/m2:_:1
+poise:cgs unit:P:1 barye·s:_:0.1
+pound per foot hour:_:lb/ft·h:1 lb/ft·h:_:approx,4.133789E-4
+pound per foot second:_:lb/ft·s:1 lb/ft·s:_:approx,1.488164
+pound-force second per square foot:_:lbf·s/ft2:1 lbf·s/ft2:_:approx,47.88026
+pound-force second per square inch:_:lbf·s/in2:1 lbf·s/in2:_:approx,6,894.757
+
+
+Kinematic viscosity dims-m2 s-1
+square foot per second:_:ft2/s:1 ft2/s:_:0.09290304
+square metre per second:SI:m2/s:1 m2/s:_:1
+stokes:cgs unit:St:1E-4 m2/s:_:1E-4
+
+Electric current 
+ampere:SI:A:1 C/s:The constant current needed to produce a force of 2 E-7 newton per metre between two straight parallel conductors of infinite length and negligible circular cross-section placed one metre apart in a vacuum:1
+abampere,electromagnetic unit:cgs unit:abamp:10 A:_:10
+esu per second, statampere:cgs unit:esu/s:(0.1 A·m/s)/c:_:approx,3.335641E-10
+
+
+Electric charge dims-s A
+abcoulomb,electromagnetic unit:cgs unit:abC,emu:10 C:_:10
+atomic unit of charge:_:au:e:_:approx,1.602176462E-19
+coulomb:SI_base:C:1 A·s:The amount of electricity carried in one second of time by one ampere of current:1
+faraday:_:F:1 mol × NA·e:_:approx,96485.3383
+milliampere hour:_:mA·h:0.001 A × 1 h:_:3.6
+statcoulomb,franklin,electrostatic unit:cgs unit:statC,Fr,esu:(0.1 A·m) / c:_:approx,3.335641E-10
+
+Electric dipole dims-
+atomic unit of electric dipole moment:_:ea0:_:_:approx,8.47835281E-30
+coulomb meter:SI:C m:_:_:1
+debye:_:D:1E-10 esu·Å:_:3.33564095E-30
+
+
+Electromotive force, electric potential difference dims-m2 kg s-3 A-1
+abvolt:cgs unit:abV:1E-8 V:_:1E-8
+statvolt:cgs unit:statV:c· (1 μJ/A·m):_:299.792458
+volt:SI:V:1 W/A:The difference in electric potential across two points along a conducting wire carrying one ampere of constant current when the power dissipated between the points equals one watt:1
+
+
+Electrical resistance dims-m2 kg s-3 A-2
+ohm:SI:Ω:1 V/A:The resistance between two points in a conductor when one volt of electric potential difference, applied to these points, produces one ampere of current in the conductor:1
+
+
+Capacitance dims-m-2 kg-1 s4 A2
+farad:SI:F:1 C/V:The capacitance between two parallel plates that results in one volt of potential difference when charged by one coulomb of electricity:1
+
+Magnetic flux dims-m2 kg s-2 A-1
+maxwell:CGS unit:Mx:1E-8 Wb:_:1E-8 Wb
+weber:SI:Wb:1 V·s:Magnetic flux which, linking a circuit of one turn, would produce in it an electromotive force of 1 volt if it were reduced to zero at a uniform rate in 1 second:1
+
+
+Magnetic flux density dims-kg s-2 A-1
+gauss:CGS unit:G:Mx/cm2,1E-4 T:_:1E-4
+tesla:SI:T:Wb/m^2:_:1
+
+Temperature
+degree Celsius:_:°C:K − 273.15:_:x+273.15
+degree Delisle:_:°De:_:_:373.15-x\cdot\frac{2}{3}
+degree Fahrenheit:_:°F:°C × 9/5 + 32:_:\left(x+459.67\right)\cdot\frac{5}{9}
+degree Newton:_:°N:_:_:x\cdot\frac{100}{33}+273.15
+degree Rankine:_:°R;:K × 9/5:_:x\cdot\frac{5}{9}
+degree Réaumur:_:°Ré:_:_:x\cdot\frac{5}{4}+273.15
+degree Rømer:_:°Rø:_:_:\left(x-7.5\right)\cdot\frac{40}{21}+273.15
+Regulo Gas Mark:_:GM:(°F - 300) / 25:_:x\cdot\frac{125}{9}+422.038
+kelvin:SI_base:K:_:1/273.16 of the thermodynamic temperature of the triple point of water:1
+
+
+Luminous intensity 
+candela,candle:SI_base:cd:_:The luminous intensity, in a given direction, of a source that emits monochromatic radiation of frequency 540×1012 hertz and that has a radiant intensity in that direction of 1/683 watt per steradian:1
+
+
+Luminance dims-m-2 cd
+candela per square foot:_:cd/ft2:cd/ft2:_:approx,10.763910417
+candela per square inch:_:cd/in2:cd/in2:_:approx,1550.0031
+candela per square metre:SI:cd/m2:cd/m2:_:1
+footlambert:_:fL:(1/π) cd/ft2:_:approx,3.4262590996
+lambert:_:L:(104/PI) cd/m2:_:approx,3183.0988618
+stilb:CGS unit:sb:1E4 cd/m2:_:approx,1E4
+
+
+Luminous flux dims-cd
+lumen:SI:lm:1 cd sr:_:1
+
+Illuminance dims-m-2 cd
+footcandle,lumen per square foot:_:fc:lm/ft2:_:10.763910417
+lumen per square inch:_:lm/in2:lm/in2:_:approx,1550.0031
+lux:SI:lx:lm/m2:_:1
+phot:CGS unit:ph:lm/cm2:_:1E4
+
+Radiation(source activity) dims-s-1
+becquerel:SI:Bq:_:Number of disintegrations per second:1
+curie:_:Ci:_:_:3.7E10
+
+
+
+Radiation(absorbed dose) dims-m2 s-2
+gray:SI:Gy:1 J/kg,1 m2/s2:_:1
+rad:_:rad:_:_:0.01
+
+
+Radiation(equivalent dose) dims-m2 s-2
+Röntgen equivalent man:_:rem:_:_:0.01
+sievert:SI:Sv:1 J/kg:_:1
+
+
