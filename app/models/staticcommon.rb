@@ -8,12 +8,12 @@ module CommonClassMethods
 
   def after lastSync
     if  lastSync && lastSync != "" && lastSync != "\"\""
-      lastSync = Time.parse(lastSync).to_json
+      lastSync = Time.parse(lastSync).to_str
       puts lastSync
       lastSync = lastSync.sub 'T', ' '
       puts lastSync
   
-      with_deleted.all.where("updated_at > #{lastSync}")
+      with_deleted.all.where("updated_at > TIMESTAMP \'#{lastSync}\'")
     else
       all().order :updated_at
     end
