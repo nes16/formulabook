@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
   	  cond2 = ''
   	end
   	
-  	cond = cond1 + ' (user_id IS NULL OR ' +  cond2 + " shared = \"t\")"
+  	cond = cond1 + ' (user_id IS NULL OR ' +  cond2 + " shared = true)"
   	
   	return cond
   end
