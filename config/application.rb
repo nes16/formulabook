@@ -29,9 +29,6 @@ module TestLab
     config.action_view.embed_authenticity_token_in_remote_forms = false
     #config.requirejs.loader = :almond
     
-    config.requirejs.logical_asset_filter += [/\.us$/]
-
-    
 
     config.active_record.schema_format =
 

@@ -1,3 +1,3 @@
-define( ['require'], function(require){
-  
-});
+//= require bootstrap
+//= require turbolinks
+//= require_tree .
