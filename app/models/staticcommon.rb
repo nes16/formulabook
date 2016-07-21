@@ -8,7 +8,7 @@ module CommonClassMethods
 
   def after lastSync
     if  lastSync && lastSync != "" && lastSync != "\"\""
-      lastSync = Time.parse(lastSync).to_str
+      lastSync = Time.parse(lastSync).to_json
       puts lastSync
       lastSync = lastSync.sub 'T', ' '
       puts lastSync
