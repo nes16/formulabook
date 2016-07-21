@@ -72,3 +72,5 @@ group :production do
 	gem 'fog',  '1.25.0'
 
 end
+
+ruby "2.2.0"
