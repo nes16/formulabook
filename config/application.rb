@@ -31,7 +31,7 @@ module TestLab
     
     config.requirejs.logical_asset_filter += [/\.us$/]
 
-    config.web_console.whitelisted_ips = '172.17.42.1'
+    
 
     config.active_record.schema_format =
 
