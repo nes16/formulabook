@@ -77,11 +77,6 @@ GEM
       sass (~> 3.2)
     builder (3.2.2)
     byebug (6.0.2)
-    carrierwave (0.10.0)
-      activemodel (>= 3.2.0)
-      activesupport (>= 3.2.0)
-      json (>= 1.7)
-      mime-types (>= 1.16)
     coderay (1.1.0)
     coffee-rails (4.1.0)
       coffee-script (>= 2.2.0)
@@ -273,7 +268,6 @@ PLATFORMS
 DEPENDENCIES
   bootstrap-sass (= 3.2.0.0)
   byebug
-  carrierwave (= 0.10.0)
   devise
   devise_token_auth (= 0.1.37.beta4)
   faker (= 1.4.2)

@@ -43,7 +43,6 @@ gem 'mini_magick',             '3.8.0'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 gem 'requirejs-rails',         '0.9.5'
-gem 'carrierwave',             '0.10.0'
 gem 'figaro', :github => "laserlemon/figaro"
 gem 'rack-cors', :require => 'rack/cors'
 gem "paranoia", "~> 2.0"
