@@ -2,8 +2,8 @@ class Api::V1::SyncsController < ApplicationController
 	skip_before_filter :verify_authenticity_token
 	respond_to :json
 
-  
-  
+
+
   def updateIds (info, orders, col, oldId, id )
     orders.each do |o| 
       if o[:references].index col
@@ -23,10 +23,6 @@ class Api::V1::SyncsController < ApplicationController
 
   #POST formulas/:formula_id/variables
   def sync
-    maxid = 1000000;
-    @res = 
-
-    fetchDatas = {}
     info = params[:data][:syncInfo]
 
     puts info
@@ -35,44 +31,43 @@ class Api::V1::SyncsController < ApplicationController
     #its associated models
     #used for updating ids
     torders = [{name:"properties", idColumn: :property_id, classA:Property, references:[]},
-             {name:"units",  idColumn: :unit_id, classA:Unit,  references:[:property_id]},
-             {name:"globals",  idColumn: :global_id, classA:Global,  references:[:unit_id]},
-             {name:"formulas",  idColumn: :formula_id, classA:Formula,  references:[:unit_id, :property_id]},
-             {name:"fgs",  idColumn: :fg_id, classA:Fg,  references:[:formula_id, :global_id]},
-            {name:"variables",  idColumn: :variable_id, classA:Variable,  references:[:unit_id, :property_id, :formula_id]}
-            ]
+    {name:"units",  idColumn: :unit_id, classA:Unit,  references:[:property_id]},
+    {name:"globals",  idColumn: :global_id, classA:Global,  references:[:unit_id]},
+    {name:"formulas",  idColumn: :formula_id, classA:Formula,  references:[:unit_id, :property_id]},
+    {name:"fgs",  idColumn: :fg_id, classA:Fg,  references:[:formula_id, :global_id]},
+    {name:"variables",  idColumn: :variable_id, classA:Variable,  references:[:unit_id, :property_id, :formula_id]}
+  ]
 
     #initialize array variable if they are given nil value
     #rails assign nil value instead of empty array for
     #json object in request parameter
+    response_objs = {}
     info[:tables].each do |t|
       t[:deletedItems] = t[:deletedItems]?t[:deletedItems]:[]
       t[:resources] = t[:resources]?t[:resources]:[]
+      responce_objs[t]=({name: t, resources:[], deletedItems:[], ids:[]})
     end
 
-    #fetch locally modified items, changed since lastsync
-    #and store them in a variable
-
-    torders.each do |o|
-      info[:tables].each do |t|
-        if t[:name] == o[:name]
-          fetchDatas[t[:name]] = o[:classA].after t[:lastSync]
-          puts 'fetch data length - ' + t[:name] + '-' + fetchDatas[t[:name]].length.to_s
-        end
-      end
-    end
 
     #Delete remotely deleted items 
     torders.each do |o|
       info[:tables].each do |t|
         if t[:name] == o[:name]
+          response_obj = responce_objs[t];
           t[:deletedItems].each do |i|
+            response_obj.ids.push i.id
             if o[:classA].exists? i[:id]
               item = o[:classA].find i[:id]
-              item.destroy
+              res = item.destroy
+              if res
+                response_obj.deletedItems.push {id:i.id, status:"success"}
+              else
+                response_obj.deletedItems.push {id:i.id, status:"failed"}
+              end  
+            else
+              response_obj.deletedItems.push[{id:i.id, status:"item not found"}]  
             end
           end
-          t[:deletedItems] = []
         end
       end
     end
@@ -83,6 +78,7 @@ class Api::V1::SyncsController < ApplicationController
       torders.each do |o|
         info[:tables].each do |t|
           if t[:name] == o[:name]
+            response_obj = response_obs[t]
             t[:resources].each do |i|
               #Items created and updated in remote clients
               #Refer client code standard.ts for SyncState flags
@@ -99,14 +95,13 @@ class Api::V1::SyncsController < ApplicationController
                   end
                 end 
 
-                puts i.to_json
-                puts newItem.to_json
-                if newItem.has_attribute? :name
-                  puts 'the save result - '+ newItem.name.to_json + ' - ' + newItem.save.to_s
+                success = newItem.save;
+                if !success
+                  response_obj[:resources].push {id: i[:id], syncState: 1, status:"failed", errors: newItem.errors.messages}
                 else
-                  puts 'the save result - ' + newItem.save.to_s
+                  response_obj.ids.push newItem.id
+                  response_obj[:resources].push {id: newItem.Id, oldId: i[:id], syncState: 1, status:"success"}
                 end
-                i[:id]=newItem.id;
 
                 #update the remotely assigned ids
                 #in referenced objects
@@ -121,6 +116,7 @@ class Api::V1::SyncsController < ApplicationController
       torders.each do |o|
         info[:tables].each do |t|
           if t[:name] == o[:name]
+            response_obj = response_obs[t]
             t[:resources].each do |i|
               #items only updated in remote client
               if i[:syncState] & 2 > 0
@@ -130,28 +126,44 @@ class Api::V1::SyncsController < ApplicationController
                   item = o[:classA].find i[:id]
                   o[:classA].assign item, i
                   
-                  puts 'the save result - '+ item.name + ' - ' + item.save.to_s
+                  success = item.save;
+                  if !success
+                    response_obj[:resources].push {id: i[:id], syncState: 2, status:"failed", errors: item.errors.messages}
+                  else
+                    response_obj.ids.push item.id
+                    response_obj[:resources].push {id: i[:id], syncState: 2, status:"success"}
+                  end
+                else
+                  response_obj[:resources].push {id: i[:id], syncState:2, status:"item not found"}
                 end
               end
             end
 
-            #Response back with only new items, so that id can be updated
-            t[:resources] = t[:resources].select { |i| i[:oldId]?i[:oldId] > 0:false}
-            #append the fetched item to the response packet
-            t[:resources].concat fetchDatas[t[:name]]
-            
-            #delete temperory variable
-            #t.delete :fetechedItems
 
-            #set the new lastSync value to response packet
-            t[:lastSync] = o[:classA].lastSync
+            response_obj[:lastSync] = Time.now.to_json;
+            fetched_data = o[:classA].after response_obj[:affected_ids], t[:lastSync];
+            deletedItems = fetched_data.select {|i| i[:deleted] != null}
+
+            #Seperate deleted items
+            deletedItems.each do |i|
+              response_obj[:deletedItems].push({id: i[:id]})
+              fetched_data.delete i
+            end
+
+            #append the fetched item to the response packet
+            response_obj[:resources].concat fetched_data
+
           end
         end
       end
     end #transaction 
 
+    response_array = [];
+    info[:tables].each do |t|
+      response_array.push response_obs[t]
+    end
     
-    render json: {data: info}
+    render json: {data: response_array}
   end #def
 
   #change the ids in child resources for new ids of parent 

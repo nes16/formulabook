@@ -3,16 +3,17 @@ class CreateUnit < ActiveRecord::Migration
     create_table :units do |t|
       t.belongs_to :property, index: true
       t.string :name
-      t.string :system
-      t.boolean :baseunit
-      t.string :symbol
-      t.string :prefix
-      t.string :extend
-      t.string :definition
       t.string :description
+      t.string :system
+      t.string :symbol
       t.boolean :approx
       t.string :factor
-      t.integer :repeat
+      
+      t.boolean :shared
+      t.belongs_to  :user, index: true
+
+      t.time :deleted, index: true
+      t.integer :lock_version, default: 0, null: false
 
       t.timestamps null: false
     end

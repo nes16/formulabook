@@ -1,12 +1,9 @@
-require "staticcommon"
-
 class Property < ActiveRecord::Base
-  extend CommonClassMethods
+  acts_as_paranoid :column => 'deleted', :column_type => 'time'
   
   has_many :favorites, as: :favoritable
-  has_many :units, -> (object){ where.not symbol: ['_','', nil]}, dependent: :destroy
-  has_many :property_aliases, dependent: :destroy
+  has_many :units, -> (object){ where.not symbol: ['_','', nil]}, dependent: :destroy, :inverse_of => :property
   has_one :default_unit, -> (object){ where factor: '1'}, dependent: :destroy, class_name: "Unit"
-  acts_as_paranoid :column => 'deleted', :column_type => 'time'
-  validates :name,  presence: true, length: { maximum: 50 }
+
+  validates :name, uniqueness: { case_sensitive: false }, presence: true, length: { minimum: 5, maximum: 30 }
 end

@@ -1,21 +1,35 @@
-class Time
-  def to_milliseconds
-    (self.to_f * 1000.0).to_i
+module ActiveRecordExtension
+
+extend ActiveSupport::Concern
+
+
+def to_json(options={})
+    options[:except] ||= [:updated_at, :created_at]
+    super(options)
+end
+
+def belongs_to_property_or_unit
+  if property.present? && unit.present?
+    errors.add(:property, "Invalid measurement")
   end
 end
 
-module CommonClassMethods
+class_methods do
 
-  def after lastSync
+  def after ids, lastSync
     if  lastSync && lastSync != "" && lastSync != "\"\""
       lastSync = Time.parse(lastSync).to_json
       puts lastSync
       lastSync = lastSync.sub 'T', ' '
       puts lastSync
-  
-      with_deleted.all.where("updated_at > TIMESTAMP \'#{lastSync}\'")
+      if Rails.env.production?
+          with_deleted.all.where.not(id: ids).where("updated_at > TIMESTAMP \'#{lastSync}\'")
+      else
+          with_deleted.all.where.not(id: ids).where("updated_at > #{lastSync}")
+      end
+
     else
-      all().order :updated_at
+      all.where.not(id: ids).order :updated_at
     end
   end
 
@@ -44,11 +58,26 @@ module CommonClassMethods
     p = self.new({name: name})
     p.units << Unit.new({name: uname, factor:factor, symbol:symbol})
     p.save
+    r = p
   end
 
   def T_destroyProperty name
     where("name == \"#{name}\"").each do |i|
       i.destroy
+    end
+  end
+
+  def T_addTestRows
+    (1..5).each do |i|
+      p = Property.T_addProperty  "Property"+i.to_s, "Unit"+i.to_s, i, "u"+i.to_s
+      g=Global.new({name:'Gloabl'+i.to_s, symbol:'g'+i.to_s, value:i.to_s})
+      g.valid?
+      puts g.errors.to_json
+      g.save
+      f=Formula.new({name:'Formula'+i.to_s, symbol:'f'+i.to_s, latex:'g1+v1+5'})
+      f.valid?
+      puts f.errors.to_json
+      f.save
     end
   end
 
@@ -67,6 +96,9 @@ module CommonClassMethods
       i.really_destroy!
     end
   end
-
+end
   
 end
+
+# include the extension 
+ActiveRecord::Base.send(:include, ActiveRecordExtension)

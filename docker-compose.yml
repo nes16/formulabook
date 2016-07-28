@@ -15,4 +15,5 @@ web:
 
   ports:
     - "80:80" 
+  privileged: true
 
