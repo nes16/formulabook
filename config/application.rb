@@ -29,17 +29,16 @@ module TestLab
     config.action_view.embed_authenticity_token_in_remote_forms = false
     #config.requirejs.loader = :almond
     
-
-    config.active_record.schema_format =
-
-    config.middleware.use Rack::Cors do
+    
+    config.middleware.insert_before 0, "Rack::Cors", :debug => true, :logger => (-> { Rails.logger }) do
           allow do
             origins '*'
             resource '*',
               :headers => :any,
-              :expose  => ['access-token', 'expiry', 'token-type', 'uid', 'client'],
-              :methods => [:get, :post, :options, :delete, :put]
+              :methods => [:get, :post, :delete, :put, :patch, :options, :head],
+              :max_age => 0
           end
         end
+
   end
 end

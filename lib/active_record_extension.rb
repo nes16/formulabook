@@ -45,7 +45,7 @@ class_methods do
 
   def assign obj, state
 	keys = state.keys
-	dbkeys = ["id", "updated_at", "deleted", "lock_version", "created_at", "syncState", "oldId"]
+	dbkeys = ["id", "updated_at", "deleted", "created_at", "syncState", "tempId"]
 	keys.each do |k|
 		if obj.has_attribute?(k) && (dbkeys.index(k) == nil)
 			obj[k] = state[k]
@@ -56,7 +56,7 @@ class_methods do
 #Testing functions
   def T_addProperty name, uname, factor, symbol
     p = self.new({name: name})
-    p.units << Unit.new({name: uname, factor:factor, symbol:symbol})
+    p.units << Unit.new({name: uname, factor:factor, description:uname, system:"SI", symbol:symbol})
     p.save
     r = p
   end
@@ -69,12 +69,14 @@ class_methods do
 
   def T_addTestRows
     (1..5).each do |i|
-      p = Property.T_addProperty  "Property"+i.to_s, "Unit"+i.to_s, i, "u"+i.to_s
+      p = Property.T_addProperty  "Property"+i.to_s, "Unit"+i.to_s, "1", "u"+i.to_s
       g=Global.new({name:'Gloabl'+i.to_s, symbol:'g'+i.to_s, value:i.to_s})
       g.valid?
       puts g.errors.to_json
       g.save
       f=Formula.new({name:'Formula'+i.to_s, symbol:'f'+i.to_s, latex:'g1+v1+5'})
+      f.variables << Variable.new({name:"variable1", symbol:"v1"});
+      f.fgs << Fg.new({global:Global.first})
       f.valid?
       puts f.errors.to_json
       f.save

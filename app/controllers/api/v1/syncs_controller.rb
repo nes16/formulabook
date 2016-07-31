@@ -26,6 +26,12 @@ class Api::V1::SyncsController < ApplicationController
     info = params[:data][:syncInfo]
 
     puts info
+    error_codes = {};
+    error_codes[:success] = 0;
+    error_codes[:validation_error] = 1;
+    error_codes[:item_not_found] = 2;
+    error_codes[:stale_object] = 3;
+    error_codes[:unknown_error] = 100;
 
     #static table describe different models and
     #its associated models
@@ -45,7 +51,7 @@ class Api::V1::SyncsController < ApplicationController
     info[:tables].each do |t|
       t[:deletedItems] = t[:deletedItems]?t[:deletedItems]:[]
       t[:resources] = t[:resources]?t[:resources]:[]
-      responce_objs[t]=({name: t, resources:[], deletedItems:[], ids:[]})
+      response_objs[t[:name]]=({name: t[:name], resources:[], deletedItems:[], ids:[]})
     end
 
 
@@ -53,19 +59,22 @@ class Api::V1::SyncsController < ApplicationController
     torders.each do |o|
       info[:tables].each do |t|
         if t[:name] == o[:name]
-          response_obj = responce_objs[t];
+          response_obj = response_objs[t[:name]];
           t[:deletedItems].each do |i|
-            response_obj.ids.push i.id
+            response_obj[:ids].push i[:id]
             if o[:classA].exists? i[:id]
               item = o[:classA].find i[:id]
               res = item.destroy
               if res
-                response_obj.deletedItems.push {id:i.id, status:"success"}
+                response_obj[:deletedItems].push {id:i[:id] \
+                                            , error_code:error_codes[:success]}
               else
-                response_obj.deletedItems.push {id:i.id, status:"failed"}
+                response_obj[:deletedItems].push {id:i[:id] \
+                                            , error_code:error_codes[:unknown_error]}
               end  
             else
-              response_obj.deletedItems.push[{id:i.id, status:"item not found"}]  
+              response_obj[:deletedItems].push[{id:i[:id] \
+                                            , error_code:error_codes[:item_not_found]}]  
             end
           end
         end
@@ -78,13 +87,12 @@ class Api::V1::SyncsController < ApplicationController
       torders.each do |o|
         info[:tables].each do |t|
           if t[:name] == o[:name]
-            response_obj = response_obs[t]
+            response_obj = response_objs[t[:name]]
             t[:resources].each do |i|
               #Items created and updated in remote clients
               #Refer client code standard.ts for SyncState flags
               if i[:syncState] & 1 > 0
                 i[:syncState] = 0
-                i[:oldId] = i[:id]
                 newItem = o[:classA].new
                 o[:classA].assign newItem, i
                 if newItem.has_attribute? :user_id
@@ -96,16 +104,20 @@ class Api::V1::SyncsController < ApplicationController
                 end 
 
                 success = newItem.save;
-                if !success
-                  response_obj[:resources].push {id: i[:id], syncState: 1, status:"failed", errors: newItem.errors.messages}
+                if success
+                  response_obj[:ids].push newItem.id
+                  response_obj[:resources].push ({id: i[:id] \
+                                        , tempId: newItem.id \
+                                        , error_code:error_codes[:success]})
+                  #update the remotely assigned ids
+                  #in referenced objects
+                  updateIds info, torders, o[:idColumn], i[:id], i[:tempId]
                 else
-                  response_obj.ids.push newItem.id
-                  response_obj[:resources].push {id: newItem.Id, oldId: i[:id], syncState: 1, status:"success"}
+                  response_obj[:resources].push ({id: i[:id] \
+                                        , error_code:error_codes[:validation_error] \
+                                        , error_messages: newItem.errors.messages})
                 end
 
-                #update the remotely assigned ids
-                #in referenced objects
-                updateIds info, torders, o[:idColumn], i[:oldId], i[:id]
               end
             end
           end
@@ -116,7 +128,7 @@ class Api::V1::SyncsController < ApplicationController
       torders.each do |o|
         info[:tables].each do |t|
           if t[:name] == o[:name]
-            response_obj = response_obs[t]
+            response_obj = response_objs[t[:name]]
             t[:resources].each do |i|
               #items only updated in remote client
               if i[:syncState] & 2 > 0
@@ -124,26 +136,33 @@ class Api::V1::SyncsController < ApplicationController
                 
                 if o[:classA].exists? i[:id]
                   item = o[:classA].find i[:id]
-                  o[:classA].assign item, i
-                  
-                  success = item.save;
-                  if !success
-                    response_obj[:resources].push {id: i[:id], syncState: 2, status:"failed", errors: item.errors.messages}
+                  response_obj[:ids].push item.id
+                  if item.lock_version <= i[:lock_version]
+                    o[:classA].assign item, i
+                    success = item.save;
+                    if success
+                      response_obj[:resources].push({id: i[:id] \
+                                            , error_code:error_codes[:success]})
+                    else
+                      response_obj[:resources].push({id: i[:id] \
+                                  , error_code:error_codes[:validation_error] \
+                                  , error_messages: item.errors.messages})
+                    end
                   else
-                    response_obj.ids.push item.id
-                    response_obj[:resources].push {id: i[:id], syncState: 2, status:"success"}
+                    response_obj[:resources].push({id: i[:id] \
+                                , remote_lock_version: item.lock_version \
+                                , error_code:error_codes[:stale_object] })
                   end
                 else
-                  response_obj[:resources].push {id: i[:id], syncState:2, status:"item not found"}
+                  response_obj[:resources].push({id: i[:id] \
+                              , error_code:error_codes[:item_not_found]})
                 end
               end
             end
 
-
             response_obj[:lastSync] = Time.now.to_json;
-            fetched_data = o[:classA].after response_obj[:affected_ids], t[:lastSync];
-            deletedItems = fetched_data.select {|i| i[:deleted] != null}
-
+            fetched_data = o[:classA].after response_obj[:ids], t[:lastSync];
+            deletedItems = fetched_data.select {|i| i[:deleted] != nil}
             #Seperate deleted items
             deletedItems.each do |i|
               response_obj[:deletedItems].push({id: i[:id]})
@@ -160,10 +179,12 @@ class Api::V1::SyncsController < ApplicationController
 
     response_array = [];
     info[:tables].each do |t|
-      response_array.push response_obs[t]
+      response_objs[t[:name]].delete :ids
+      response_array.push response_objs[t[:name]]
     end
     
-    render json: {data: response_array}
+    info[:tables] = response_array;
+    render json: {data: info}
   end #def
 
   #change the ids in child resources for new ids of parent 
