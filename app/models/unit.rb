@@ -8,7 +8,7 @@ class Unit < ActiveRecord::Base
 	belongs_to :property, :inverse_of => :units
 
   validates :name, uniqueness: { case_sensitive: false }, presence: true, length: { minimum: 5, maximum: 30 }
-	validates :description,  length: { minimum: 5, maximum: 50 }
+	validates :description,  length: { minimum: 5, maximum: 50 }, :allow_nil => true
 	validates :symbol, uniqueness: true, presence: true, length: { minimum: 1, maximum: 10 }
   validates :factor,  presence: true, format: { with: /\A([+-]?\d+(\.\d+(e[+-]\d+)?)?(e[+-]\d+)?)$\z/}, if: :factor_number?
   validates :system, inclusion: { in: %w(SI Others), message: "%{value} is not a valid system" }
