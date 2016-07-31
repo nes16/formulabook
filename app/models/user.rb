@@ -13,6 +13,4 @@ class User < ActiveRecord::Base
   has_many :favorites, inverse_of: :user
   has_many :properties
   has_many :units
-  acts_as_paranoid :column => 'deleted', :column_type => 'time'
-
 end
