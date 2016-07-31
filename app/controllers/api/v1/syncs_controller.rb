@@ -111,7 +111,7 @@ class Api::V1::SyncsController < ApplicationController
                                         , error_code:error_codes[:success]})
                   #update the remotely assigned ids
                   #in referenced objects
-                  updateIds info, torders, o[:idColumn], i[:id], i[:tempId]
+                  updateIds info, torders, o[:idColumn], i[:id], newItem.id
                 else
                   response_obj[:resources].push ({id: i[:id] \
                                         , error_code:error_codes[:validation_error] \
