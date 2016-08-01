@@ -16,8 +16,8 @@ user = User.create! :name => 'John Doe', :email => 'john@sangamsoftech.org', :pa
   User.create(:name => name, :email => email, :password => password, :password_confirmation => password)
 end
 
-require "./db/seed_units_wiki.rb";
-require "./db/seed_formulas.rb";
+#require "./db/seed_units_wiki.rb";
+#Srequire "./db/seed_formulas.rb";
 
 
 
