@@ -36,7 +36,8 @@ module TestLab
             resource '*',
               :headers => :any,
               :methods => [:get, :post, :delete, :put, :patch, :options, :head],
-              :max_age => 0
+              :max_age => 0,
+              :expose  => ['Access-Token', 'Expiry', 'Uid', 'Token-Type', 'Client'],
           end
         end
 
