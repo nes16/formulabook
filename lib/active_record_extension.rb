@@ -96,6 +96,14 @@ class_methods do
       end
   end
 
+  def get_autoincrement
+    if connection.adapter_name == 'PostgreSQL'
+        connection.execute("SELECT nextval(table_name+'_id_seq')")
+    else
+        return null
+    end
+  end
+
   def T_cleanAll
     with_deleted.all.each do |i|
       i.really_destroy!
