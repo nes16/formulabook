@@ -83,6 +83,19 @@ class_methods do
     end
   end
 
+  def reset_autoincrement(options={})
+      options[:to] ||= 1
+      case connection.adapter_name
+        when 'MySQL'
+          connection.execute "ALTER TABLE #{table_name} AUTO_INCREMENT=#{options[:to]}"
+        when 'PostgreSQL'
+          connection.execute "ALTER SEQUENCE #{table_name}_id_seq RESTART WITH #{options[:to]};"
+        when 'SQLite'
+          connection.execute "UPDATE sqlite_sequence SET seq=#{options[:to]} WHERE name='#{table_name}';"
+        else
+      end
+  end
+
   def T_cleanAll
     with_deleted.all.each do |i|
       i.really_destroy!
