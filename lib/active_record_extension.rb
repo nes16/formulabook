@@ -98,7 +98,7 @@ class_methods do
 
   def get_autoincrement
     if connection.adapter_name == 'PostgreSQL'
-        connection.execute("SELECT nextval(table_name+'_id_seq')")
+        connection.execute("SELECT nextval('#{table_name}_id_seq')")
     else
         return null
     end
