@@ -100,9 +100,22 @@ class_methods do
     if connection.adapter_name == 'PostgreSQL'
         connection.execute("SELECT nextval('#{table_name}_id_seq')")
     else
-        return null
+        return nil
     end
   end
+
+  def override_clientid(id)
+    auto = get_autoincrement 
+    if auto
+      auto = aut0[0]["nextval"]
+      if id > auto
+        reset_autoincrement({to: id})
+      else
+        reset_autoincrement({to: auto})
+      end
+    end
+    return nil
+  end 
 
   def T_cleanAll
     with_deleted.all.each do |i|

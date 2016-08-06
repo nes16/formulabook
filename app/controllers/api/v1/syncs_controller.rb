@@ -81,17 +81,25 @@ class Api::V1::SyncsController < ApplicationController
       end
     end
 
+
     #create, update new items
     ActiveRecord::Base.transaction do
       #New items
       torders.each do |o|
         info[:tables].each do |t|
           if t[:name] == o[:name]
+            auto = -1
             response_obj = response_objs[t[:name]]
             t[:resources].each do |i|
               #Items created and updated in remote clients
               #Refer client code standard.ts for SyncState flags
               if i[:syncState] & 1 > 0
+                #in some extreme case if client id generated 
+                #went past our id
+                #increase our id
+                if auto == -1 #once per table
+                  auto = override_clientid i[:id]
+                end
                 i[:syncState] = 0
                 newItem = o[:classA].new
                 o[:classA].assign newItem, i
