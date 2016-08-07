@@ -107,7 +107,7 @@ class_methods do
   def sync_autoid_with_client(id)
     auto = get_autoincrement 
     if auto
-      auto = aut0[0]["nextval"]
+      auto = auto[0]["nextval"]
       if id > auto
         reset_autoincrement({to: id})
       else
