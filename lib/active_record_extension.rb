@@ -104,7 +104,7 @@ class_methods do
     end
   end
 
-  def adjust_autoid_for_client(id)
+  def sync_autoid_with_client(id)
     auto = get_autoincrement 
     if auto
       auto = aut0[0]["nextval"]
