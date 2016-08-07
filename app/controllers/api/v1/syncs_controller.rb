@@ -98,7 +98,7 @@ class Api::V1::SyncsController < ApplicationController
                 #went past our id
                 #increase our id
                 if auto == -1 #once per table
-                  auto = override_clientid i[:id]
+                  auto = o[:classA].sync_autoid_with_client i[:id]
                 end
                 i[:syncState] = 0
                 newItem = o[:classA].new

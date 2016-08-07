@@ -104,7 +104,7 @@ class_methods do
     end
   end
 
-  def override_clientid(id)
+  def adjust_autoid_for_client(id)
     auto = get_autoincrement 
     if auto
       auto = aut0[0]["nextval"]
