@@ -200,12 +200,13 @@ class Api::V1::SyncsController < ApplicationController
   end  
     response_array = [];
     
-    info[:tables] = response_array;
+    
     if success == true
       info[:status] = 'success';
       info[:tables].each do |t|
         response_objs[t[:name]].delete :ids
         response_array.push response_objs[t[:name]]
+        info[:tables] = response_array;
       end
     else
       info[:status] = 'failed';
@@ -218,6 +219,7 @@ class Api::V1::SyncsController < ApplicationController
         deletedItems = response_objs[t[:name]][:deletedItems].select {|i| i[:error_code] && i[:error_code] > 0}
         response_objs[t[:name]][:deletedItems] = deletedItems;
         response_array.push response_objs[t[:name]]
+        info[:tables] = response_array;
       end
     end
     render json: {data: info}
