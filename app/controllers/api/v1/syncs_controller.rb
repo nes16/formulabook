@@ -188,10 +188,10 @@ class Api::V1::SyncsController < ApplicationController
       info[:tables].each do |t|
         res = response_objs[t[:name]][:resources].find {|i| (i[:error_code] && (i[:error_code] > 0))}
         puts ('Failed item = ' + res.to_json)
-        if res != nil
-          puts ('Inside if res')
-          throw 'save failed'
-        end
+      end
+      if res != nil
+        puts ('Inside if res')
+        throw 'save failed'
       end
     end #transaction 
   rescue Exception
@@ -212,7 +212,7 @@ class Api::V1::SyncsController < ApplicationController
       #remove fetched items and success item
       info[:tables].each do |t|
         newResources = response_objs[t[:name]][:resources].select {|i| i[:error_code] && i[:error_code] > 0}
-        newResources.each do i
+        newResources.each do |i|
           if i[:tempId]
             i[:id] = i[:tempId];
             i.delete :tempId
