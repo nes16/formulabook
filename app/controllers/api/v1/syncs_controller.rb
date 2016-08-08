@@ -191,7 +191,7 @@ class Api::V1::SyncsController < ApplicationController
       end
       if res != nil
         puts ('Inside if res')
-        throw 'save failed'
+        raise 'save failed'
       end
     end #transaction 
   rescue Exception
