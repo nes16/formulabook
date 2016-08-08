@@ -81,8 +81,7 @@ class Api::V1::SyncsController < ApplicationController
       end
     end
 
-    success = true;
-  begin
+    save_success = true;
     #create, update new items
     ActiveRecord::Base.transaction do
       #New items
@@ -191,17 +190,15 @@ class Api::V1::SyncsController < ApplicationController
       end
       if res != nil
         puts ('Inside if res')
-        raise 'save failed'
+        raise ActiveRecord::Rollback, "save failed"
+        save_success = false;
       end
     end #transaction 
-  rescue Exception
-      puts 'Exception occured'
-      succes=false;
-  end  
+    
     response_array = [];
     
     
-    if success == true
+    if save_success == true
       info[:status] = 'success';
       info[:tables].each do |t|
         response_objs[t[:name]].delete :ids
@@ -223,8 +220,6 @@ class Api::V1::SyncsController < ApplicationController
       end
     end
     render json: {data: info}
-
-  
   end #def
 
   #change the ids in child resources for new ids of parent 
