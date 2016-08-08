@@ -207,8 +207,6 @@ class Api::V1::SyncsController < ApplicationController
         response_objs[t[:name]].delete :ids
         response_array.push response_objs[t[:name]]
       end
-    end
-    
     else
       info[:status] = 'failed';
       #remove fetched items and success item
