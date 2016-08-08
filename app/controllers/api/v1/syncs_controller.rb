@@ -209,6 +209,12 @@ class Api::V1::SyncsController < ApplicationController
       #remove fetched items and success item
       info[:tables].each do |t|
         newResources = response_objs[t[:name]][:resources].select {|i| i[:error_code] && i[:error_code] > 0}
+        newResources.each do i
+          if i[:tempId]
+            i[:id] = i[:tempId];
+            i.delete :tempId
+          end
+        end
         response_objs[t[:name]][:resources] = newResources;
         deletedItems = response_objs[t[:name]][:deletedItems].select {|i| i[:error_code] && i[:error_code] > 0}
         response_objs[t[:name]][:deletedItems] = deletedItems;
