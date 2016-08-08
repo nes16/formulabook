@@ -67,6 +67,7 @@ class_methods do
     end
   end
 
+
   def T_addTestRows
     (1..5).each do |i|
       p = Property.T_addProperty  "Property"+i.to_s, "Unit"+i.to_s, "1", "u"+i.to_s

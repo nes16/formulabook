@@ -81,7 +81,8 @@ class Api::V1::SyncsController < ApplicationController
       end
     end
 
-
+    success = true;
+  begin
     #create, update new items
     ActiveRecord::Base.transaction do
       #New items
@@ -183,8 +184,17 @@ class Api::V1::SyncsController < ApplicationController
           end
         end
       end
+  
+      info[:tables].each do |t|
+        res = response_objs[t[:name]][:resources].find {|i| i[:error_code] > 0}
+        if res
+          throw 'save failed'
+        end
+      end
     end #transaction 
-
+  rescue Exception
+      succes=false;
+  end  
     response_array = [];
     info[:tables].each do |t|
       response_objs[t[:name]].delete :ids
@@ -192,7 +202,21 @@ class Api::V1::SyncsController < ApplicationController
     end
     
     info[:tables] = response_array;
+    if success
+      info[:status] = 'success';
+    else
+      info[:status] = 'failed';
+      #remove fetched items and success item
+      info[:tables].each do |t|
+        newResources = response_objs[t[:name]][:resources].select {|i| i[:error_code] > 0}
+        response_objs[t[:name]][:resources] = newResources;
+        deletedItems = response_objs[t[:name]][:deletedItems].select {|i| i[:error_code] > 0}
+        response_objs[t[:name]][:deletedItems] = deletedItems;
+      end
+    end
     render json: {data: info}
+
+  
   end #def
 
   #change the ids in child resources for new ids of parent 
