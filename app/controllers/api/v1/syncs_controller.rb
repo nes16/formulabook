@@ -186,7 +186,7 @@ class Api::V1::SyncsController < ApplicationController
       end
   
       info[:tables].each do |t|
-        res = response_objs[t[:name]][:resources].find {|i| i[:error_code] > 0}
+        res = response_objs[t[:name]][:resources].find {|i| i[:error_code] && i[:error_code] > 0}
         if res
           throw 'save failed'
         end
@@ -208,9 +208,9 @@ class Api::V1::SyncsController < ApplicationController
       info[:status] = 'failed';
       #remove fetched items and success item
       info[:tables].each do |t|
-        newResources = response_objs[t[:name]][:resources].select {|i| i[:error_code] > 0}
+        newResources = response_objs[t[:name]][:resources].select {|i| i[:error_code] && i[:error_code] > 0}
         response_objs[t[:name]][:resources] = newResources;
-        deletedItems = response_objs[t[:name]][:deletedItems].select {|i| i[:error_code] > 0}
+        deletedItems = response_objs[t[:name]][:deletedItems].select {|i| i[:error_code] && i[:error_code] > 0}
         response_objs[t[:name]][:deletedItems] = deletedItems;
       end
     end
