@@ -187,7 +187,7 @@ class Api::V1::SyncsController < ApplicationController
       res = nil
       info[:tables].each do |t|
         res = response_objs[t[:name]][:resources].find {|i| (i[:error_code] && (i[:error_code] > 0))}
-        puts ('Failed itesm' + res.to_json)
+        puts ('Failed item = ' + res.to_json)
         if res != nil
           puts ('Inside if res')
           throw 'save failed'
