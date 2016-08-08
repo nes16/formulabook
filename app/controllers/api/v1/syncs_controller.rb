@@ -190,8 +190,8 @@ class Api::V1::SyncsController < ApplicationController
       end
       if res != nil
         puts ('Inside if res')
-        raise ActiveRecord::Rollback, "save failed"
         save_success = false;
+        raise ActiveRecord::Rollback, "save failed"
       end
     end #transaction 
     
@@ -199,6 +199,7 @@ class Api::V1::SyncsController < ApplicationController
     
     
     if save_success == true
+      puts ('inside success true')
       info[:status] = 'success';
       info[:tables].each do |t|
         response_objs[t[:name]].delete :ids
