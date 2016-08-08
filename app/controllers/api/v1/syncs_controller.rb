@@ -194,6 +194,7 @@ class Api::V1::SyncsController < ApplicationController
       end
     end #transaction 
   rescue Exception
+      puts 'Exception occured'
       succes=false;
   end  
     response_array = [];
@@ -203,7 +204,7 @@ class Api::V1::SyncsController < ApplicationController
     end
     
     info[:tables] = response_array;
-    if success
+    if success == true
       info[:status] = 'success';
     else
       info[:status] = 'failed';
