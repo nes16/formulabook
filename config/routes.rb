@@ -31,6 +31,7 @@ Rails.application.routes.draw do
       end
       get 'sync'    => 'syncs#index'
       put 'sync'    => 'syncs#sync'
+      put 'unique'  => 'unique#unique?'
       resources :formulas do
         resources :variables
         resources :globals, only: [:index, :destroy]

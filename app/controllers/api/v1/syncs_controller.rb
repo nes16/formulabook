@@ -4,22 +4,7 @@ class Api::V1::SyncsController < ApplicationController
 
 
 
-  def updateIds (info, orders, col, oldId, id )
-    orders.each do |o| 
-      if o[:references].index col
-        info[:tables].each do |t|
-          if t[:name] == o[:name]
-            t[:resources].each do |i|
-              if i[col] == oldId
-                i[col] = id
-              end
-            end
-          end
-        end
-      end
-    end
-  end      
-
+ 
 
   #POST formulas/:formula_id/variables
   def sync
@@ -244,4 +229,19 @@ class Api::V1::SyncsController < ApplicationController
     end    
   end
 
+  def updateIds (info, orders, col, oldId, id )
+    orders.each do |o| 
+      if o[:references].index col
+        info[:tables].each do |t|
+          if t[:name] == o[:name]
+            t[:resources].each do |i|
+              if i[col] == oldId
+                i[col] = id
+              end
+            end
+          end
+        end
+      end
+    end
+  end      
 end

@@ -133,6 +133,13 @@ class_methods do
       i.really_destroy!
     end
   end
+
+  def unique? (col, val)
+    obj = new ()
+    obj[col] = val;
+    obj.valid?
+    !(obj.errors.messages[:name] && obj.errors.messages[:name].index("has already been taken") >= 0)
+  end
 end
   
 end
