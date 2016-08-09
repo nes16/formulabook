@@ -73,8 +73,8 @@ class Api::V1::SyncsController < ApplicationController
                                             , error_code:error_codes[:unknown_error]}
               end  
             else
-              response_obj[:deletedItems].push[{id:i[:id] \
-                                            , error_code:error_codes[:item_not_found]}]  
+              response_obj[:deletedItems].push {id:i[:id] \
+                                            , error_code:error_codes[:item_not_found]}  
             end
           end
         end
@@ -207,6 +207,7 @@ class Api::V1::SyncsController < ApplicationController
         info[:tables] = response_array;
       end
     else
+      
       info[:status] = 'failed';
       #remove fetched items and success item
       info[:tables].each do |t|
