@@ -138,7 +138,7 @@ class_methods do
     obj = new ()
     obj[col] = val;
     obj.valid?
-    !(obj.errors.messages[:name] && obj.errors.messages[:name].index("has already been taken"))
+    !(obj.errors.messages[col] && obj.errors.messages[col].index("has already been taken"))
   end
 end
   
