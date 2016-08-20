@@ -1,4 +1,5 @@
 class Unit < ActiveRecord::Base
+  include ActiveUUID::UUID
 	acts_as_paranoid :column => 'deleted', :column_type => 'time'
 
 	has_many :favorites, as: :favoritable
@@ -7,9 +8,9 @@ class Unit < ActiveRecord::Base
 	has_many :formulas
 	belongs_to :property, :inverse_of => :units
 
-  validates :name, uniqueness: { case_sensitive: false }, presence: true, length: { minimum: 5, maximum: 30 }
+  validates :name, uniqueness: { case_sensitive: false }, presence: true, length: { minimum: 2, maximum: 30 }
 	validates :description,  length: { minimum: 5, maximum: 50 }, :allow_nil => true
-	validates :symbol, uniqueness: true, presence: true, length: { minimum: 1, maximum: 10 }
+	validates :symbol, uniqueness: { case_sensitive: true }, presence: true, length: { minimum: 1, maximum: 10 }
   validates :factor,  presence: true, format: { with: /\A([+-]?\d+(\.\d+(e[+-]\d+)?)?(e[+-]\d+)?)$\z/}, if: :factor_number?
   validates :system, inclusion: { in: %w(SI Others), message: "%{value} is not a valid system" }
 	validates_presence_of :property

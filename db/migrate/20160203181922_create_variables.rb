@@ -1,6 +1,6 @@
 class CreateVariables < ActiveRecord::Migration
   def change
-    create_table :variables do |t|
+    create_table :variables, id: :uuid  do |t|
       t.string :name
       t.string :symbol
       t.belongs_to :unit

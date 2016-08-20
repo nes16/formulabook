@@ -1,9 +1,6 @@
 class Api::V1::SyncsController < ApplicationController
 	skip_before_filter :verify_authenticity_token
 	respond_to :json
-
-
-
  
 
   #POST formulas/:formula_id/variables
@@ -27,16 +24,17 @@ class Api::V1::SyncsController < ApplicationController
     {name:"formulas",  idColumn: :formula_id, classA:Formula,  references:[:unit_id, :property_id]},
     {name:"fgs",  idColumn: :fg_id, classA:Fg,  references:[:formula_id, :global_id]},
     {name:"variables",  idColumn: :variable_id, classA:Variable,  references:[:unit_id, :property_id, :formula_id]}
-  ]
+    ]
 
     #initialize array variable if they are given nil value
     #rails assign nil value instead of empty array for
     #json object in request parameter
     response_objs = {}
     info[:tables].each do |t|
-      t[:deletedItems] = t[:deletedItems]?t[:deletedItems]:[]
-      t[:resources] = t[:resources]?t[:resources]:[]
-      response_objs[t[:name]]=({name: t[:name], resources:[], deletedItems:[], ids:[]})
+      t[:deleted] = t[:deleted]?t[:deleted]:[]
+      t[:added] = t[:added]?t[:added]:[]
+      t[:updated] = t[:updated]?t[:updated]:[]
+      response_objs[t[:name]]=({name: t[:name], added:[], updated:[], deleted:[], ids:[]})
     end
 
 
@@ -45,20 +43,23 @@ class Api::V1::SyncsController < ApplicationController
       info[:tables].each do |t|
         if t[:name] == o[:name]
           response_obj = response_objs[t[:name]];
-          t[:deletedItems].each do |i|
+          t[:deleted].each do |i|
             response_obj[:ids].push i[:id]
             if o[:classA].exists? i[:id]
               item = o[:classA].find i[:id]
+              o[:references].each do |r|
+                item[r] = response_objs[r][:idColumn]
+              end
               res = item.destroy
               if res
-                response_obj[:deletedItems].push {id:i[:id] \
+                response_obj[:deleted].push {id:i[:id] \
                                             , error_code:error_codes[:success]}
               else
-                response_obj[:deletedItems].push {id:i[:id] \
+                response_obj[:deleted].push {id:i[:id] \
                                             , error_code:error_codes[:unknown_error]}
               end  
             else
-              response_obj[:deletedItems].push {id:i[:id] \
+              response_obj[:deleted].push {id:i[:id] \
                                             , error_code:error_codes[:item_not_found]}  
             end
           end
@@ -75,42 +76,28 @@ class Api::V1::SyncsController < ApplicationController
           if t[:name] == o[:name]
             auto = -1
             response_obj = response_objs[t[:name]]
-            t[:resources].each do |i|
-              #Items created and updated in remote clients
-              #Refer client code standard.ts for SyncState flags
-              if i[:syncState] & 1 > 0
-                #in some extreme case if client id generated 
-                #went past our id
-                #increase our id
-                if auto == -1 #once per table
-                  auto = o[:classA].sync_autoid_with_client i[:id]
-                end
-                i[:syncState] = 0
-                newItem = o[:classA].new
-                o[:classA].assign newItem, i
-                if newItem.has_attribute? :user_id
-                  if current_user
-                    newItem.user_id = current_user.id 
-                  else
-                    newItem.user_id = nil
-                  end
-                end 
-
-                success = newItem.save;
-                if success
-                  response_obj[:ids].push newItem.id
-                  response_obj[:resources].push ({id: i[:id] \
-                                        , tempId: newItem.id \
-                                        , error_code:error_codes[:success]})
-                  #update the remotely assigned ids
-                  #in referenced objects
-                  updateIds info, torders, o[:idColumn], i[:id], newItem.id
+            t[:added].each do |id|
+              if auto == -1 #once per table
+                auto = o[:classA].sync_autoid_with_client id
+              end
+              newItem = o[:classA].new
+              o[:classA].assign newItem, t[:resources][i]
+              if newItem.has_attribute? :user_id
+                if current_user
+                  newItem.user_id = current_user.id 
                 else
-                  response_obj[:resources].push ({id: i[:id] \
-                                        , error_code:error_codes[:validation_error] \
-                                        , error_messages: newItem.errors.messages})
+                  newItem.user_id = nil
                 end
+              end 
 
+              success = newItem.save
+              
+              if success
+                t[:resources][i][:tempId]=  newItem.id
+                t[:resources][i][:error_code]=  error_codes[:success]
+              else
+                t[:resources][i][:error_code] = error_codes[:validation_error]
+                t[:resources][i][:error_messages] = newItem.errors.messages
               end
             end
           end
@@ -158,7 +145,7 @@ class Api::V1::SyncsController < ApplicationController
             deletedItems = fetched_data.select {|i| i[:deleted] != nil}
             #Seperate deleted items
             deletedItems.each do |i|
-              response_obj[:deletedItems].push({id: i[:id]})
+              response_obj[:deleted].push({id: i[:id]})
               fetched_data.delete i
             end
 
@@ -203,8 +190,8 @@ class Api::V1::SyncsController < ApplicationController
         
         response_objs[t[:name]][:resources] = newResources;
 
-        deletedItems = response_objs[t[:name]][:deletedItems].select {|i| i[:error_code] && i[:error_code] > 0}
-        response_objs[t[:name]][:deletedItems] = deletedItems;
+        deletedItems = response_objs[t[:name]][:deleted].select {|i| i[:error_code] && i[:error_code] > 0}
+        response_objs[t[:name]][:deleted] = deletedItems;
         response_array.push response_objs[t[:name]]
         info[:tables] = response_array;
       end

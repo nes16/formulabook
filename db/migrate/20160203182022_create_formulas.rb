@@ -1,6 +1,6 @@
 class CreateFormulas < ActiveRecord::Migration
   def change
-    create_table :formulas do |t|
+    create_table :formulas, id: :uuid  do |t|
       t.string :name
       t.string :symbol
   	  t.string :latex

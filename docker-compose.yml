@@ -1,19 +1,27 @@
-web:
-  build: .
-  environment:
-    RACK_ENV: development
-    S3_ACCESS_KEY: AKIAIJSRR2RK6FPB7TPQ
-    S3_BUCKET: imagessampleapp2
-    S3_SECRET_KEY: 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
-    SECRET_KEY_BASE: 5c0b2225eba1f82e09fb4c4520b8008d9f9ddbeb3ea5c094614621614f60a9876ea9539a8d6bfd126162c5f75f60a004cd23471e829fed79a178610289a9329a
-    SENDGRID_PASSWORD: n7lklrxz3734
-    SENDGRID_USERNAME: app31974549@heroku.com    
-  command: bundle exec puma -C config/puma.rb
-  #command: ./bin/spring binstub --remove --all
-  volumes:
-    - .:/website
+version: '2'
+services:
+  db:
+      image: postgres
 
-  ports:
-    - "80:80" 
-  privileged: true
+  web:
+    build: .
+    environment:
+      RACK_ENV: development
+      S3_ACCESS_KEY: AKIAIJSRR2RK6FPB7TPQ
+      S3_BUCKET: imagessampleapp2
+      S3_SECRET_KEY: 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
+      SECRET_KEY_BASE: 5c0b2225eba1f82e09fb4c4520b8008d9f9ddbeb3ea5c094614621614f60a9876ea9539a8d6bfd126162c5f75f60a004cd23471e829fed79a178610289a9329a
+      SENDGRID_PASSWORD: n7lklrxz3734
+      SENDGRID_USERNAME: app31974549@heroku.com    
+    command: bundle exec puma -C config/puma.rb
+    #command: ./bin/spring binstub --remove --all
+    volumes:
+      - .:/website
+
+    ports:
+      - "80:80" 
+    privileged: true
+
+    depends_on:
+        - db
 

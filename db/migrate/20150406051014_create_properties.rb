@@ -1,6 +1,6 @@
 class CreateProperties < ActiveRecord::Migration
   def change
-    create_table :properties do |t|
+    create_table :properties, id: :uuid  do |t|
       t.string :name
       t.string :dims
       

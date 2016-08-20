@@ -8,8 +8,8 @@ class Formula < ActiveRecord::Base
   belongs_to :property
   belongs_to :unit
 
-  validates :name, uniqueness: { case_sensitive: false }, presence: true, length: { minimum: 5, maximum: 30 }
-  validates :symbol, uniqueness: true, presence: true, length: { minimum: 1, maximum: 3 }
+  validates :name, uniqueness: { case_sensitive: false }, presence: true, length: { minimum: 2, maximum: 30 }
+  validates :symbol, uniqueness: true, presence: true, length: { minimum: 1, maximum: 10 }
   validate :belongs_to_property_or_unit
   validates_associated :variables
   validates_associated :fgs

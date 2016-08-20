@@ -23,9 +23,9 @@ class_methods do
       lastSync = lastSync.sub 'T', ' '
       puts lastSync
       if Rails.env.production?
-          with_deleted.all.where.not(id: ids).where("updated_at > TIMESTAMP \'#{lastSync}\'")
+          with_deleted.all.where.not(id: ids).where("updated_at > TIMESTAMP \'#{lastSync}\' OR deleted > TIMESTAMP \'#{lastSync}\' ")
       else
-          with_deleted.all.where.not(id: ids).where("updated_at > #{lastSync}")
+          with_deleted.all.where.not(id: ids).where("updated_at > #{lastSync} OR deleted > #{lastSync}")
       end
 
     else
@@ -138,7 +138,50 @@ class_methods do
     obj = new ()
     obj[col] = val;
     obj.valid?
-    !(obj.errors.messages[col] && obj.errors.messages[col].index("has already been taken"))
+    !(obj.errors.messages[col.to_sym] && obj.errors.messages[col.to_sym].index("has already been taken"))
+  end
+
+  def AddMultipleObject
+    p1 = Property.new({name:'Property1'})
+    u1 = Unit.new({name:'Units1', symbol:'u1', description:'Units1', factor:'1', system:'SI'})
+    p1.units << u1;
+    u1.save
+    puts '---------------------------------------------'
+    puts p1.to_json
+    puts u1.to_json
+    puts '---------------------------------------------'
+    g1 = Global.new({name:'Global1', symbol:'g1', value:10})
+    u1.globals << g1;
+    u1.save
+    puts '-------Unit saved--------------------------------------'
+    puts u1.to_json
+    puts g1.to_json
+    puts '---------------------------------------------'
+    g1.save
+    puts '--------Global saved-------------------------------------'
+    puts u1.to_json
+    puts g1.to_json
+    puts '---------------------------------------------'
+    f1 = Formula.new({name:'Formula1', symbol:'f1', latex:'x+1'})
+    v1 = Variable.new({name:'Variable1', symbol:'v1'})
+    f1.variables << v1
+    p1.formulas << f1;
+    u1.variables << v1;
+    p1.save
+    puts '--------Property saved-------------------------------------'
+    puts f1.to_json
+    puts v1.to_json
+    puts '---------------------------------------------'
+    
+    u1.save  
+    puts '--------Unit saved-------------------------------------'
+    puts f1.to_json
+    puts v1.to_json
+    puts '---------------------------------------------'
+    
+    p1.really_destroy!
+    g1.really_destroy!
+    f1.really_destroy!
   end
 end
   

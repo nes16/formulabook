@@ -1,6 +1,6 @@
 class CreateGlobals < ActiveRecord::Migration
   def change
-    create_table :globals do |t|
+    create_table :globals, id: :uuid  do |t|
       t.string :name
       t.string :symbol
       t.string :value
