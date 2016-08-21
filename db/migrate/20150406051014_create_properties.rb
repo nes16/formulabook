@@ -1,6 +1,6 @@
 class CreateProperties < ActiveRecord::Migration
   def change
-    enable_extension 'uuid-ossp'
+   
     create_table :properties, id: :uuid  do |t|
       t.string :name
       t.string :dims

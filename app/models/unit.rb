@@ -1,5 +1,4 @@
 class Unit < ActiveRecord::Base
-  include ActiveUUID::UUID
 	acts_as_paranoid :column => 'deleted', :column_type => 'time'
 
 	has_many :favorites, as: :favoritable
