@@ -1,7 +1,7 @@
 class CreateUnit < ActiveRecord::Migration
   def change
     create_table :units, id: :uuid  do |t|
-      t.belongs_to :property, index: true
+      t.uuid :property_id, index: true
       t.string :name
       t.string :description
       t.string :system
