@@ -1,7 +1,7 @@
 version: '2'
 services:
   db:
-      image: postgres
+    image: postgres
 
   web:
     build: .
@@ -23,5 +23,7 @@ services:
     privileged: true
 
     depends_on:
-        - db
+      - db
+
+
 
