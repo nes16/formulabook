@@ -1,6 +1,6 @@
 class Unit < ActiveRecord::Base
 	acts_as_paranoid :column => 'deleted', :column_type => 'time'
-
+  
 	has_many :favorites, as: :favoritable
 	has_many :variables
 	has_many :globals
@@ -22,7 +22,6 @@ class Unit < ActiveRecord::Base
       return true;
     end
   end
-
 
   def addGlobal name, val, symbol
   	globals << Global.new({name:name, value:val, symbol:symbol})

@@ -3,9 +3,9 @@ class CreateVariables < ActiveRecord::Migration
     create_table :variables, id: :uuid  do |t|
       t.string :name
       t.string :symbol
-      t.belongs_to :unit
-      t.belongs_to :property
-      t.belongs_to :formula, index: true
+      t.uuid :unit_id
+      t.uuid :property_id
+      t.uuid :formula_id, index: true
       
       t.time :deleted, index: true
       t.integer :lock_version, default: 0, null: false

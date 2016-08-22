@@ -4,8 +4,8 @@ class CreateFormulas < ActiveRecord::Migration
       t.string :name
       t.string :symbol
   	  t.string :latex
-  	  t.belongs_to :unit
-  	  t.belongs_to :property
+  	  t.uuid :unit_id
+  	  t.uuid :property_id
       
       t.boolean :shared
 	    t.belongs_to  :user, index: true

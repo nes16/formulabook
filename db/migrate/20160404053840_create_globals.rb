@@ -4,7 +4,7 @@ class CreateGlobals < ActiveRecord::Migration
       t.string :name
       t.string :symbol
       t.string :value
-      t.belongs_to :unit
+      t.uuid :unit_id
       
       t.boolean :shared
       t.belongs_to  :user, index: true

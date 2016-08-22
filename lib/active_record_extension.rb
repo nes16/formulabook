@@ -16,6 +16,20 @@ end
 
 class_methods do
 
+  def app_model_info
+    #static table describe different models and
+    #its associated models
+    #used for updating ids
+    {
+      properties:{idColumn: :property_id, classA:Property, references:[]},
+      units:{idColumn: :unit_id, classA:Unit,  references:[:properties]},
+      globals:{idColumn: :global_id, classA:Global,  references:[:units]},
+      formulas:{idColumn: :formula_id, classA:Formula,  references:[:units, :properties]},
+      fgs:{idColumn: :fg_id, classA:Fg,  references:[:formulas, :globals]},
+      variables:{idColumn: :variable_id, classA:Variable,  references:[:units, :propertys, :formulas]}
+    }
+  end
+
   def after ids, lastSync
     if  lastSync && lastSync != "" && lastSync != "\"\""
       lastSync = Time.parse(lastSync).to_json

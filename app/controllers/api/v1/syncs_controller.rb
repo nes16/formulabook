@@ -2,233 +2,111 @@ class Api::V1::SyncsController < ApplicationController
 	skip_before_filter :verify_authenticity_token
 	respond_to :json
  
+  @@app_models = Property.app_model_info
 
+  @@error_codes = {
+      success:0,
+      validation_error:1,
+      item_not_found:2,
+      stale_object:3,
+      unknown_error:100
+  }
+    
   #POST formulas/:formula_id/variables
   def sync
-    info = params[:data][:syncInfo]
+    @info = params[:data][:syncInfo]
+    @resources = @info[:resources]
+    
+    puts @info
 
-    puts info
-    error_codes = {};
-    error_codes[:success] = 0;
-    error_codes[:validation_error] = 1;
-    error_codes[:item_not_found] = 2;
-    error_codes[:stale_object] = 3;
-    error_codes[:unknown_error] = 100;
-
-    #static table describe different models and
-    #its associated models
-    #used for updating ids
-    torders = [{name:"properties", idColumn: :property_id, classA:Property, references:[]},
-    {name:"units",  idColumn: :unit_id, classA:Unit,  references:[:property_id]},
-    {name:"globals",  idColumn: :global_id, classA:Global,  references:[:unit_id]},
-    {name:"formulas",  idColumn: :formula_id, classA:Formula,  references:[:unit_id, :property_id]},
-    {name:"fgs",  idColumn: :fg_id, classA:Fg,  references:[:formula_id, :global_id]},
-    {name:"variables",  idColumn: :variable_id, classA:Variable,  references:[:unit_id, :property_id, :formula_id]}
-    ]
-
+    
     #initialize array variable if they are given nil value
     #rails assign nil value instead of empty array for
     #json object in request parameter
-    response_objs = {}
-    info[:tables].each do |t|
-      t[:deleted] = t[:deleted]?t[:deleted]:[]
-      t[:added] = t[:added]?t[:added]:[]
-      t[:updated] = t[:updated]?t[:updated]:[]
-      response_objs[t[:name]]=({name: t[:name], added:[], updated:[], deleted:[], ids:[]})
+    @info[:tables].each do |t|
+      t[:o]=@@app_models[t[:name]]
+      t[:added] ||= []
+      t[:updated] ||= []
+      t[:deleted] ||= []
     end
 
-
-    #Delete remotely deleted items 
-    torders.each do |o|
-      info[:tables].each do |t|
-        if t[:name] == o[:name]
-          response_obj = response_objs[t[:name]];
-          t[:deleted].each do |i|
-            response_obj[:ids].push i[:id]
-            if o[:classA].exists? i[:id]
-              item = o[:classA].find i[:id]
-              o[:references].each do |r|
-                item[r] = response_objs[r][:idColumn]
-              end
-              res = item.destroy
-              if res
-                response_obj[:deleted].push {id:i[:id] \
-                                            , error_code:error_codes[:success]}
-              else
-                response_obj[:deleted].push {id:i[:id] \
-                                            , error_code:error_codes[:unknown_error]}
-              end  
-            else
-              response_obj[:deleted].push {id:i[:id] \
-                                            , error_code:error_codes[:item_not_found]}  
-            end
-          end
+    tables = @info[:tables].map
+    #Delete items 
+    tables.each do |t|
+      t[:deleted].each do |id|
+        model = t[:o][:classA]  
+        if model.exists? id
+          item = model.find id
+          res = item.destroy
+          @resources[id]={item:item}
         end
       end
     end
+    
+    #new items
+    tables.each do |t|
+      t[:added].each do |id|
+        model = t[:o][:classA]  
+        citem = @resources[id]    #client side item
+        newItem = model.new citem
+        model.assign newItem, citem
+        makeAssociation newItem, citem, t[:o][:references]      
+        success = newItem.save
+        @resources[id] = {error_messages: newItem.errors.messages, item:newItem}
+      end
+    end   
 
-    save_success = true;
-    #create, update new items
-    ActiveRecord::Base.transaction do
-      #New items
-      torders.each do |o|
-        info[:tables].each do |t|
-          if t[:name] == o[:name]
-            auto = -1
-            response_obj = response_objs[t[:name]]
-            t[:added].each do |id|
-              if auto == -1 #once per table
-                auto = o[:classA].sync_autoid_with_client id
-              end
-              newItem = o[:classA].new
-              o[:classA].assign newItem, t[:resources][i]
-              if newItem.has_attribute? :user_id
-                if current_user
-                  newItem.user_id = current_user.id 
-                else
-                  newItem.user_id = nil
-                end
-              end 
-
-              success = newItem.save
-              
-              if success
-                t[:resources][i][:tempId]=  newItem.id
-                t[:resources][i][:error_code]=  error_codes[:success]
-              else
-                t[:resources][i][:error_code] = error_codes[:validation_error]
-                t[:resources][i][:error_messages] = newItem.errors.messages
-              end
-            end
-          end
-        end
-      end    
-
-      #Updated items
-      torders.each do |o|
-        info[:tables].each do |t|
-          if t[:name] == o[:name]
-            response_obj = response_objs[t[:name]]
-            t[:resources].each do |i|
-              #items only updated in remote client
-              if i[:syncState] & 2 > 0
-                i[:syncState] = 0
-                
-                if o[:classA].exists? i[:id]
-                  item = o[:classA].find i[:id]
-                  response_obj[:ids].push item.id
-                  if item.lock_version <= i[:lock_version]
-                    o[:classA].assign item, i
-                    success = item.save;
-                    if success
-                      response_obj[:resources].push({id: i[:id] \
-                                            , error_code:error_codes[:success]})
-                    else
-                      response_obj[:resources].push({id: i[:id] \
-                                  , error_code:error_codes[:validation_error] \
-                                  , error_messages: item.errors.messages})
-                    end
-                  else
-                    response_obj[:resources].push({id: i[:id] \
-                                , remote_lock_version: item.lock_version \
-                                , error_code:error_codes[:stale_object] })
-                  end
-                else
-                  response_obj[:resources].push({id: i[:id] \
-                              , error_code:error_codes[:item_not_found]})
-                end
-              end
-            end
-
-            response_obj[:lastSync] = Time.now.to_json;
-            fetched_data = o[:classA].after response_obj[:ids], t[:lastSync];
-            deletedItems = fetched_data.select {|i| i[:deleted] != nil}
-            #Seperate deleted items
-            deletedItems.each do |i|
-              response_obj[:deleted].push({id: i[:id]})
-              fetched_data.delete i
-            end
-
-            #append the fetched item to the response packet
-            response_obj[:resources].concat fetched_data
-
-          end
+    #Updated items
+    tables.each do |t|
+      t[:updated].each do |id|
+        model = t[:o][:classA]
+        if model.exists? id
+          item = model.find id
+          citem = @resources[id]             #client side item
+          model.assign item, citem
+          makeAssociation item, citem, t[:o][:references]        
+          success = item.save;
+          @resources[id] = {error_messages: item.errors.messages, item:item}
         end
       end
-      res = nil
-      info[:tables].each do |t|
-        res = response_objs[t[:name]][:resources].find {|i| (i[:error_code] && (i[:error_code] > 0))}
-        puts ('Failed item = ' + res.to_json)
-        if res
-          break;
-        end
+    end
+    success = true;
+    @resources.keys.each do |id|
+      if @resources[id][:item][:error_messages].keys.length > 0
+        success = false;
+        break
       end
-      if res != nil
-        puts ('Inside if res')
-        save_success = false;
-        raise ActiveRecord::Rollback, "save failed"
-      end
-    end #transaction 
-    
-    response_array = [];
-    
-    
-    if save_success == true
-      puts ('inside success true')
-      info[:status] = 'success';
-      info[:tables].each do |t|
-        response_objs[t[:name]].delete :ids
-        response_array.push response_objs[t[:name]]
-        info[:tables] = response_array;
+    end
+
+    if success
+      added = @resources.keys.select {|id| @resources[id][:item][:id] != id}
+      tables.each do |t|
+        skipIds = t[:added].map {|id| @resources[id][:item][:id] }
+        skipIds.concat t[:deleted]
+        skipIds.concat t[:updated]
+        o[:classA].after t[:lastSync] skipIds, t
+        t[:lastSync] = Time.now.to_json;
       end
     else
-      
-      info[:status] = 'failed';
-      #remove fetched items and success item
-      info[:tables].each do |t|
-        newResources = response_objs[t[:name]][:resources].select {|i| i[:error_code] && i[:error_code] > 0}
-        
-        response_objs[t[:name]][:resources] = newResources;
 
-        deletedItems = response_objs[t[:name]][:deleted].select {|i| i[:error_code] && i[:error_code] > 0}
-        response_objs[t[:name]][:deleted] = deletedItems;
-        response_array.push response_objs[t[:name]]
-        info[:tables] = response_array;
-      end
     end
-    render json: {data: info}
+    render json: {data: @info}
   end #def
 
-  #change the ids in child resources for new ids of parent 
-  def updateIds(info, torders, idColumn, oldId, newId)
-    torders.each do |o|
-      if o[:references].index idColumn
-        info[:tables].each do |t|
-          if t[:name] == o[:name]
-            t[:resources].each do |i|
-              if i[idColumn] == oldId
-                i[idColumn] = newId
-              end
-            end
-          end
-        end
-      end
-    end    
-  end
 
-  def updateIds (info, orders, col, oldId, id )
-    orders.each do |o| 
-      if o[:references].index col
-        info[:tables].each do |t|
-          if t[:name] == o[:name]
-            t[:resources].each do |i|
-              if i[col] == oldId
-                i[col] = id
-              end
-            end
-          end
+  def makeAssociation(item, citem, references)
+    #make association
+    references.each do |ref|
+      plu = ActiveSupport::Inflector.pluralize ref
+      ref_id = citem[@@app_models[plu][:idColumn]]
+      if @resources[ref_id] && @resources[ref_id].item
+        item[ref] = @resources[ref_id].item
+      else
+        if item.new_record?
+          newItem[ref] = model.find ref_id
         end
       end
     end
-  end      
+  end
+
 end
