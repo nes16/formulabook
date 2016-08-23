@@ -93,11 +93,12 @@ class Api::V1::SyncsController < ApplicationController
         skipIds.concat t[:deleted]
         skipIds.concat t[:updated]
         resources = t[:o][:classA].after skipIds, t[:lastSync]
+        reset_info t
         resources.each do |r| 
           if r.deleted
             t[:deleted].push r.id
           else
-            if r.creadted_at >= t[:lastSync] 
+            if r.created_at >= t[:lastSync] 
               t[:added].push r.id
             else
               t[:updated].push r.id
@@ -112,7 +113,7 @@ class Api::V1::SyncsController < ApplicationController
       @info[:status]="failed"
     end
     trimResults
-    puts @info
+    puts JSON.pretty_generate(@info)
     render json: {data: @info}
   end #def
 
@@ -126,11 +127,19 @@ class Api::V1::SyncsController < ApplicationController
         res.delete :error_messages
       end
     end
-    @@info.tables.each do |t|
+    @info[:tables].each do |t|
       t.delete :o
     end
   end
 
+  def reset_info(t)
+    t[:added].concat(t[:updated]).each do |id|
+      @resources.delete id
+    end
+    t[:added]=[]
+    t[:updated]=[]
+    t[:deleted]=[]
+  end
 
   def makeAssociation(item, citem, references)
     #make association

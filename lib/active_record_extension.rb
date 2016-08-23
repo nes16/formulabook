@@ -36,7 +36,7 @@ class_methods do
       puts lastSync
       lastSync = lastSync.sub 'T', ' '
       puts lastSync
-      with_deleted.all.where.not(id: ids).where("updated_at > TIMESTAMP \'#{lastSync}\' OR deleted > TIMESTAMP \'#{lastSync}\' ")
+      with_deleted.all.where.not(id: ids).where("(updated_at > TIMESTAMP \'#{lastSync}\') OR (deleted > TIMESTAMP \'#{lastSync}\' )")
     else
       all.where.not(id: ids).order :updated_at
     end

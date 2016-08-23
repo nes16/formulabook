@@ -7,7 +7,7 @@ class CreateVariables < ActiveRecord::Migration
       t.uuid :property_id
       t.uuid :formula_id, index: true
       
-      t.time :deleted, index: true
+      t.datetime :deleted, index: true
       t.integer :lock_version, default: 0, null: false
 
       t.timestamps null: false

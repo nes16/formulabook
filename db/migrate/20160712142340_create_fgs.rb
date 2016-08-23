@@ -4,7 +4,7 @@ class CreateFgs < ActiveRecord::Migration
       t.uuid :formula_id, index: true
       t.uuid :global_id, index: true
 
-      t.time :deleted, index: true
+      t.datetime :deleted, index: true
       t.integer :lock_version, default: 0, null: false
 
       t.timestamps null: false
