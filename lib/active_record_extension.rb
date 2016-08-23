@@ -4,7 +4,7 @@ extend ActiveSupport::Concern
 
 
 def to_json(options={})
-    options[:except] ||= [:updated_at, :created_at]
+    options[:except] ||= [:updated_at, :created_at, :deleted, :id, :dim, :user_id, :shared]
     super(options)
 end
 
@@ -17,16 +17,16 @@ end
 class_methods do
 
   def app_model_info
-    #static table describe different models and
+    #static table describe dimfferent models and
     #its associated models
     #used for updating ids
     {
-      properties:{idColumn: :property_id, classA:Property, references:[]},
-      units:{idColumn: :unit_id, classA:Unit,  references:[:properties]},
-      globals:{idColumn: :global_id, classA:Global,  references:[:units]},
-      formulas:{idColumn: :formula_id, classA:Formula,  references:[:units, :properties]},
-      fgs:{idColumn: :fg_id, classA:Fg,  references:[:formulas, :globals]},
-      variables:{idColumn: :variable_id, classA:Variable,  references:[:units, :propertys, :formulas]}
+      "properties":{idColumn: :property_id, classA:Property, references:[]},
+      "units":{idColumn: :unit_id, classA:Unit,  references:[:properties]},
+      "globals":{idColumn: :global_id, classA:Global,  references:[:units]},
+      "formulas":{idColumn: :formula_id, classA:Formula,  references:[:units, :properties]},
+      "fgs":{idColumn: :fg_id, classA:Fg,  references:[:formulas, :globals]},
+      "variables":{idColumn: :variable_id, classA:Variable,  references:[:units, :propertys, :formulas]}
     }
   end
 
@@ -36,12 +36,7 @@ class_methods do
       puts lastSync
       lastSync = lastSync.sub 'T', ' '
       puts lastSync
-      if Rails.env.production?
-          with_deleted.all.where.not(id: ids).where("updated_at > TIMESTAMP \'#{lastSync}\' OR deleted > TIMESTAMP \'#{lastSync}\' ")
-      else
-          with_deleted.all.where.not(id: ids).where("updated_at > #{lastSync} OR deleted > #{lastSync}")
-      end
-
+      with_deleted.all.where.not(id: ids).where("updated_at > TIMESTAMP \'#{lastSync}\' OR deleted > TIMESTAMP \'#{lastSync}\' ")
     else
       all.where.not(id: ids).order :updated_at
     end
@@ -197,9 +192,27 @@ class_methods do
     g1.really_destroy!
     f1.really_destroy!
   end
+
+  def crateTestSyncInfo
+    info={}
+    ActiveRecord::Ac begin
+      p1 = Property.T_addProperty "Property1","Unit1", "1", "s2"
+      resources[p1.id]=p1
+      resources[p1.units[0].id]=p1.units[0]
+      
+    rescue Exception => e
+      
+    end
+
+  end
+
+
 end
+
   
 end
+
+
 
 # include the extension 
 ActiveRecord::Base.send(:include, ActiveRecordExtension)

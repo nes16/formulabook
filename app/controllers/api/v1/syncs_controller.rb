@@ -4,6 +4,7 @@ class Api::V1::SyncsController < ApplicationController
  
   @@app_models = Property.app_model_info
 
+
   @@error_codes = {
       success:0,
       validation_error:1,
@@ -16,21 +17,22 @@ class Api::V1::SyncsController < ApplicationController
   def sync
     @info = params[:data][:syncInfo]
     @resources = @info[:resources]
-    
-    puts @info
 
+    puts @info
     
+    tables = @info[:tables].map
     #initialize array variable if they are given nil value
     #rails assign nil value instead of empty array for
     #json object in request parameter
-    @info[:tables].each do |t|
-      t[:o]=@@app_models[t[:name]]
+    tables.each do |t|
+      puts @@app_models[t[:name].to_sym]
+      t[:o]=@@app_models[t[:name].to_sym]
+
       t[:added] ||= []
       t[:updated] ||= []
       t[:deleted] ||= []
     end
 
-    tables = @info[:tables].map
     #Delete items 
     tables.each do |t|
       t[:deleted].each do |id|
@@ -39,6 +41,7 @@ class Api::V1::SyncsController < ApplicationController
           item = model.find id
           res = item.destroy
           @resources[id]={item:item}
+          @resources.delete id
         end
       end
     end
@@ -48,8 +51,8 @@ class Api::V1::SyncsController < ApplicationController
       t[:added].each do |id|
         model = t[:o][:classA]  
         citem = @resources[id]    #client side item
-        newItem = model.new citem
-        model.assign newItem, citem
+        newItem = model.new
+        model.assign newItem, JSON.parse(citem.to_json)
         makeAssociation newItem, citem, t[:o][:references]      
         success = newItem.save
         @resources[id] = {error_messages: newItem.errors.messages, item:newItem}
@@ -63,50 +66,89 @@ class Api::V1::SyncsController < ApplicationController
         if model.exists? id
           item = model.find id
           citem = @resources[id]             #client side item
-          model.assign item, citem
+          model.assign item, JSON.parse(citem.to_json)
           makeAssociation item, citem, t[:o][:references]        
           success = item.save;
           @resources[id] = {error_messages: item.errors.messages, item:item}
+        else
+          @resources[id] = {error_messages: {}}
+          puts "=============update model not found==============="
         end
       end
     end
     success = true;
+    puts @resources
     @resources.keys.each do |id|
-      if @resources[id][:item][:error_messages].keys.length > 0
+      if @resources[id][:error_messages].keys.length > 0
         success = false;
         break
       end
     end
 
     if success
-      added = @resources.keys.select {|id| @resources[id][:item][:id] != id}
+      @info[:status]="success"
       tables.each do |t|
-        skipIds = t[:added].map {|id| @resources[id][:item][:id] }
+        skipIds = t[:added].map { |id| @resources[id][:item]?@resources[id][:item][:id]:nil } \
+                  .select {|id| id != nil}
         skipIds.concat t[:deleted]
         skipIds.concat t[:updated]
-        o[:classA].after t[:lastSync] skipIds, t
+        resources = t[:o][:classA].after skipIds, t[:lastSync]
+        resources.each do |r| 
+          if r.deleted
+            t[:deleted].push r.id
+          else
+            if r.creadted_at >= t[:lastSync] 
+              t[:added].push r.id
+            else
+              t[:updated].push r.id
+            end
+          end
+          @resources[r.id] = r
+        end
+
         t[:lastSync] = Time.now.to_json;
       end
     else
-
+      @info[:status]="failed"
     end
+    trimResults
+    puts @info
     render json: {data: @info}
   end #def
+
+  def trimResults
+    @resources.keys.each do |id|
+      res = @resources[id]
+      if res[:item]
+        res.delete :item
+      end
+      if res[:error_messages] && res[:error_messages].keys.length == 0
+        res.delete :error_messages
+      end
+    end
+    @@info.tables.each do |t|
+      t.delete :o
+    end
+  end
 
 
   def makeAssociation(item, citem, references)
     #make association
+    puts item
     references.each do |ref|
       plu = ActiveSupport::Inflector.pluralize ref
-      ref_id = citem[@@app_models[plu][:idColumn]]
-      if @resources[ref_id] && @resources[ref_id].item
-        item[ref] = @resources[ref_id].item
+      sing = ActiveSupport::Inflector.singularize  ref
+      fk = ActiveSupport::Inflector.foreign_key sing
+      ref_id = citem[@@app_models[plu.to_sym][:idColumn]]
+      if @resources[ref_id] && @resources[ref_id][:item]
+        item[fk.to_sym] = @resources[ref_id][:item][:id]
       else
         if item.new_record?
-          newItem[ref] = model.find ref_id
+          newItem[fk.to_sym] = ref_id
         end
       end
     end
   end
+
 
 end

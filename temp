@@ -1,3 +1,6 @@
+require './lib/sync_info';si=SyncInfo.new.simulate
+app.put '/api/v1/sync', {data:{syncInfo:si}}
+
 var request = new XMLHttpRequest();
 request.open("POST", "http://localhost:4000/api/v1/auth/sign_in.json");
 request.setRequestHeader("Content-Type", "application/json");
