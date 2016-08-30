@@ -26,7 +26,7 @@ class_methods do
       "globals":{idColumn: :global_id, classA:Global,  references:[:units]},
       "formulas":{idColumn: :formula_id, classA:Formula,  references:[:units, :properties]},
       "fgs":{idColumn: :fg_id, classA:Fg,  references:[:formulas, :globals]},
-      "variables":{idColumn: :variable_id, classA:Variable,  references:[:units, :propertys, :formulas]}
+      "variables":{idColumn: :variable_id, classA:Variable,  references:[:units, :properties, :formulas]}
     }
   end
 

@@ -55,7 +55,7 @@ class Api::V1::SyncsController < ApplicationController
         model.assign newItem, JSON.parse(citem.to_json)
         makeAssociation newItem, citem, t[:o][:references]      
         success = newItem.save
-        @resources[id] = {error_messages: newItem.errors.messages, item:newItem}
+        @resources[id] = {error_messages: newItem.errors.messages, id:newItem.id, item:newItem}
       end
     end   
 
@@ -65,11 +65,13 @@ class Api::V1::SyncsController < ApplicationController
         model = t[:o][:classA]
         if model.exists? id
           item = model.find id
-          citem = @resources[id]             #client side item
+          citem = @resources[id] #client side item
+          citem[:lock_version] = item.lock_version   #TODO:handle stale object. and inform client           
           model.assign item, JSON.parse(citem.to_json)
           makeAssociation item, citem, t[:o][:references]        
-          success = item.save;
-          @resources[id] = {error_messages: item.errors.messages, item:item}
+          success = item.save
+          item.lock_version += 1
+          @resources[id] = {error_messages: item.errors.messages, lock_version:item.lock_version, item:item}
         else
           @resources[id] = {error_messages: {}}
           puts "=============update model not found==============="
@@ -78,6 +80,7 @@ class Api::V1::SyncsController < ApplicationController
     end
     success = true;
     puts @resources
+    puts @info
     @resources.keys.each do |id|
       if @resources[id][:error_messages].keys.length > 0
         success = false;
@@ -98,13 +101,17 @@ class Api::V1::SyncsController < ApplicationController
           if r.deleted
             t[:deleted].push r.id
           else
-            if r.created_at >= t[:lastSync] 
-              t[:added].push r.id
+            if t[:lastSync] && t[:lastSync].length > 4
+              if r.created_at >= t[:lastSync] 
+                t[:added].push r.id
+              else
+                t[:updated].push r.id
+              end
             else
-              t[:updated].push r.id
+              t[:added].push r.id
             end
+            @resources[r.id] = r
           end
-          @resources[r.id] = r
         end
 
         t[:lastSync] = Time.now.to_json;
@@ -118,6 +125,8 @@ class Api::V1::SyncsController < ApplicationController
   end #def
 
   def trimResults
+    puts 'before trim'
+    puts @info
     @resources.keys.each do |id|
       res = @resources[id]
       if res[:item]
@@ -130,14 +139,14 @@ class Api::V1::SyncsController < ApplicationController
     @info[:tables].each do |t|
       t.delete :o
     end
+    @resources.keys.each do |id|
+      @resources[id] = JSON.parse(@resources[id].to_json)
+    end
+    puts 'before trim'
+    puts @info
   end
 
   def reset_info(t)
-    t[:added].concat(t[:updated]).each do |id|
-      @resources.delete id
-    end
-    t[:added]=[]
-    t[:updated]=[]
     t[:deleted]=[]
   end
 
@@ -151,10 +160,10 @@ class Api::V1::SyncsController < ApplicationController
       ref_id = citem[@@app_models[plu.to_sym][:idColumn]]
       if @resources[ref_id] && @resources[ref_id][:item]
         item[fk.to_sym] = @resources[ref_id][:item][:id]
-      else
-        if item.new_record?
-          newItem[fk.to_sym] = ref_id
-        end
+      # else
+      #   if item.new_record?
+      #     item[fk.to_sym] = ref_id
+      #   end
       end
     end
   end
