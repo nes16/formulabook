@@ -24,7 +24,11 @@ class Api::V1::UniqueController < ApplicationController
 
     tinfo = torders.find {|i| i[:name] == info[:table]};
 
-    result[:unique] = tinfo[:classA].unique? info[:field], info[:value]
+    if tinfo[:classA].unique? info[:field], info[:value], info[:id]
+      result[:id] = info[:id]
+    else
+      result[:id] = "unique-id";
+    end
 
     render json: {data: result}
   end #def

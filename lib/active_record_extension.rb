@@ -143,7 +143,15 @@ class_methods do
     end
   end
 
-  def unique? (col, val)
+  def unique? (col, val, id)
+    if id
+      if exists?(id: id)
+        obj = find(id)
+        obj[col] = val;
+        obj.valid?
+       return !(obj.errors.messages[col.to_sym] && obj.errors.messages[col.to_sym].index("has already been taken"))
+      end
+    end
     obj = new ()
     obj[col] = val;
     obj.valid?

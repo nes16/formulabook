@@ -25,14 +25,14 @@ class Api::V1::SyncsController < ApplicationController
     #rails assign nil value instead of empty array for
     #json object in request parameter
     tables.each do |t|
-      puts @@app_models[t[:name].to_sym]
       t[:o]=@@app_models[t[:name].to_sym]
 
       t[:added] ||= []
       t[:updated] ||= []
       t[:deleted] ||= []
     end
-
+ActiveRecord::Base.transaction do
+begin
     #Delete items 
     tables.each do |t|
       t[:deleted].each do |id|
@@ -74,19 +74,16 @@ class Api::V1::SyncsController < ApplicationController
           @resources[id] = {error_messages: item.errors.messages, lock_version:item.lock_version, item:item}
         else
           @resources[id] = {error_messages: {}}
-          puts "=============update model not found==============="
         end
       end
     end
     success = true;
-    puts @resources
-    puts @info
-    @resources.keys.each do |id|
-      if @resources[id][:error_messages].keys.length > 0
-        success = false;
-        break
-      end
-    end
+    # @resources.keys.each do |id|
+    #   if @resources[id][:error_messages].keys.length > 0
+    #     success = false;
+    #     break
+    #   end
+    # end
 
     if success
       @info[:status]="success"
@@ -122,11 +119,18 @@ class Api::V1::SyncsController < ApplicationController
     trimResults
     puts JSON.pretty_generate(@info)
     render json: {data: @info}
+rescue Exception => e
+    @_errors = true
+end
+  if @_errors
+    puts 'Rolling back transactions'
+    raise ActiveRecord::Rollback  #force a rollback
+  end
+end
+    raise "Internal Error" if @_errors
   end #def
 
   def trimResults
-    puts 'before trim'
-    puts @info
     @resources.keys.each do |id|
       res = @resources[id]
       if res[:item]
@@ -142,8 +146,6 @@ class Api::V1::SyncsController < ApplicationController
     @resources.keys.each do |id|
       @resources[id] = JSON.parse(@resources[id].to_json)
     end
-    puts 'before trim'
-    puts @info
   end
 
   def reset_info(t)
@@ -152,7 +154,6 @@ class Api::V1::SyncsController < ApplicationController
 
   def makeAssociation(item, citem, references)
     #make association
-    puts item
     references.each do |ref|
       plu = ActiveSupport::Inflector.pluralize ref
       sing = ActiveSupport::Inflector.singularize  ref
