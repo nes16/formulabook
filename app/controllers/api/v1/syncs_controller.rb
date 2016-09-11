@@ -17,7 +17,7 @@ class Api::V1::SyncsController < ApplicationController
   def sync
     @info = params[:data][:syncInfo]
     @resources = @info[:resources]
-
+    puts current_user;
     puts @info
     
     tables = @info[:tables].map
@@ -33,47 +33,57 @@ class Api::V1::SyncsController < ApplicationController
     end
 ActiveRecord::Base.transaction do
 begin
-    #Delete items 
-    tables.each do |t|
-      t[:deleted].each do |id|
-        model = t[:o][:classA]  
-        if model.exists? id
-          item = model.find id
-          res = item.destroy
-          @resources[id]={item:item}
-          @resources.delete id
+    
+    if current_user
+      #Delete items 
+      tables.each do |t|
+        t[:deleted].each do |id|
+          model = t[:o][:classA]  
+          if model.exists? id
+            item = model.find id
+            if item.user_id == current_user.id
+              res = item.destroy
+              @resources[id]={item:item}
+              @resources.delete id
+            end
+          end
         end
       end
-    end
-    
-    #new items
-    tables.each do |t|
-      t[:added].each do |id|
-        model = t[:o][:classA]  
-        citem = @resources[id]    #client side item
-        newItem = model.new
-        model.assign newItem, JSON.parse(citem.to_json)
-        makeAssociation newItem, citem, t[:o][:references]      
-        success = newItem.save
-        @resources[id] = {error_messages: newItem.errors.messages, id:newItem.id, item:newItem}
-      end
-    end   
+      
+      #new items
+      tables.each do |t|
+        t[:added].each do |id|
+          model = t[:o][:classA]  
+          citem = @resources[id]    #client side item
+          newItem = model.new
+          model.assign newItem, JSON.parse(citem.to_json)
+          newItem.user_id = current_user.id;
+          makeAssociation newItem, citem, t[:o][:references]      
+          success = newItem.save
+          @resources[id] = {error_messages: newItem.errors.messages, id:newItem.id, item:newItem}
+        end
+      end   
 
-    #Updated items
-    tables.each do |t|
-      t[:updated].each do |id|
-        model = t[:o][:classA]
-        if model.exists? id
-          item = model.find id
-          citem = @resources[id] #client side item
-          citem[:lock_version] = item.lock_version   #TODO:handle stale object. and inform client           
-          model.assign item, JSON.parse(citem.to_json)
-          makeAssociation item, citem, t[:o][:references]        
-          success = item.save
-          item.lock_version += 1
-          @resources[id] = {error_messages: item.errors.messages, lock_version:item.lock_version, item:item}
-        else
-          @resources[id] = {error_messages: {}}
+      #Updated items
+      tables.each do |t|
+        t[:updated].each do |id|
+          model = t[:o][:classA]
+          if model.exists? id
+            item = model.find id
+            if item.user_id == current_user.id
+              citem = @resources[id] #client side item
+              citem[:lock_version] = item.lock_version   #TODO:handle stale object. and inform client           
+              model.assign item, JSON.parse(citem.to_json)
+              makeAssociation item, citem, t[:o][:references]        
+              success = item.save
+              item.lock_version += 1
+              @resources[id] = {error_messages: item.errors.messages, lock_version:item.lock_version, item:item}
+            else
+              @resources[id] = {error_messages: {common:"not autherzied"}, item:item}
+            end
+          else
+            @resources[id] = {error_messages: {}}
+          end
         end
       end
     end
@@ -92,7 +102,8 @@ begin
                   .select {|id| id != nil}
         skipIds.concat t[:deleted]
         skipIds.concat t[:updated]
-        resources = t[:o][:classA].after skipIds, t[:lastSync]
+        user_id = current_user.id if current_user; 
+        resources = t[:o][:classA].after skipIds, t[:lastSync], user_id
         reset_info t
         resources.each do |r| 
           if r.deleted

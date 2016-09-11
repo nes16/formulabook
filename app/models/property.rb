@@ -6,9 +6,8 @@ class Property < ActiveRecord::Base
   has_one :default_unit, -> (object){ where factor: '1'}, class_name: "Unit"
   has_many :formulas
   has_many :validates
+  validates :name, uniqueness: { case_sensitive: false, conditions: -> {where(user_id: [:user_id, nil])},  message: "has already been taken" }, presence: true, length: { minimum: 2, maximum: 30 }
 
-  validates :name, uniqueness: { case_sensitive: false }, presence: true, length: { minimum: 2, maximum: 30 }
-  
   def test
   	k = {a:[10,11,12]}
   	iter = k[:a].map

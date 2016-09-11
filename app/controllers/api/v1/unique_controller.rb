@@ -7,7 +7,7 @@ class Api::V1::UniqueController < ApplicationController
   def unique?
     info = params[:data]
 
-    result = {unique: true}
+    result = {}
 
     puts info
     
@@ -23,8 +23,15 @@ class Api::V1::UniqueController < ApplicationController
     ]
 
     tinfo = torders.find {|i| i[:name] == info[:table]};
+    if current_user
+      puts current_user
+      user_id = current_user.id
+    else
+      puts "user not logged in"
+      user_id = nil
+    end 
 
-    if tinfo[:classA].unique? info[:field], info[:value], info[:id]
+    if tinfo[:classA].unique? info[:field], info[:value], info[:id], user_id
       result[:id] = info[:id]
     else
       result[:id] = "unique-id";

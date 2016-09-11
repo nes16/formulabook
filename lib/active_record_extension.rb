@@ -4,7 +4,7 @@ extend ActiveSupport::Concern
 
 
 def to_json(options={})
-    options[:except] ||= [:updated_at, :created_at, :deleted, :id, :dim, :user_id, :shared]
+    options[:except] ||= [:updated_at, :created_at, :deleted, :id, :dim, :shared]
     super(options)
 end
 
@@ -30,15 +30,20 @@ class_methods do
     }
   end
 
-  def after ids, lastSync
+  def after ids, lastSync, user_id
+    if user_id
+      user_param = "(USER_ID =  #{user_id} OR USER_ID IS NULL)"
+    else
+      user_param = "USER_ID IS NULL"
+    end
     if  lastSync && lastSync != "" && lastSync != "\"\""
       lastSync = Time.parse(lastSync).to_json
       puts lastSync
       lastSync = lastSync.sub 'T', ' '
       puts lastSync
-      with_deleted.all.where.not(id: ids).where("(updated_at > TIMESTAMP \'#{lastSync}\') OR (deleted > TIMESTAMP \'#{lastSync}\' )")
+      with_deleted.all.where.not(id: ids).where("((updated_at > TIMESTAMP \'#{lastSync}\') OR (deleted > TIMESTAMP \'#{lastSync}\' )) AND #{user_param}")
     else
-      all.where.not(id: ids).order :updated_at
+      all.where.not(id: ids).where("#{user_param}").order :updated_at
     end
   end
 
@@ -143,18 +148,22 @@ class_methods do
     end
   end
 
-  def unique? (col, val, id)
+  def unique? (col, val, id, user_id)
     if id
       if exists?(id: id)
         obj = find(id)
-        obj[col] = val;
+        obj[col] = val
+        obj.user_id = user_id
         obj.valid?
+        puts obj.errors.to_json
        return !(obj.errors.messages[col.to_sym] && obj.errors.messages[col.to_sym].index("has already been taken"))
       end
     end
     obj = new ()
     obj[col] = val;
+    obj.user_id = user_id
     obj.valid?
+    puts obj.errors.to_json
     !(obj.errors.messages[col.to_sym] && obj.errors.messages[col.to_sym].index("has already been taken"))
   end
 
