@@ -30,23 +30,45 @@ class_methods do
     }
   end
 
-  def after ids, lastSync, user_id
+  def after ids, lastSync, user_id, lastSyncShared
+    
+
     if user_id
       user_param = "(USER_ID =  #{user_id} OR USER_ID IS NULL)"
     else
       user_param = "USER_ID IS NULL"
     end
-    if  lastSync && lastSync != "" && lastSync != "\"\""
-      lastSync = Time.parse(lastSync).to_json
-      puts lastSync
-      lastSync = lastSync.sub 'T', ' '
-      puts lastSync
-      with_deleted.all.where.not(id: ids).where("((updated_at > TIMESTAMP \'#{lastSync}\') OR (deleted > TIMESTAMP \'#{lastSync}\' )) AND #{user_param}")
+    
+    if lastSyncShared == nil || user_id == nil #only share with authenticated user
+      puts 'Inside shared nil'
+      list1 = [];
     else
-      all.where.not(id: ids).where("#{user_param}").order :updated_at
+      if lastSyncShared != "" && lastSyncShared != "\"\""
+        lastSyncShared = getTimeStr lastSyncShared
+        shared_param = "NOT(#{user_param}) AND (shared = TRUE) AND (((updated_at > TIMESTAMP \'#{lastSyncShared}\') OR (deleted > TIMESTAMP \'#{lastSyncShared}\' ))"
+        list1 = with_deleted.all.where("#{shared_param}")
+      else
+        shared_param = "shared = TRUE"
+        list1 = all.where("NOT(#{user_param}) AND #{shared_param}") 
+      end
     end
+
+    if  lastSync && lastSync != "" && lastSync != "\"\""
+      getTimeStr lastSync
+      list2 = with_deleted.all.where.not(id: ids).where("((updated_at > TIMESTAMP \'#{lastSync}\') OR (deleted > TIMESTAMP \'#{lastSync}\' )) AND #{user_param}")
+    else
+      list2 = all.where.not(id: ids).where("#{user_param}")
+    end
+    list1.concat list2
   end
 
+  def getTimeStr(str)
+    lastSync = Time.parse(str).to_json
+    puts lastSync
+    lastSync = lastSync.sub 'T', ' '
+    puts lastSync
+    lastSync
+  end
   def lastSync
     a = with_deleted.all.order("updated_at DESC")
     if a.empty?

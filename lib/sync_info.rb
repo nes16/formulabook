@@ -4,6 +4,11 @@ class SyncInfo
 		table[:lastSync] = time
 	end
 
+	def last_sync_share(tablename, time)
+		table = get_table tablename
+		table[:lastSyncShared] = time
+	end
+
 	def item(op, tablename, r)
 		table = get_table tablename
 		table[op].push r[:id]
@@ -15,7 +20,7 @@ class SyncInfo
 	def get_table(name)
 		table = @info[:tables].find {|t| t[:name] == name}
 		if !table
-			table = {name:name, added:[], updated:[], deleted:[], lastSync:nil}
+			table = {name:name, added:[], updated:[], deleted:[], lastSync:nil, lastSyncShared:nil}
 			@info[:tables].push table
 		end
 		return table
@@ -48,6 +53,8 @@ class SyncInfo
 			p1 = Property.T_addProperty "Property"+arandom.to_s, "Unit"+arandom.to_s, "1", "k1"
 			last_sync "properties", lastSync
 			last_sync "units", lastSync
+			last_sync_share "properties", ""
+			last_sync_share "units", ""
 			item(:added, "properties", p1)
 			item(:added, "units", p1.units[0])
 			item(:updated, "properties", pupdated)

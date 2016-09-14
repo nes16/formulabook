@@ -19,7 +19,8 @@ class Api::V1::SyncsController < ApplicationController
     @resources = @info[:resources]
     puts current_user;
     puts @info
-    
+    @user_id = current_user.id if current_user
+
     tables = @info[:tables].map
     #initialize array variable if they are given nil value
     #rails assign nil value instead of empty array for
@@ -41,7 +42,7 @@ begin
           model = t[:o][:classA]  
           if model.exists? id
             item = model.find id
-            if item.user_id == current_user.id
+            if item.user_id == @user_id
               res = item.destroy
               @resources[id]={item:item}
               @resources.delete id
@@ -57,7 +58,7 @@ begin
           citem = @resources[id]    #client side item
           newItem = model.new
           model.assign newItem, JSON.parse(citem.to_json)
-          newItem.user_id = current_user.id;
+          newItem.user_id = @user_id;
           makeAssociation newItem, citem, t[:o][:references]      
           success = newItem.save
           @resources[id] = {error_messages: newItem.errors.messages, id:newItem.id, item:newItem}
@@ -70,7 +71,7 @@ begin
           model = t[:o][:classA]
           if model.exists? id
             item = model.find id
-            if item.user_id == current_user.id
+            if item.user_id == @user_id
               citem = @resources[id] #client side item
               citem[:lock_version] = item.lock_version   #TODO:handle stale object. and inform client           
               model.assign item, JSON.parse(citem.to_json)
@@ -97,32 +98,47 @@ begin
 
     if success
       @info[:status]="success"
+      @info[:user_id]=@user_id;
       tables.each do |t|
         skipIds = t[:added].map { |id| @resources[id][:item]?@resources[id][:item][:id]:nil } \
                   .select {|id| id != nil}
         skipIds.concat t[:deleted]
         skipIds.concat t[:updated]
-        user_id = current_user.id if current_user; 
-        resources = t[:o][:classA].after skipIds, t[:lastSync], user_id
+        resources = t[:o][:classA].after skipIds, t[:lastSync], @user_id, t[:lastSyncShared]
         reset_info t
         resources.each do |r| 
           if r.deleted
             t[:deleted].push r.id
           else
-            if t[:lastSync] && t[:lastSync].length > 4
-              if r.created_at >= t[:lastSync] 
-                t[:added].push r.id
+            if r.user_id == nil || r.user_id == @user_id
+              if t[:lastSync] && t[:lastSync].length > 4
+                if r.created_at >= t[:lastSync] 
+                  t[:added].push r.id
+                else
+                  t[:updated].push r.id
+                end
               else
-                t[:updated].push r.id
+                t[:added].push r.id
               end
             else
-              t[:added].push r.id
+              if t[:lastSyncShared] && t[:lastSyncShared].length > 4
+                if r.created_at >= t[:lastSyncShared] 
+                  t[:added].push r.id
+                else
+                  t[:updated].push r.id
+                end
+              else
+                t[:added].push r.id
+              end
             end
             @resources[r.id] = r
           end
         end
 
-        t[:lastSync] = Time.now.to_json;
+        t[:lastSync] = Time.now.to_json
+        if t[:lastSyncShared]
+          t[:lastSyncShared] = Time.now.to_json
+        end
       end
     else
       @info[:status]="failed"
