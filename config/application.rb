@@ -37,7 +37,7 @@ module TestLab
               :headers => :any,
               :methods => [:get, :post, :delete, :put, :patch, :options, :head],
               :max_age => 0,
-              :expose  => ['Access-Token', 'Expiry', 'Uid', 'Token-Type', 'Client']
+              :expose  => [ 'access-token', 'expiry', 'uid', 'token-type', 'client']
           end
         end
 

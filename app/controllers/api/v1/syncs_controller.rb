@@ -20,7 +20,6 @@ class Api::V1::SyncsController < ApplicationController
     puts current_user;
     puts @info
     @user_id = current_user.id if current_user
-
     tables = @info[:tables].map
     #initialize array variable if they are given nil value
     #rails assign nil value instead of empty array for
@@ -104,6 +103,7 @@ begin
                   .select {|id| id != nil}
         skipIds.concat t[:deleted]
         skipIds.concat t[:updated]
+
         resources = t[:o][:classA].after skipIds, t[:lastSync], @user_id, t[:lastSyncShared]
         reset_info t
         resources.each do |r| 
@@ -147,6 +147,7 @@ begin
     puts JSON.pretty_generate(@info)
     render json: {data: @info}
 rescue Exception => e
+    raise e
     @_errors = true
 end
   if @_errors
@@ -180,7 +181,7 @@ end
   end
 
   def makeAssociation(item, citem, references)
-    #make association
+    #make associationsta
     references.each do |ref|
       plu = ActiveSupport::Inflector.pluralize ref
       sing = ActiveSupport::Inflector.singularize  ref

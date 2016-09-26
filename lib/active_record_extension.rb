@@ -26,12 +26,15 @@ class_methods do
       "globals":{idColumn: :global_id, classA:Global,  references:[:units]},
       "formulas":{idColumn: :formula_id, classA:Formula,  references:[:units, :properties]},
       "fgs":{idColumn: :fg_id, classA:Fg,  references:[:formulas, :globals]},
-      "variables":{idColumn: :variable_id, classA:Variable,  references:[:units, :properties, :formulas]}
+      "variables":{idColumn: :variable_id, classA:Variable,  references:[:units, :properties, :formulas]},
+      "favorites":{idColumn: :favorite_id, classA:Favorite, notShared:true, references:[], multiRef:[:favoritable_type, :favoritable_id]}
     }
   end
 
   def after ids, lastSync, user_id, lastSyncShared
     
+    puts table_name
+    notShared = app_model_info()[table_name.to_sym][:notShared]
 
     if user_id
       user_param = "(USER_ID =  #{user_id} OR USER_ID IS NULL)"
@@ -39,7 +42,7 @@ class_methods do
       user_param = "USER_ID IS NULL"
     end
     
-    if lastSyncShared == nil || user_id == nil #only share with authenticated user
+    if lastSyncShared == nil || user_id == nil || notShared #only share with authenticated user
       puts 'Inside shared nil'
       list1 = [];
     else

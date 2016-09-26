@@ -7,12 +7,13 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 User.delete_all
 
-user = User.create! :name => 'John Doe', :email => 'john@sangamsoftech.org', :password => 'topsecret', :password_confirmation => 'topsecret'
+user = User.create! :name => 'TestAdmin', :email => 'testadmin@sangamsofech.com', :password => 'rs#123456', :password_confirmation => 'rs#123456'
 
-10.times do |n|
-  name  = Faker::Name.name
-  email = "user#{n+1}@a.com"
-  password = "password"
+
+2.times do |n|
+  name  = "TestUser#{n+1}"
+  email = "testuser#{n+1}@sangamsoftech.com"
+  password = "rs#123456"
   User.create(:name => name, :email => email, :password => password, :password_confirmation => password)
 end
 
