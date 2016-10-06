@@ -2,7 +2,7 @@ class CreateFavorites < ActiveRecord::Migration
   def change 
   	create_table :favorites do |t|
       t.belongs_to  :user, index: true
-      t.integer :favoritable_id
+      t.uuid :favoritable_id
       t.string  :favoritable_type
 
       t.datetime :deleted, index: true

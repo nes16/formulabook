@@ -1,11 +1,16 @@
+require 'categorizable.rb'
+
 class Unit < ActiveRecord::Base
-	acts_as_paranoid :column => 'deleted', :column_type => 'time'
+	include Categorizable
+
+  acts_as_paranoid :column => 'deleted', :column_type => 'time'
   
 	has_many :favorites, as: :favoritable
 	has_many :variables
 	has_many :globals
 	has_many :formulas
 	belongs_to :property, :inverse_of => :units
+
 
   validates :name, uniqueness: { case_sensitive: false }, presence: true, length: { minimum: 2, maximum: 30 }
 	validates :description,  length: { minimum: 5, maximum: 50 }, :allow_nil => true

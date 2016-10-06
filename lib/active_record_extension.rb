@@ -27,8 +27,12 @@ class_methods do
       "formulas":{idColumn: :formula_id, classA:Formula,  references:[:units, :properties]},
       "fgs":{idColumn: :fg_id, classA:Fg,  references:[:formulas, :globals]},
       "variables":{idColumn: :variable_id, classA:Variable,  references:[:units, :properties, :formulas]},
-      "favorites":{idColumn: :favorite_id, classA:Favorite, notShared:true, references:[], multiRef:[:favoritable_type, :favoritable_id]}
+      "favorites":{idColumn: :favorite_id, classA:Favorite, notShared:true, references:[], multiRef:[:favoritable_type, :favoritable_id]},
+      "categories":{idColumn: :category_id, classA:Category, notShared:true, references:[]},
+      "crs":{idColumn: :cr_id, classA:Cr,  references:[], multiRef:[:categorizable_id, :categorizable_type]},
+    
     }
+
   end
 
   def after ids, lastSync, user_id, lastSyncShared

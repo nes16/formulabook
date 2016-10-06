@@ -1,4 +1,7 @@
+require 'categorizable.rb'
+
 class Formula < ActiveRecord::Base
+	include Categorizable
   acts_as_paranoid :column => 'deleted', :column_type => 'time'
   after_destroy :destroy_child
 

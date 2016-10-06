@@ -1,5 +1,6 @@
 class Category < ActiveRecord::Base
-  has_many :subcategories, :class_name => "Category", :foreign_key => "parent_id", :dependent => :destroy
-  belongs_to :parent_category, :class_name => "Category"
+  has_many :crs
+  validates :name, uniqueness: { case_sensitive: false }, presence: true
+  acts_as_tree order: "name"
   acts_as_paranoid :column => 'deleted', :column_type => 'time'
 end
