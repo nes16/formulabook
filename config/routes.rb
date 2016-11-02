@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   
   get 'about'   => 'static_pages#about'
   get 'contact' => 'static_pages#contact'
+  get 'formulabook', :to => redirect('/formulabook/index.html')
 
   namespace :api do
     namespace :v1 do
