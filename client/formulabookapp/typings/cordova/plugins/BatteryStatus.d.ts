@@ -6,6 +6,7 @@
 // Copyright (c) Microsoft Open Technologies, Inc.
 // Licensed under the MIT license. 
 
+
 interface Window {
     onbatterystatus: (type: BatteryStatusEvent) => void;
     onbatterycritical: (type: BatteryStatusEvent) => void;

@@ -38,9 +38,9 @@
   "devDependencies": {
     
   },
-  
-
-  
+  "config": {
+    "ionic_copy": "./config/copy.config.js"
+  },
   "cordovaPlugins": [
     "cordova-plugin-network",
     "cordova-plugin-console",
