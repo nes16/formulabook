@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import '../lib/globals';
+import '../assets/globals';
 import '../assets/mathquill-0.10.1/mathquill'
 declare var jQuery: any;
 declare var MathQuill: any;
