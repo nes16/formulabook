@@ -23,17 +23,17 @@ export class TutorialPage {
       {
         title: 'Welcome to <b>Formula Library</b>',
         description: 'The <b>Formula Library App</b> is a mobile app for collection of formulas, to keep the day today used formulas handy.',
-        image: 'img/ica-slidebox-img-1.png',
+        image: '../assets/img/ica-slidebox-img-1.png',
       },
       {
         title: 'What can be done?',
         description: '<b>Formula Library</b> you can define properties like Force, Time, Mass etc. You can define units for them. <br> You can define units, Global constants. <br> These can be used in your definition of a formula.',
-        image: 'img/ica-slidebox-img-2.png',
+        image: '../assets/img/ica-slidebox-img-2.png',
       },
       {
         title: 'How to define formula?',
         description: 'The <b>Formula Library</b> is a cloud platform for define and sharing formulas. Each formula contains variable and global constants. The variables and formula can be optionaly specify a unit/property for them',
-        image: 'img/ica-slidebox-img-3.png',
+        image: '../assets/img/ica-slidebox-img-3.png',
       }
     ];
   }

@@ -1,7 +1,7 @@
 <ion-header no-shadow>
   <ion-navbar>
     <ion-buttons end *ngIf="showSkip">
-      (click)="startApp()" color="primary">Skip
+      <button ion-button (click)="startApp()" color="primary">Skip</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -14,7 +14,7 @@
       <p [innerHTML]="slide.description"></p>
     </ion-slide>
     <ion-slide>
-      <img src="img/ica-slidebox-img-4.png" class="slide-image"/>
+      <img src="../assets/img/ica-slidebox-img-4.png" class="slide-image"/>
       <h2 class="slide-title">Ready to Play?</h2>
       <button ion-button large clear (click)="startApp()">
         Continue
