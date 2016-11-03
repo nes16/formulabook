@@ -4,8 +4,7 @@ import { Splashscreen, StatusBar } from 'ionic-native';
 
 import { UserPage } from '../pages/user/user';
 import { TabsPage } from '../pages/tabs/tabs';
-// import { TutorialPage } from '../pages/tutorial/tutorial';
-// import { ResponsiveState } from 'responsive-directives-angular2';
+import { TutorialPage } from '../pages/tutorial/tutorial';
 import { MyTokenAuth } from '../providers/token-auth/auth-service'
 
 export interface PageObj {
@@ -59,6 +58,11 @@ export class FormulaApp {
 
     // decide which menu items should be hidden by current login status stored in local storage
     this.enableMenu(this.auth.userIsAuthenticated());
+    if(!localStorage.getItem("tutShown")){
+      this.rootPage = TutorialPage;
+      localStorage.setItem("tutShown", "1");
+      
+    }
 
     this.listenToLoginEvents();
   }
