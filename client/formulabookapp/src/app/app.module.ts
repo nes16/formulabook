@@ -41,6 +41,7 @@ import { MQService } from '../providers/mq-service'
 import { RemoteService } from '../providers/remote-service'
 import { SqlService } from '../providers/sql-service'
 import { SqlCacheService } from '../providers/sqlcache-service'
+import { LFCacheService } from '../providers/lfcache-service'
 import { UIStateService } from '../providers/ui-state-service'
 import { Sql } from '../providers/sql'
 
@@ -106,6 +107,7 @@ import { FavFilterPipe } from '../components/fav-filter';
     UIStateService,
     Sql,
     {provide:'ApiEndpoint', useValue: 'http://formulalab.net/api/v1'},
+    {provide:'CacheService', useClass: LFCacheService},
   ]
 })
 export class AppModule {}

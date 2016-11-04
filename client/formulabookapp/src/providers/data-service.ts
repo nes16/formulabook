@@ -1,10 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { SyncResponseHandler, Category, CR,  States, ResourceCollection, BaseResource
         , Unit, Property, Global, Formula, Variable, Varval, ErrorHandler
-        , Favorite, LogHandler, FG, OfflineData, } from '../lib/types/standard';
+        , Favorite, LogHandler, FG, OfflineData, CacheService} from '../lib/types/standard';
 
 import { RemoteService } from './remote-service';
-import { SqlCacheService } from './sqlcache-service';
 import { Observable } from 'rxjs/Rx';
 import { UIStateService } from './ui-state-service'
 import { UUID } from 'angular2-uuid';
@@ -34,15 +33,16 @@ export class DataService {
     , 'categories', 'crs'];
 
     initComplete: boolean = false;
+    cache:CacheService;
     
     constructor(public remoteService: RemoteService
       //Encapsulate cache into cache service
-      , public cache: SqlCacheService
+      , @Inject("CacheService") cache:CacheService
       , public uiService: UIStateService) {      
       //What is this
       //Why log handler
       //When it is required, is it required in production?    
-      
+      this.cache = cache;
       this.logHandler = new LogHandler("Load items");
       
           }

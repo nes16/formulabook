@@ -78,7 +78,7 @@ export class CategoryComponent extends BaseComponent {
 			this.form = new FormGroup({
 				name: new FormControl(this.resource.name, [Validators.required
 											, Validators.minLength(2)
-											, Validators.maxLength(30)],createUniqueNameValidator(this.dataService, this.resource)),
+											, Validators.maxLength(30)],createUniqueNameValidator(this.dataService, this)),
 			})
 		}		
 	}

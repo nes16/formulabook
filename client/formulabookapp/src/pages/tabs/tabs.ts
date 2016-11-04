@@ -47,6 +47,13 @@ export class TabsPage {
         return DetailPage.root.nav.push(DetailPage, {currResource:res})
     }
     this.tabRef.select(3);
+    this.showTabs(false);
+  }
+
+  showTabs(flag:boolean){
+    this.tabRef.getByIndex(0).show = flag;
+    this.tabRef.getByIndex(1).show = flag;
+    this.tabRef.getByIndex(2).show = flag;
   }
 
   popVar(){
@@ -69,6 +76,7 @@ export class TabsPage {
     	  DetailPage.root.nav.pop();
       else
         DetailPage.root = null;
+        this.showTabs(true);
     }
   }
 
