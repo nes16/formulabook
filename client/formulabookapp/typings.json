@@ -1,7 +1,8 @@
 {
   "dependencies": {},
   "devDependencies": {},
-  "ambientDependencies": {
+  "ambientDependencies": {},
+  "globalDependencies": {
+    "localforage": "registry:dt/localforage#0.0.0+20161016142622"
   }
 }
- 

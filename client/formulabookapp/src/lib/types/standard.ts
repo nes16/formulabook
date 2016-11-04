@@ -167,7 +167,7 @@ export class ResourceCollection<T extends BaseResource>{
     addRows(rows) {
         let i;
         for (i = 0; i < rows.length; i++) {
-            var obj = new this.type(rows.item(i))
+            var obj = new this.type(rows[i])
             this.add(obj)
         }
     }
@@ -1709,6 +1709,7 @@ export class User {
 }
 
 export interface CacheService {
+    init():Observable<any>;
     deleteItem(table: string, id: string): Observable<any>;
     addItem(item: BaseResource): Observable<any>;
     updateItem(item: BaseResource): Observable<any>;
@@ -1717,6 +1718,7 @@ export interface CacheService {
     selectAllByUserIds(table: string, ids: Array<number>): Observable<any>;
     setKV(key: string, value: string): Observable<any>;
     getKV(key: string): Observable<any>;
+
 }
 
 export class ErrorHandler {
