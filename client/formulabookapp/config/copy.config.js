@@ -12,8 +12,8 @@ module.exports = {
       dest: '{{WWW}}/assets/'
     },
     {
-      src: '{{SRC}}/index.html',
-      dest: '{{WWW}}/index.html'
+      src: '{{SRC}}/formulalib.html',
+      dest: '{{WWW}}/formulalib.html'
     },
     {
       src: '{{SRC}}/manifest.json',
