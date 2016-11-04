@@ -100,6 +100,7 @@ interface LocalForage extends LocalForageDbMethods {
     getSerializer(): Promise<LocalForageSerializer>;
     getSerializer(callback: (serializer: LocalForageSerializer) => void): void;
 
+
     supports(driverName: string): boolean;
 }
 
