@@ -39,7 +39,7 @@ class_methods do
     
     puts table_name
     notShared = app_model_info()[table_name.to_sym][:notShared]
-    if table_name == 'categories' || table_name == 'crs' || table_name == 'fgs'
+    if table_name == 'categories' || table_name == 'crs' || table_name == 'fgs' || table_name == 'variables'
       user_param = "(1 = 1)"
     else
       if user_id
@@ -70,6 +70,12 @@ class_methods do
       list2 = all.where.not(id: ids).where("#{user_param}")
     end
     list1.concat list2
+
+    #filter out fgs of other user
+    if table_name == 'fgs' || table_name == 'variables'
+      list1 = list1.select {|item| item.formula.user_id == user_id || user_id == nil} 
+    end
+    list1
   end
 
   def getTimeStr(str)

@@ -1,6 +1,7 @@
 class Api::V1::SyncsController < ApplicationController
 	respond_to :json
- 
+	skip_before_action :verify_authenticity_token 
+
   @@app_models = Property.app_model_info
 
 

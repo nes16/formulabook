@@ -1,5 +1,6 @@
 class Api::V1::Std::UnitsController < ApplicationController
 	respond_to :json
+	skip_before_action :verify_authenticity_token 
 
   #GET   /properties/:property_id/units
   def index

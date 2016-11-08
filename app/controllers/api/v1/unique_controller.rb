@@ -1,5 +1,6 @@
 class Api::V1::UniqueController < ApplicationController
 	respond_to :json
+	skip_before_action :verify_authenticity_token 
 
 
   #POST formulas/:formula_id/variables

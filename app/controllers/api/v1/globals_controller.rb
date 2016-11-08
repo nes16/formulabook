@@ -1,6 +1,7 @@
 class Api::V1::GlobalsController < ApplicationController
 	respond_to :json
-  
+  	skip_before_action :verify_authenticity_token 
+
 
   #GET   /globals
   def index
