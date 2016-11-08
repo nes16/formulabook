@@ -309,6 +309,7 @@ export class BaseResource {
     makeFavorite():Favorite{
         let f = new Favorite();
         f._favoritable = this;
+        this.Favorite = f;
         return f;
     }
 
