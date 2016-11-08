@@ -22,24 +22,12 @@ module TestLab
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     #hack
-    config.active_record.raise_in_transactional_callbacks = false
+    config.active_record.raise_in_transactional_callbacks = true
     
     # Include the authenticity token in remote forms.
     #hack
-    config.action_view.embed_authenticity_token_in_remote_forms = false
+    config.action_view.embed_authenticity_token_in_remote_forms = true
     #config.requirejs.loader = :almond
-    
-    
-    config.middleware.insert_before 0, "Rack::Cors", :debug => true, :logger => (-> { Rails.logger }) do
-          allow do
-            origins '*'
-            resource '*',
-              :headers => :any,
-              :methods => [:get, :post, :delete, :put, :patch, :options, :head],
-              :max_age => 0,
-              :expose  => [ 'access-token', 'expiry', 'uid', 'token-type', 'client']
-          end
-        end
 
   end
 end

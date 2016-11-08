@@ -44,7 +44,6 @@ gem 'mini_magick',             '3.8.0'
 # gem 'capistrano-rails', group: :development
 # gem 'requirejs-rails',         '0.9.5'
 gem 'figaro', :github => "laserlemon/figaro"
-gem 'rack-cors', :require => 'rack/cors'
 gem "paranoia", "~> 2.0"
 gem "acts_as_tree"
 
