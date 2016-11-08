@@ -106,11 +106,16 @@ begin
 
         resources = t[:o][:classA].after skipIds, t[:lastSync], @user_id, t[:lastSyncShared]
         reset_info t
+        has_user_id = nil
         resources.each do |r| 
+          if has_user_id == nil
+            has_user_id = r.has_attribute? 'user_id'
+          end
           if r.deleted
+
             t[:deleted].push r.id
           else
-            if r.user_id == nil || r.user_id == @user_id
+            if !has_user_id || r.user_id == nil || r.user_id == @user_id
               if t[:lastSync] && t[:lastSync].length > 4
                 if r.created_at >= t[:lastSync] 
                   t[:added].push r.id

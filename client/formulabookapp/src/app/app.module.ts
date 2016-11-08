@@ -106,7 +106,7 @@ import { FavFilterPipe } from '../components/fav-filter';
     SqlCacheService,
     UIStateService,
     Sql,
-    {provide:'ApiEndpoint', useValue: 'http://formulalab.net/api/v1'},
+    {provide:'ApiEndpoint', useValue: 'api/v1'},
     {provide:'CacheService', useClass: LFCacheService},
   ]
 })

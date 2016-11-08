@@ -13,8 +13,8 @@ class Unit < ActiveRecord::Base
 
 
   validates :name, uniqueness: { case_sensitive: false }, presence: true, length: { minimum: 2, maximum: 30 }
-	validates :description,  length: { minimum: 5, maximum: 50 }, :allow_nil => true
-	validates :symbol, uniqueness: { case_sensitive: true }, presence: true, length: { minimum: 1, maximum: 10 }
+	validates :description,  length: { minimum: 5, maximum: 300 }, :allow_nil => true
+	validates :symbol, uniqueness: { case_sensitive: true, scope: :property_id }, presence: true, length: { minimum: 1, maximum: 10 }
   validates :factor,  presence: true, format: { with: /\A([+-]?\d+(\.\d+(e[+-]\d+)?)?(e[+-]\d+)?)$\z/}, if: :factor_number?
   validates :system, inclusion: { in: %w(SI Others), message: "%{value} is not a valid system" }
 	validates_presence_of :property

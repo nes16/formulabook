@@ -32,7 +32,6 @@ export class MyTokenAuth {
   _hasLocalStorage:boolean = false;
   guestUser:any = {uid:"guest@sangamsoftech.com", id:-1, name:'Guest'};
   config:any = {
-       // apiUrl: 'https://young-hollows-77540.herokuapp.com/api/v1',
         apiUrl: this.apiEndpoint,
         signOutUrl: '/auth/sign_out.json',
         emailSignInPath: '/auth/sign_in.json',

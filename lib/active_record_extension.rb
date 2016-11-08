@@ -39,11 +39,14 @@ class_methods do
     
     puts table_name
     notShared = app_model_info()[table_name.to_sym][:notShared]
-
-    if user_id
-      user_param = "(USER_ID =  #{user_id} OR USER_ID IS NULL)"
+    if table_name == 'categories' || table_name == 'crs' || table_name == 'fgs'
+      user_param = "(1 = 1)"
     else
-      user_param = "USER_ID IS NULL"
+      if user_id
+        user_param = "(USER_ID =  #{user_id} OR USER_ID IS NULL)"
+      else
+        user_param = "USER_ID IS NULL"
+      end
     end
     
     if lastSyncShared == nil || user_id == nil || notShared #only share with authenticated user

@@ -16,7 +16,7 @@ describe('Service: auth-service', () => {
     JwtHttp,
     HTTP_PROVIDERS,
     provide(
-    'ApiEndpoint', {useValue: 'http://formulalab.net/api/v1'})
+    'ApiEndpoint', {useValue: './api/v1'})
   ];
 
   let originalTimeout;

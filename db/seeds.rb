@@ -10,15 +10,15 @@ User.delete_all
 user = User.create! :name => 'TestAdmin', :email => 'testadmin@sangamsofech.com', :password => 'rs#123456', :password_confirmation => 'rs#123456'
 
 
-2.times do |n|
+5.times do |n|
   name  = "TestUser#{n+1}"
   email = "testuser#{n+1}@sangamsoftech.com"
   password = "rs#123456"
   User.create(:name => name, :email => email, :password => password, :password_confirmation => password)
 end
 
-#require "./db/seed_units_wiki.rb";
-#Srequire "./db/seed_formulas.rb";
+require "./db/seed_units_wiki.rb";
+require "./db/seed_formulas.rb";
 
 
 

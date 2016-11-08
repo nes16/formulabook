@@ -338,6 +338,8 @@ export class DataService {
         case this.variables:
         case this.fgs:
         case this.favorites:
+        case this.categories:
+        case this.crs:
           return [];
       }
     }

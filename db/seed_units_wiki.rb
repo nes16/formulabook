@@ -11,8 +11,8 @@ def initPropertyAndUnits(verify)
       Unit.destroy_all
       Property.destroy_all
       
-      ActiveRecord::Base.connection.execute("DELETE from sqlite_sequence where name = 'units'")
-      ActiveRecord::Base.connection.execute("DELETE from sqlite_sequence where name = 'properties'")
+      ActiveRecord::Base.connection.execute("TRUNCATE TABLE properties RESTART IDENTITY;")
+      ActiveRecord::Base.connection.execute("TRUNCATE TABLE units RESTART IDENTITY;")
    end
    
    arr = readUnitFile();
@@ -68,16 +68,10 @@ def setUnit(parts, p, verify)
       if parts[1].include? "SI"
          u.system = "SI"
       else
-         u.system = parts[1]
+         u.system = "Others"
       end
       
       
-      #base
-      if parts[1].include? "SI_base"
-         u.baseunit = true
-      else
-         u.baseunit = false
-      end
       
       symbol = symbols[names.index name]
       
@@ -101,21 +95,11 @@ def setUnit(parts, p, verify)
          u.symbol = symbol.rstrip.lstrip
       end
       
-      #definition
-      if parts[3] == "_"
-         u.definition = ""
-      else
-         if parts[3].include? "[extend]"
-            u.extend = true
-            u.definition = parts[3].replace("[extend]", '')
-         else
-            u.definition = parts[3]
-         end
-      end
+      
       
       #description
       if parts[4] == "_"
-         u.description = ""
+         u.description = p.name + ":" + u.name
       else
          u.description = parts[4]
       end
@@ -130,13 +114,11 @@ def setUnit(parts, p, verify)
          end
          temp = fi.split(',')
          u.factor = temp[0]
-         if temp[1]      
-            u.repeat = temp[1]
-         end
       end
       if !verify && u.symbol.length > 0 && u.symbol.length > 0
          u.save
-         puts "Name:#{u.name}, symbol:#{u.symbol}, factor:#{u.factor}, extend:#{u.extend}, prefix:#{u.prefix}"
+         puts u.errors.to_json
+         puts "Name:#{u.name}, symbol:#{u.symbol}, factor:#{u.factor}"
       end
    end
 end

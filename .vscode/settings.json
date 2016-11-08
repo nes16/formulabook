@@ -6,6 +6,15 @@
         "**/.hg": true,
         "**/.DS_Store": true,
         "**/.tmp/**/*":true,
-        "**/client/**/*":true,
+        "**/bin/**/*":true,
+        "**/log/**/*":true,
+        "**/public/**/*":true,
+        "**/tmp/**/*":true,
+        "**/node_modules/**/*":true,
+        "**/hooks/**/*":true,
+        "**/projects/**/*":true,
+        "**/resources/**/*":true,
+        "**/typings/**/*":true,
+        "**/www/**/*":true,
     }
 }
