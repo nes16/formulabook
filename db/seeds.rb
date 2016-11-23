@@ -9,7 +9,8 @@ User.delete_all
 
 user = User.create! :name => 'TestAdmin', :email => 'testadmin@sangamsofech.com', :password => 'rs#123456', :password_confirmation => 'rs#123456'
 
-
+# testuser1@sangamsoftech.com
+# rs#123456
 5.times do |n|
   name  = "TestUser#{n+1}"
   email = "testuser#{n+1}@sangamsoftech.com"

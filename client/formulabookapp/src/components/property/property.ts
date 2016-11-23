@@ -1,69 +1,53 @@
-import { Component, ElementRef, Input, ViewChildren, QueryList } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, Output, EventEmitter, ViewChildren, QueryList } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { App, NavController } from 'ionic-angular';
-import { DataService } from '../../providers/data-service'
-import { UIStateService } from '../../providers/ui-state-service'
-import { ResourceListPage } from '../../pages/resource-list'
-import { BaseComponent } from '../base-component'
-import { UnitComponent } from '../unit/unit'
-import { DetailPage } from '../../pages/detail/detail';
 import { createUniqueNameValidator } from '../validators/custom.validators'
-
+import { Property } from '../../reducers/resource'
 @Component({
+    //changeDetection: ChangeDetectionStrategy.OnPush,
 	selector: 'fl-property',
 	templateUrl: 'property.html',
 })
 
-export class PropertyComponent extends BaseComponent{
-	expand: boolean = false;
-	errorMessage: string;
-	detailPage: any;
-
-	
+export class PropertyComponent {
+	er:Property;
 	form:FormGroup;
 
 	constructor(public el: ElementRef,
 				 app:App,
-				 dataService: DataService, 
-				 nav: NavController,
-				 public uiStateService:UIStateService) {
-		super(app, dataService, nav, uiStateService);
-		this.detailPage = DetailPage;
+				 nav: NavController) {
 	}
-	
+	@Input() showChkbox:boolean = false;
 	@Input() resource;
-	@ViewChildren(UnitComponent) unitForm: QueryList<UnitComponent>;
 	@Input() mode = 'list';
-	@Input() index = null;
-	@Input() last = null;
-	
+	@Output() save : EventEmitter<Property> = new EventEmitter<Property>();
+	@Output() select : EventEmitter<any> = new EventEmitter<any>();
+	@Output() unit : EventEmitter<any> = new EventEmitter<any>();
 	ngOnInit() {
-		super.ngOnInit();
 		if(this.mode == 'edit'){
+		this.er = Object.assign({},this.resource)
 		this.form = new FormGroup({
-			name: new FormControl(this.resource.name, [Validators.required
+			name: new FormControl(this.er.name, [Validators.required
 									, Validators.minLength(2)
-									, Validators.maxLength(30)], 
-									createUniqueNameValidator(this.dataService, this))
+									, Validators.maxLength(30)])
 			})	
 		}
 	}
 
-	ngAfterViewInit(){
-	//	var a = this.unitForm 
+    onSave(){
+        this.save.emit(this.er);
 	}
-		
+
+	onSelect(evt){
+		this.select.emit({resource:this.resource, checked:evt.checked});
+	}
 	
-
-	onEditCmd(evt) {
-		super.onEditCmd(evt);
+	onUnitClick(evt){
+		evt.stopPropagation();
+		this.unit.emit(this.resource)
 	}
+	get diagnostic() { return JSON.stringify(this.resource) 
 
-	showUnits(evt){
-		this.nav.push(ResourceListPage, {type:"units", prop:this.resource})
-	}
-
-	get diagnostic() { return JSON.stringify(this.resource.getState()) 
-						+'\n'+JSON.stringify(this.resource.DefaultUnit.getState())
 						+ '\n'+JSON.stringify(this.form.valid);}
+
 }

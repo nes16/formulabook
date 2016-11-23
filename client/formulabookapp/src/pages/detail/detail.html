@@ -1,29 +1,27 @@
 <ion-header>
-<fl-nav-bar [title]="'Detail -' + currResource?.name"  (onClose)="onClose($event)" [closeButton]="true"  [searchButton]="false" [moreButton]="false"></fl-nav-bar>
+    <ion-navbar no-border-bottom>
+		<ion-title small>{{title}}</ion-title>
+		<ion-buttons right>
+			<button royal ion-button icon-only  (click)="onClose($event)">
+				<ion-icon name="close"></ion-icon>
+			</button>
+		</ion-buttons>
+	</ion-navbar>
 </ion-header>l
 <ion-content id="detail-page">
-    <ion-list *ngIf="type == 'properties'">
-        <fl-property [mode]="'edit'" [resource]="currResource"></fl-property>
-    </ion-list>
-    <ion-list *ngIf="type == 'units'">
-        <fl-unit  [mode]="'edit'" [resource]="currResource"></fl-unit>
-    </ion-list>
-    <ion-list *ngIf="type == 'globals'">
-        <fl-global  [mode]="'edit'" [resource]="currResource"></fl-global>
-    </ion-list>
-    <ion-list *ngIf="type == 'formulas'">
-        <fl-formula  [mode]="'edit'" [resource]="currResource"></fl-formula>
-    </ion-list>
-    <ion-list *ngIf="type == 'variables'">
-        <fl-var  [mode]="'edit'" [resource]="currResource"></fl-var>
-    </ion-list>
-    <ion-list *ngIf="type == 'varvals'">
-        <fl-varval  [mode]="'edit'" [resource]="currResource"></fl-varval>
-    </ion-list>
-    <ion-list *ngIf="type == 'categories'">
-        <fl-category  [mode]="'edit'" [resource]="currResource"></fl-category>
-    </ion-list>
+    <div  [ngSwitch] = "(uiState$ | async)?.detail_currResource.type">
+        <template [ngSwitchCase]="'properties'">
+            <ion-list>
+                <fl-property [mode]="'edit'" (save)="onSave($event)" [resource]="(uiState$ | async)?.detail_currResource"></fl-property>
+            </ion-list>
+        </template>
+        <template [ngSwitchCase]="'units'">
+            <ion-list>
+                <fl-unit [mode]="'edit'" (save)="onSave($event)" [property]="(uiState$ | async)?.current_property" [resource]="(uiState$ | async)?.detail_currResource"></fl-unit>
+            </ion-list>
+        </template>
+    </div>   
 </ion-content>
-<ion-footer [class.fl-hidden]="!mq.showKeyboard">
-<keypad></keypad>
+<ion-footer [class.fl-hidden]="(uiState$ | async)?.showKB">
+<keypad parent=""></keypad>
 </ion-footer>

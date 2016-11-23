@@ -17,30 +17,26 @@ end
 class_methods do
 
   def app_model_info
-    #static table describe dimfferent models and
+    #static table describe different models and
     #its associated models
-    #used for updating ids
     {
       "properties":{idColumn: :property_id, classA:Property, references:[]},
       "units":{idColumn: :unit_id, classA:Unit,  references:[:properties]},
       "globals":{idColumn: :global_id, classA:Global,  references:[:units]},
       "formulas":{idColumn: :formula_id, classA:Formula,  references:[:units, :properties]},
-      "fgs":{idColumn: :fg_id, classA:Fg,  references:[:formulas, :globals]},
-      "variables":{idColumn: :variable_id, classA:Variable,  references:[:units, :properties, :formulas]},
+      #this table polymorphic col favouritable_type and favouritable_id
       "favorites":{idColumn: :favorite_id, classA:Favorite, notShared:true, references:[], multiRef:[:favoritable_type, :favoritable_id]},
       "categories":{idColumn: :category_id, classA:Category, notShared:true, references:[]},
       "crs":{idColumn: :cr_id, classA:Cr,  references:[], multiRef:[:categorizable_id, :categorizable_type]},
-    
     }
-
   end
 
   def after ids, lastSync, user_id, lastSyncShared
-    
     puts table_name
     notShared = app_model_info()[table_name.to_sym][:notShared]
     if table_name == 'categories' || table_name == 'crs' || table_name == 'fgs' || table_name == 'variables'
       user_param = "(1 = 1)"
+      shared_param = "(1 = 1)"
     else
       if user_id
         user_param = "(USER_ID =  #{user_id} OR USER_ID IS NULL)"
@@ -55,10 +51,10 @@ class_methods do
     else
       if lastSyncShared != "" && lastSyncShared != "\"\""
         lastSyncShared = getTimeStr lastSyncShared
-        shared_param = "NOT(#{user_param}) AND (shared = TRUE) AND (((updated_at > TIMESTAMP \'#{lastSyncShared}\') OR (deleted > TIMESTAMP \'#{lastSyncShared}\' ))"
+        shared_param ||= "NOT(#{user_param}) AND (shared = TRUE) AND (((updated_at > TIMESTAMP \'#{lastSyncShared}\') OR (deleted > TIMESTAMP \'#{lastSyncShared}\' ))"
         list1 = with_deleted.all.where("#{shared_param}")
       else
-        shared_param = "shared = TRUE"
+        shared_param ||= "shared = TRUE"
         list1 = all.where("NOT(#{user_param}) AND #{shared_param}") 
       end
     end
@@ -73,8 +69,25 @@ class_methods do
 
     #filter out fgs of other user
     if table_name == 'fgs' || table_name == 'variables'
-      list1 = list1.select {|item| item.formula.user_id == user_id || user_id == nil} 
+      list1 = list1.select {|item| item.formula.user_id == user_id || user_id == nil || item.formula.shared} 
     end
+    list1
+  end
+
+  def afterSharedChanged ids, lastSync, user_id, lastSyncShared
+    puts table_name
+    list1 = []
+    notShared = app_model_info()[table_name.to_sym][:notShared]
+    if table_name == 'categories' || table_name == 'crs' || lastSyncShared == nil || user_id == nil || notShared
+      return list1
+    else
+      if lastSyncShared != "" && lastSyncShared != "\"\""
+        lastSyncShared = getTimeStr lastSyncShared
+        shared_param ||= "NOT(#{user_param}) AND (shared = FALSE) AND (shared_changed = TRUE) AND (((updated_at > TIMESTAMP \'#{lastSyncShared}\') OR (deleted > TIMESTAMP \'#{lastSyncShared}\' ))"
+        list1 = with_deleted.all.where("#{shared_param}")
+      end
+    end
+    
     list1
   end
 
@@ -97,10 +110,15 @@ class_methods do
 
   def assign obj, state
 	keys = state.keys
-	dbkeys = ["id", "updated_at", "deleted", "created_at", "syncState", "tempId"]
+  notShared = app_model_info()[table_name.to_sym][:notShared]
+	dbkeys = ["id", "updated_at", "deleted", "created_at", "shared_changed"]
 	keys.each do |k|
 		if obj.has_attribute?(k) && (dbkeys.index(k) == nil)
-			obj[k] = state[k]
+			#keep shared change a note
+      if(!(notShared && notShared == 'false'))
+        id(state[:shared] && obj.shared != state[:shared])
+          obj.shared_changed = true
+      obj[k] = state[k]
 		end
   	end
   end

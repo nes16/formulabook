@@ -1,8 +1,7 @@
 import { Component, ElementRef, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NavController, App } from 'ionic-angular';
-
-import { Varval, Variable } from '../../lib/types/standard';
+import { Variable } from '../../lib/types/standard';
 import { DataService } from '../../providers/data-service';
 import { UIStateService } from '../../providers/ui-state-service';
 import { LatexParserService } from '../../providers/latex-parser-service';

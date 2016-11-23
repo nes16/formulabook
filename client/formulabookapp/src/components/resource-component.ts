@@ -1,6 +1,9 @@
 import { Input } from '@angular/core';
 import { DataService } from '../providers/data-service'
 import { UIStateService } from '../providers/ui-state-service'
+
+import { Store } from '@ngrx/store'
+import * as rootStore from '../reducer'
 import { States, Formula } from '../lib/types/standard';
 import { NavController, ActionSheet, App } from 'ionic-angular';
 import { ErrorHandler } from '../lib/types/standard';
@@ -8,7 +11,7 @@ import { ResourceListPage } from '../pages/resource-list'
 import { Observable } from 'rxjs/Rx';
 
 
-export class BaseComponent {
+export class ResourceComponent {
 	submitButtonName: string;
 	form: any;
 	errorMessage: string;
@@ -193,8 +196,8 @@ export class BaseComponent {
 	}
 
 	onRun(evt){
-		let val = (this.resource as Formula).newVarval();
-		this.openDetailsTab(val)
+		// let val = (this.resource as Formula).
+		// this.openDetailsTab(val)
 	}
 
 	onCategory(){

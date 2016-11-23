@@ -19,7 +19,18 @@
         </ion-item-divider>
     </template>
     <template [ngSwitchCase]="'edit'">
-        <form [formGroup]="form" (submit)="edit($event)">
+        <ion-segment [(ngModel)]="viewType">
+            <ion-segment-button value="Definition" (ionSelect)="selectedViewType('Definition')" >
+                Define
+            </ion-segment-button>
+            <ion-segment-button value="Run" (ionSelect)="selectedViewType('Run')" >
+                Run
+            </ion-segment-button>
+            <ion-segment-button value="History" (ionSelect)="selectedViewType('History')" >
+                History
+            </ion-segment-button>
+	    </ion-segment>
+        <form *ngIf="viewType == 'Definition'" [formGroup]="defform" (submit)="edit($event)">
             <ion-list>
                 <ion-item>
                     <ion-label>Name</ion-label>
@@ -78,5 +89,7 @@
                 </ion-item>
             </ion-list>
         </form>
+        <valval *ngIf="viewType == 'Run'" mode="edit"></varval> 
+        <varval *ngIf="viewType == 'History'" mode="list"></varval>
     </template>
 </div>

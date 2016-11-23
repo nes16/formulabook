@@ -7,6 +7,8 @@ class CreateGlobals < ActiveRecord::Migration
       t.uuid :unit_id
       
       t.boolean :shared
+      t.boolean :shared_changed
+
       t.belongs_to  :user, index: true
 
       t.datetime :deleted, index: true

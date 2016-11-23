@@ -4,7 +4,7 @@ import { Content } from 'ionic-angular';
 import { RemoteService } from './remote-service'
 import { UIStateService } from './ui-state-service'
 import { BaseService } from './base-service'
-import { MyTokenAuth } from './token-auth/auth-service'
+import { AuthService } from './auth-service'
 import { SqlService } from './sql-service'
 import { JwtHttp } from './token-auth/jwtHttp'
 import { provide } from '@angular/core'
@@ -27,7 +27,7 @@ describe('Service: data-service', () => {
     UIStateService,
     SqlService,
     BaseService,
-    MyTokenAuth,
+    AuthService,
     JwtHttp,
     Content,
     HTTP_PROVIDERS,

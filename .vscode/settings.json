@@ -16,5 +16,7 @@
         "**/resources/**/*":true,
         "**/typings/**/*":true,
         "**/www/**/*":true,
+        "**/**/*.spec.ts":true,
+        "**/**/*.e2e.ts":true,
     }
 }

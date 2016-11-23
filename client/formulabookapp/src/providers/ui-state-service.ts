@@ -5,7 +5,7 @@ import { Observer } from 'rxjs/Observer';
 import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
 import { Modal } from 'ionic-angular';
 import { ModalsPage } from '../pages/modals/modals';
-import { MyTokenAuth } from './token-auth/auth-service';
+import { AuthService } from './auth-service';
 
 
 @Injectable()
@@ -38,7 +38,7 @@ export class UIStateService {
 
     inSelectMode:boolean;
     constructor(public app:App, public platform: Platform, 
-                public auth:MyTokenAuth) {
+                public auth:AuthService) {
         this.ole = ConnectableObservable.create(or => {
             this.or = or;
         }).publish();
@@ -127,16 +127,7 @@ export class UIStateService {
     }
 
     listenToLoginEvents() {
-    this.auth.events.subscribe('auth', (evt) => {
-      if(evt.action == 'login' && evt.result == 'success'){
-        this.authenticated = this.auth.userIsAuthenticated();
-        this.user = this.auth.getUser();
-      }
-      if(evt.action == 'logout' && evt.result == 'success'){
-        this.authenticated = this.auth.userIsAuthenticated();
-        this.user = this.auth.getUser();
-      }
-    });
-  }
+    
+    }
 
 }

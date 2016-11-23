@@ -10,6 +10,8 @@ class CreateUnit < ActiveRecord::Migration
       t.string :factor
       
       t.boolean :shared
+      t.boolean :shared_changed
+
       t.belongs_to  :user, index: true
 
       t.datetime :deleted, index: true

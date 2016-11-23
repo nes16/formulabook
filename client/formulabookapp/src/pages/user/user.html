@@ -1,10 +1,17 @@
 <ion-header>
-    <fl-nav-bar [title]="title"  (onClose)="onClose($event)" [closeButton]="false"  [searchButton]="false" [moreButton]="false"></fl-nav-bar>
+   <ion-navbar no-border-bottom>
+		<ion-title small>{{title}}</ion-title>
+		<ion-buttons right>
+			<button royal ion-button icon-only  (click)="close($event)">
+				<ion-icon name="close"></ion-icon>
+			</button>
+		</ion-buttons>
+	</ion-navbar>
 </ion-header>
 <ion-content>
     <div [ngSwitch]="option">
         <template [ngSwitchCase]="'login'">
-            <form  [formGroup]="formLogin" (submit)="login($event, login.value)">
+            <form  [formGroup]="formLogin" (submit)="login($event, formLogin.value)">
                 <ion-list>
                     <div class="logo">
                         <img src="../assets/img/appicon.png">
@@ -35,9 +42,8 @@
                 </ion-item>
             </ion-list>
         </template>
-
         <template [ngSwitchCase]="'signup'">
-            <form [formGroup]="formSignup" (submit)="signup($event, signup.value)">
+            <form [formGroup]="formSignup" (submit)="signup($event, formSignup.value)">
                 <ion-item>
                     <ion-label stacked>Emailid</ion-label>
                     <ion-input type="text" formControlName="emailId" ></ion-input>
@@ -52,7 +58,7 @@
             </form>
         </template>
         <template [ngSwitchCase]="'forgot'">
-            <form [formGroup]="formForgot" (submit)="forgot($event, forgot.value)">
+            <form [formGroup]="formForgot" (submit)="forgot($event, formForgot.value)">
                 <ion-item>
                     <ion-label stacked>Emailid</ion-label>
                     <ion-input type="text" formControlName="emailId"></ion-input>
@@ -63,7 +69,7 @@
             </form>
         </template>
         <template [ngSwitchCase]="'chpwd'">
-            <form [formGroup]="formChpwd" (submit)="chpwd($event, chpwd.value)">
+            <form [formGroup]="formChpwd" (submit)="chpwd($event, formChpwd.value)">
                 <ion-item>
                     <ion-label stacked>Password</ion-label>
                     <ion-input type="password" formControlName="pwd"></ion-input>
@@ -74,7 +80,7 @@
             </form>
         </template>
         <template [ngSwitchCase]="'setup'">
-            <form [formGroup]="formSetup" (submit)="setup($event, settings.value)">
+            <form [formGroup]="formSetup" (submit)="setup($event, formSetup.value)">
                 <ion-item>
                     <ion-label stacked>Default System</ion-label>
                     <ion-input type="text" formControlName="system"></ion-input>
@@ -84,13 +90,5 @@
                 </ion-item>
             </form>
         </template>
-        <template [ngSwitchCase]="'about'">
-            <ion-card>
-                <p>
-                    TestLab is an application for create, edit, browse standard and custom formulas with units. The formulas can be input with values to find the result.
-                </p>
-            </ion-card>
-        </template>
-        
     </div>
 </ion-content>

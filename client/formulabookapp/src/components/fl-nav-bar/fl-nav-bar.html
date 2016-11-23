@@ -1,31 +1,47 @@
-    <ion-navbar no-border-bottom>
-        <ion-buttons left>
-            <button ion-button icon-only  *ngIf="menuButton" menuToggle>
-                <ion-icon name="menu"></ion-icon>
-            </button>
-        </ion-buttons>
+    <ion-navbar *ngIf="listMode == 'List'" no-border-bottom>
+        <button ion-button   menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
         <ion-title small>{{title}}</ion-title>
-        <ion-buttons right>
-            <button royal ion-button icon-only  [class.fl-hidden]="!switchButton" [disabled]="!Online" (click)="sync($event)">
-                <ion-icon name="sync" ></ion-icon>
-            </button>
-            <button royal ion-button icon-only   [class.fl-hidden]="!filterButton" (click)="filter($event)">
+        <ion-buttons end>
+            <button royal ion-button icon-only>
                 <ion-icon ios="ios-options-outline" md="md-options"></ion-icon>
             </button>
-            <button royal ion-button icon-only  [class.fl-hidden]="!addButton" (click)="add($event)">
+            <button royal ion-button icon-only  (click)="onActionCmd('Add')">
                 <ion-icon name="add"></ion-icon>
             </button>
-            <button royal ion-button icon-only  [class.fl-hidden]="!searchButton" (click)="search($event)">
+            <button royal ion-button icon-only  (click)="searchBar=!searchBar">
                 <ion-icon name="search"></ion-icon>
             </button>
-            <button royal ion-button icon-only  [class.fl-hidden]="!moreButton" (click)="more($event)">
+            <button royal ion-button icon-only   (click)="onMore($event)">
                 <ion-icon name="more"></ion-icon>
-            </button>
-            <button royal ion-button icon-only  [class.fl-hidden]="!closeButton" (click)="close($event)">
-                <ion-icon name="close"></ion-icon>
             </button>
         </ion-buttons>
     </ion-navbar>
-    <ion-searchbar *ngIf="searchBar" (input)="onInput($event)" (onCancel)="onCancel()" [(ngModel)]="searchQuery" [debounce]="searchDelay" >
+ <ion-navbar *ngIf="listMode == 'Select'" no-border-bottom>
+            <ion-buttons left>
+                    <button ion-button icon-only (click)="onActionCmd('Done')">
+                        Done
+                    </button>
+                    <button ion-button icon-only (click)="onActionCmd('ToggleSelect')">
+                        {{all$ | async}}
+                    </button>
+            </ion-buttons>
+            <ion-buttons right>
+                    <button ion-button icon-only (click)="onActionCmd('Favourite')">
+                        <ion-icon name="heart"></ion-icon>
+                    </button>
+                    <button ion-button icon-only (click)="onActionCmd('Delete')">
+                        <ion-icon name="trash"></ion-icon>
+                    </button>
+                    <button ion-button icon-only (click)="onActionCmd('Categorize')">
+                        <ion-icon name="folder"></ion-icon>
+                    </button>
+                    <button ion-button icon-only (click)="onActionCmd('Share')">
+                        <ion-icon name="share"></ion-icon>
+                    </button>
+            </ion-buttons>
+    </ion-navbar>
+    <ion-searchbar *ngIf="searchBar" (input)="onSearchInput($event)" (onCancel)="onSearchCancel($event)" [(ngModel)]="searchQuery" [debounce]="searchDelay" >
     </ion-searchbar>
     

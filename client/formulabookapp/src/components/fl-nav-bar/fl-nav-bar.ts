@@ -1,79 +1,53 @@
 import { Component, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import { NavController, App } from 'ionic-angular';
+import { UIStateService } from '../../providers/ui-state-service'
 import { MoreOptionsPage } from '../../pages/more-options/more-options';
-import { UIStateService } from '../../providers/ui-state-service';
 import { PopoverController } from 'ionic-angular';
-import { CategoryPage } from '../../pages/category/category'
+import * as  rootStore  from '../../reducers'
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Rx';
 
 @Component({
 	selector: 'fl-nav-bar',
 	templateUrl: 'fl-nav-bar.html',
 })
 export class FlNavBar {
-	searchQuery:string = "";
 	searchBar: boolean = false;
-	searchDelay: number = 2000;
-	
+	searchQuery:string = '';
 	constructor(public app: App
 			    , public el: ElementRef
 				, public nav: NavController
-				, public uiStateService:UIStateService
-				, public popoverCtrl: PopoverController) {
-
+				, public uiStateService: UIStateService
+				, public popoverCtrl: PopoverController,
+				public store: Store<rootStore.State>) {
+		
 	}
-	//left
-	@Input() switchButton;
-	//right
-	@Input() menuButton;
-	@Input() addButton;
-	@Input() searchButton;
-	@Input() moreButton;
-	@Input() filterButton;
-	@Input() closeButton = false;
+	@Input() searchDelay: number = 2000;
 	@Input() title;
-	@Output('onFilterChange') onFilterChange = new EventEmitter();
-	@Output('onFilterCancel') onFilterCancel = new EventEmitter();
-	@Output('onAdd') onAdd = new EventEmitter();  
-	@Output('onClose') onClose = new EventEmitter();  
+	@Input() listMode:string='List';//$:Observable<string>;
+	@Output() filterChange = new EventEmitter();
+	@Output() filterCancel = new EventEmitter();
+	@Output() actionCmd = new EventEmitter();
 
-	search(evt){
-		if (this.searchBar)
-		 	this.searchBar = false;
-		else
-			this.searchBar = true;
+
+	onSearchInput(evt) {
+		this.filterChange.emit(this.searchQuery);
 	}
 
-	onCancel(){
-		this.onFilterCancel.emit(null);
+	onSearchCancel(evt){
+
 	}
 
-	onInput(evt) {
-		this.onFilterChange.emit(this.searchQuery);
-	}
-
-	more(evt){
+	onMore(evt){
 	    let opts = this.popoverCtrl.create(MoreOptionsPage)
 	     opts.present({ev:evt});
 	}
 
-	add(evt){
-		this.onAdd.emit(evt)
+	onClose(evt){
+
 	}
 
-	close(evt){
-		this.onClose.emit(evt);
-	}
-
-	get Online(){
-		return this.uiStateService.IsOnline;
-	}
-
-	sync(evt){
-		this.uiStateService.fireSync();
-	}
-
-	filter(evt){
-		let opts = this.popoverCtrl.create(CategoryPage)
-	     opts.present({ev:evt});
+	onActionCmd(cmd:string){
+		this.actionCmd.emit(cmd);
 	}
 }

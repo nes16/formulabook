@@ -7,10 +7,10 @@ class CreateProperties < ActiveRecord::Migration
       
       t.belongs_to  :user, index: true
       t.boolean :shared
+      t.boolean :shared_changed
       
       t.datetime :deleted, index: true
       t.integer :lock_version, default: 0, null: false
-      
       t.timestamps null: false
     end
   end

@@ -1,41 +1,23 @@
-import { NgModule } from '@angular/core';
+import { NgModule, } from '@angular/core';
 import { IonicApp, IonicModule } from 'ionic-angular';
 import { FormsModule }   from '@angular/forms';
 import { HttpModule }    from '@angular/http';
-import { FormulaApp } from './app.component';
 
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { DBModule } from '@ngrx/db';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 //Pages
-import { CategoryPage } from '../pages/category/category'
 import { DetailPage } from '../pages/detail/detail'
-import { ModalsPage } from '../pages/modals/modals'
-import { MoreOptionsPage } from '../pages/more-options/more-options'
 import { TabsPage } from '../pages/tabs/tabs'
 import { TutorialPage } from '../pages/tutorial/tutorial'
-import { UserPage } from '../pages/user/user'
-import { ResourceListPage } from '../pages/resource-list'
-
+import { PropertyListPage } from '../pages/property-list'
+import { UnitListPage } from '../pages/unit-list'
+import { FormulaApp } from './app.component'
 //components
-import { FlNavBar } from '../components/fl-nav-bar/fl-nav-bar'
-import { CategoryComponent } from '../components/category/category'
-import { FormulaComponent } from '../components/formula/formula'
-import { GlobalComponent } from '../components/global/global'
-import { PropertyComponent } from '../components/property/property'
-import { UnitComponent } from '../components/unit/unit'
-import { MathKeypad } from '../components/keys/keypad'
-import { UnitSelector } from '../components/selectors/unit'
-import { UnitValueAccessor } from '../components/selectors/unit-accessor'
-import { VarComponent } from '../components/variable/variable'
-import { VarvalComponent } from '../components/varval/varval'
-import { BaseResource } from '../components/base-resource'
-import { MathQ } from '../components/mathquill'
-import { MathQValueAccessor } from '../components/mathquill-accessor'
-import { FBError } from '../components/fb-error'
-//providers
-import { MyTokenAuth } from '../providers/token-auth/auth-service'
-import { JwtHttp } from '../providers/token-auth/jwtHttp'
+import { AuthService } from '../providers/auth-service'
 import { DataService } from '../providers/data-service'
-import { LatexParserService } from '../providers/latex-parser-service'
 import { BaseService } from '../providers/base-service'
 import { MQService } from '../providers/mq-service'
 import { RemoteService } from '../providers/remote-service'
@@ -44,70 +26,84 @@ import { SqlCacheService } from '../providers/sqlcache-service'
 import { LFCacheService } from '../providers/lfcache-service'
 import { UIStateService } from '../providers/ui-state-service'
 import { Sql } from '../providers/sql'
+import { ComponentsModule } from '../components';
+import { ResourceEffects } from '../effects';
 
-import { FavFilterPipe } from '../components/fav-filter';
-
-
+import { reducer } from '../reducers';
+import { schema } from '../db';
+import { ResourceActions, UIStateActions, AuthActions } from '../actions';
 
 @NgModule({
   declarations: [
-    BaseResource,
-    CategoryComponent,
-    FormulaComponent,
-    GlobalComponent,
-    UnitComponent,
-    PropertyComponent,
-    MathKeypad,
-    UnitSelector,
-    UnitValueAccessor,
-    VarComponent,
-    VarvalComponent,
-    FlNavBar,
-    MathQ,
-    MathQValueAccessor,
-    FavFilterPipe,
-    FBError,
     FormulaApp,
-    CategoryPage,
     DetailPage,
-    ModalsPage,
-    MoreOptionsPage,
     TabsPage,
     TutorialPage,
-    UserPage,
-    ResourceListPage,
+    PropertyListPage,
+    UnitListPage
   ],
   imports: [
     HttpModule,
     FormsModule,
+    ComponentsModule,
     IonicModule.forRoot(FormulaApp),
+  /**
+     * StoreModule.provideStore is imported once in the root module, accepting a reducer
+     * function or object map of reducer functions. If passed an object of
+     * reducers, combineReducers will be run creating your application
+     * meta-reducer. This returns all providers for an @ngrx/store
+     * based application.
+     */
+    StoreModule.provideStore(reducer),
+
+    /**
+     * Store devtools instrument the store retaining past versions of state
+     * and recalculating new states. This enables powerful time-travel
+     * debugging.
+     * 
+     * To use the debugger, install the Redux Devtools extension for either
+     * Chrome or Firefox
+     * 
+     * See: https://github.com/zalmoxisus/redux-devtools-extension
+     */
+    StoreDevtoolsModule.instrumentOnlyWithExtension(),
+
+    /**
+     * EffectsModule.run() sets up the effects class to be initialized
+     * immediately when the application starts.
+     *
+     * See: https://github.com/ngrx/effects/blob/master/docs/api.md#run
+     */
+    EffectsModule.run(ResourceEffects),
+
+    /**
+     * `provideDB` sets up @ngrx/db with the provided schema and makes the Database
+     * service available.
+     */
+    DBModule.provideDB(schema),
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    CategoryPage,
     DetailPage,
-    ModalsPage,
-    MoreOptionsPage,
     TabsPage,
     TutorialPage,
-    UserPage,
-    ResourceListPage,
+    PropertyListPage,
+    UnitListPage,
     FormulaApp
   ],
   providers: [
-    MyTokenAuth,
-    JwtHttp,
+    ResourceActions,
+    UIStateActions,
+    AuthActions,
+    {provide:'ApiEndpoint', useValue: 'api/v1'},
+    AuthService,
     DataService,
-    LatexParserService,
     BaseService,
     MQService,
     RemoteService,
     SqlService,
     SqlCacheService,
     UIStateService,
-    Sql,
-    {provide:'ApiEndpoint', useValue: 'api/v1'},
-    {provide:'CacheService', useClass: LFCacheService},
-  ]
+    Sql   ]
 })
 export class AppModule {}

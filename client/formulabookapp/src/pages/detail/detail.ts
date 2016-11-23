@@ -1,73 +1,49 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { App, NavController, NavParams, Content } from 'ionic-angular';
-import { DataService } from '../../providers/data-service';
-import { UIStateService } from '../../providers/ui-state-service';
-import { MQService } from '../../providers/mq-service'
+import * as  rootStore  from '../../reducers'
+
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Rx';
+import { UIState } from '../../reducers/uistate'
+import { Resource } from '../../reducers/resource'
+import {ResourceActions} from '../../actions'
+import {UIStateActions} from '../../actions'
+
 
 @Component({
     templateUrl: 'detail.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class DetailPage {
-    currResource: any;
-    type: string;
-    title:string;
-    master: any;
-    tabsPage:any;
+    uiState$:Observable<UIState>;
+    curRes$:Observable<Resource>;
     navMode:boolean = false;
     static root:DetailPage = null;
-    constructor(public app:App, public nav: NavController, navParams: NavParams, public dataService: DataService, public uiStateService: UIStateService, public mq:MQService) {
-        this.tabsPage = uiStateService.tabsPage;
-        this.currResource = navParams.get('currResource');
-        if(this.currResource){
-            this.setTitle();
-        }
+    constructor(public app:App, 
+                public nav: NavController, 
+                navParams: NavParams,
+                public actions:ResourceActions, 
+                public uiactions:UIStateActions, 
+                public store: Store<rootStore.State>){
+
+        this.uiState$ = this.store.select(state => state.uiState);
+        
     }
 
     @ViewChild(Content) content: Content;
 
     
-    
     ngOnInit() {
-        this.uiStateService.Content = this.content;
     }
 
-    setDetail(){
-        DetailPage.root = this; 
-        this.currResource = this.tabsPage.resources[0];
-        if(this.currResource)
-            this.setTitle();
-    }
-
-    setTitle(){
-
-        this.type = this.currResource.getTable();
-        if(this.type == 'properties')
-            this.title = 'Property - ' + this.currResource.name;
-        else if(this.type == 'units')
-            this.title = 'Unit - ' + this.currResource.name;
-        else if (this.type == 'globals')
-            this.title = 'Global - ' + this.currResource.name;
-        else if (this.type == 'variables')
-            this.title = 'Variable - ' + this.currResource.name;
-        else if (this.type == 'formulas')
-            this.title = 'Formula - ' + this.currResource.name;
-        else if (this.type == 'varvals')
-            this.title = 'Run Formula - ' + this.currResource.name;
-        else if (this.type == 'varvals')
-            this.title = 'Run Formula - ' + this.currResource.name;
-        else if (this.type == 'categories')
-            this.title = 'category';
-        else
-            throw("Invalid type detail page");
+    onSave(evt){
+		   this.store.dispatch(this.actions.addResource(evt));
+		   this.store.dispatch(this.uiactions.popResources());
     }
 
     onClose(evt){
-        this.tabsPage.clearDetailTab();
+        this.store.dispatch(this.uiactions.popResources());
     }
    
-    ionViewDidEnter() {
-        if(!DetailPage.root)
-            this.setDetail();
-    }
 }

@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@angular/core';
 import { SyncResponseHandler, Category, CR,  States, ResourceCollection, BaseResource
-        , Unit, Property, Global, Formula, Variable, Varval, ErrorHandler
-        , Favorite, LogHandler, FG, OfflineData, CacheService} from '../lib/types/standard';
+        , Unit, Property, Global, Formula, Variable,  ErrorHandler
+        , Favorite, LogHandler, OfflineData, CacheService} from '../lib/types/standard';
 
-import { RemoteService } from './remote-service';
 import { Observable } from 'rxjs/Rx';
 import { UIStateService } from './ui-state-service'
+import { RemoteService } from './remote-service'
 import { UUID } from 'angular2-uuid';
 
 @Injectable()
@@ -17,35 +17,27 @@ export class DataService {
     globals: ResourceCollection<Global> = new ResourceCollection<Global>(this, Global);
     units: ResourceCollection<Unit> = new ResourceCollection<Unit>(this, Unit);
     formulas: ResourceCollection<Formula> = new ResourceCollection<Formula>(this, Formula);
-    variables: ResourceCollection<Variable> = new ResourceCollection<Variable>(this, Variable);;
-    fgs: ResourceCollection<FG> = new ResourceCollection<FG>(this, FG);
     favorites: ResourceCollection<Favorite> = new ResourceCollection<Favorite>(this, Favorite);
     categories: ResourceCollection<Category> = new ResourceCollection<Category>(this, Category);
     crs: ResourceCollection<CR> = new ResourceCollection<CR>(this, CR);
-    varvals: ResourceCollection<Varval> = new ResourceCollection<Varval>(this, Varval);
     logHandler:LogHandler;
 
     
 
     // formulas: ResourceCollection;
     resourceTables: Array<string> = ['properties', 'units', 'globals'
-    , 'formula', 'variables', 'fgs'
-    , 'categories', 'crs'];
+    , 'formula', 'variables', 'categories', 'crs'];
 
     initComplete: boolean = false;
     cache:CacheService;
     
-    constructor(public remoteService: RemoteService
-      //Encapsulate cache into cache service
-      , @Inject("CacheService") cache:CacheService
-      , public uiService: UIStateService) {      
+    constructor(public uiService: UIStateService, public remoteService: RemoteService) {      
       //What is this
       //Why log handler
       //When it is required, is it required in production?    
-      this.cache = cache;
       this.logHandler = new LogHandler("Load items");
       
-          }
+    }
 
     init():Observable<any> {
       //cache drop all tables.
@@ -106,11 +98,9 @@ export class DataService {
         case this.globals:
         return { ulist: this.units};
         case this.formulas:
-        return { plist:this.properties, ulist: this.units, vlist:this.variables, glist:this.globals, fglist:this.fgs};
+        return { plist:this.properties, ulist: this.units,  glist:this.globals};
         case this.categories:
         return { clist:this.categories }
-        case this.varvals:
-        return {flist:this.formulas, vlist:this.variables}
         default :
         return {};
       }
@@ -118,6 +108,8 @@ export class DataService {
 
     isUnique(table:string, value:string, id:string, predicate: (value: BaseResource, index: number) => boolean ):Observable<any>{
       let oles = new Array<Observable<any>>();
+      return Observable.of({unique:true});
+      /*
       console.log(table+','+value+','+id)
        oles.push(Observable.create(or => {
           let r = this[table].find(predicate, null)
@@ -150,6 +142,7 @@ export class DataService {
                    });
 
        }) 
+       */
     }
 
 
@@ -315,9 +308,7 @@ export class DataService {
         case this.globals:
         return [this.properties, this.units, this.globals]
         case this.formulas:
-        case this.variables:
-        case this.fgs:
-        return [this.properties, this.units, this.globals, this.formulas, this.fgs, this.variables]
+        return [this.properties, this.units, this.globals, this.formulas]
         case this.categories:
         return [this.crs]
         default:
@@ -328,15 +319,13 @@ export class DataService {
     getReferingList(list):ResourceCollection<BaseResource>[]{
       switch (list) {
         case this.properties:
-          return [this.units, this.formulas, this.variables];
+          return [this.units, this.formulas];
         case this.units:
-          return [this.globals, this.formulas, this.variables];
+          return [this.globals, this.formulas];
         case this.globals:
-          return [this.fgs]
+          return []
         case this.formulas:
-          return [this.fgs, this.variables]
-        case this.variables:
-        case this.fgs:
+          return []
         case this.favorites:
         case this.categories:
         case this.crs:
@@ -353,10 +342,6 @@ export class DataService {
             return 'global_id';
           case this.formulas:
             return 'formula_id'
-          case this.fgs:
-            return 'fg_id';
-          case this.variables:
-            return 'variable_id';
           case this.favorites:
             return 'favorite_id';
           case this.categories:

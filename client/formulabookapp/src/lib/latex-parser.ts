@@ -1,27 +1,24 @@
-import { Injectable } from '@angular/core';
 import '../assets/latex-parser/latex-parser'
 import { MathNode } from '../lib/math-node/math-node'
 import { ValueProvider } from '../lib/math-node/value'
 
 declare var Parser: any;
 
-@Injectable()
-export class LatexParserService {
-    parser: any;
+export class LatexParser {
+    private static parser = Parser;
     constructor() {
-        this.parser = Parser;
-        this.parser.yy.MathNode = MathNode;
+        LatexParser.parser.yy.MathNode = MathNode;
     }
 
-    parse(latex) {
-        return this.parser.parse(latex);
+    static parse(latex) {
+        return LatexParser.parser.parse(latex);
     }
 
-    evaluate(root):number{
+    static evaluate(root):number{
         return root.type()
     }
 
-    getVarNodes(root, resource, globals){
+    static getVarNodes(root, resource, globals){
         var list = {};
         MathNode.prototype.traverseNode(root, list);
         var symbols = Object.keys(list);
@@ -29,7 +26,7 @@ export class LatexParserService {
         
     }
 
-    setValueProviderForVarNodes(root:MathNode, vp:ValueProvider){
+    static setValueProviderForVarNodes(root:MathNode, vp:ValueProvider){
         var list = {};
         MathNode.prototype.traverseNode(root, list);
         var symbols = Object.keys(list);

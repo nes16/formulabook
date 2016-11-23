@@ -3,7 +3,7 @@ import { Observer } from 'rxjs/Observer';
 import { DataService } from '../../providers/data-service';
 import { ValueProvider } from '../math-node/value'
 import { MathNode } from '../math-node/math-node'
-import { LatexParserService } from '../../providers/latex-parser-service'
+import { UUID } from 'angular2-uuid';
 
 export class OfflineData {
     transactionId: string;
@@ -189,6 +189,9 @@ export class BaseResource {
     crs: CR = null;
     constructor(state = null) {
         this.loadState(state);
+        if(this.id == null || this.id == ""){
+            this.id = UUID.UUID();
+        }
     }   
     
     static errors_messages: any = {
@@ -232,7 +235,8 @@ export class BaseResource {
             lock_version: this.lock_version,
             error_messages: JSON.stringify(this.error_messages),
             user_id: this.user_id,
-            shared: this.shared
+            shared: this.shared,
+            type:this.getTable()
         };
         if(!this.isUserResource()){
             delete state.user_id;
@@ -380,7 +384,7 @@ export class Unit extends BaseResource {
             description: this.description,
             approx: this.approx,
             factor: this.factor,
-            property_id: this.Property.id
+            property_id: this.Property.id,
         });
     }
 
@@ -697,14 +701,14 @@ export class Formula extends BaseResource {
     latex: string;
     property_id: string;
     unit_id: string;
+    gids:Array<string>
     static table: string = "formulas";
 
     //private
     _measure: Measure = new Measure(null);
     _variables: Array<Variable>;
-    deletedVars: Array<Variable>;
-    _globals: Array<FG>;
-    deletedGlobals: Array<FG>;
+    _globals: Array<Global>;
+    _values:ValueU[][];    
     parsed:boolean = false;
     rootNode:MathNode = null;
 
@@ -712,8 +716,6 @@ export class Formula extends BaseResource {
         super(state);
         this._variables = [];
         this._globals = [];
-        this.deletedVars = [];
-        this.deletedGlobals = [];
         if (!state)
             this.setDefault();
     }
@@ -728,13 +730,12 @@ export class Formula extends BaseResource {
 
     init(info: any) {
         this._measure = BaseResource.initMeasure(info, this.property_id, this.unit_id);
-        this._variables = info.vlist.resources.filter(i => i.formula_id == this.id)
         this._variables.forEach(i => {
             i.init({ formula: this, ulist: info.ulist, plist: info.plist });
         })
         this._globals = info.fglist.resources.filter(i => i.formula_id == this.id)
         this._globals.forEach(i => {
-            i.init({ formula: this, global: info.glist.getItem("id", i.global_id) });
+            i.init({ formula: this, global: info.glist.getItem("id", i.id) });
         })
     }
 
@@ -764,9 +765,6 @@ export class Formula extends BaseResource {
         this.Globals.forEach(g => g.enterEdit());
     }
 
-    newVarval(){
-        return Varval.forFormula(this);
-    }
 
     getState() {
 
@@ -775,7 +773,9 @@ export class Formula extends BaseResource {
                 symbol: this.symbol,
                 latex: this.latex,
                 property_id: this._measure.PropertyId,
-                unit_id: this._measure.UnitId
+                unit_id: this._measure.UnitId,
+                vars_state : this._variables.map(v => v.getState()),
+                global_ids : this._globals.map(g => g.id)
             });
     }
 
@@ -786,6 +786,12 @@ export class Formula extends BaseResource {
         this.latex = state.latex  || null;
         this.property_id = state.property_id  || null;
         this.unit_id = state.unit_id  || null;
+        if(state.vars_state){
+            this._variables = state.var_states.map(v => new Variable(v))            
+        }
+        if(state.global_ids){
+            this._globals = state.global_ids;           
+        }
     }
 
     get Measure() {
@@ -816,33 +822,24 @@ export class Formula extends BaseResource {
             }
             else if(itemfg = this._globals.find((g, i) => {
                 index = i;
-                return a == g.Global.symbol;
+                return a == g.symbol;
             })){
                 itemfg.deleted = null;
             }
             else{
                 var g = globals.getItem("symbol", a);
                 if(g)
-                    this.addFG(g);
+                    this.addG(g);
                 else
                     this.addVar(a)
             }
         });
     }
 
-    addVarval():Varval{
-        let vv = Varval.forFormula(this);
-        if(!this.parsed)
-            this.parse();
-        return vv;
-    }
 
-    addFG(g:Global){
-        let fg = new FG();
-        fg._formula = this;
-        fg._global = g;
-        this._globals.push(fg);
-        return fg;
+    addG(g:Global){
+        this._globals.push(g);
+        return g;
     }
 
     addVar(symbol:string){
@@ -853,6 +850,26 @@ export class Formula extends BaseResource {
         return v;
     }
 
+    evaluate(i:number){
+        //If all variable has value
+        let varsWithNoValue = this._variables.filter((v, vi) => this._values[i][vi].input.length == 0)
+        if(varsWithNoValue.length > 0)
+            return null;
+        
+        this._variables.forEach((v, vi) => this._values[i][vi+1].parse())
+        
+        //Set the nodes of each variable this as value provider
+        try{
+            this.rootNode.type() as number;
+            this._values[i][0].setValue(this.rootNode.val.toString());
+            //to update variable
+            this.getState();
+        }
+        catch(exp){
+            throw exp;
+        }
+
+    }
 }
 
 //Class represents number with unit
@@ -886,147 +903,6 @@ export class ValueU {
 
     asString():string{
         return this.getValue(null).toString();
-    }
-}
-
-export class Varval extends BaseResource implements ValueProvider{
-    static table: string = "varvals";
-    /*Formula id*/
-    formula_id:string;
-    /*String version of variable and value */
-    /*"["var1", "5 in"],["var2","10 in"]" */
-    variables:string;
-
-
-    _formula: Formula;
-    _values: {[key:string]: ValueU} = {};
-    _nodes: {[key:string] : MathNode} = {};
-    
-    _result:ValueU;
-    _rootNode:MathNode = null;
-    static ps:LatexParserService = new LatexParserService();
-    static magicStingDB = [[/\\/g, "@G#"], [/\"/g, "#G@"]];
-    static magicStingMEM = [[/@G#/g, "\\"], [/#G@/g, "\""]];
-    constructor(state:any = null){
-        super(state);
-        if(!state)
-            this.setDefault();
-        if(!this._result)
-            this._result = new ValueU("");
-    }
-
-    setDefault(){
-
-    }
-
-    static forFormula(formula:Formula):Varval{
-        let val = new Varval();
-        val.Formula = formula;
-        val.Formula.Variables.forEach(v=> {
-            let sym = v.symbol;
-            val._values[sym] = new ValueU("");
-        })
-        return val;
-    }
-
-    set Formula(f:Formula){
-        this.formula_id = f.id;
-        this._formula = f;
-    }
-    get Formula():Formula{
-        return this._formula;
-    }
-
-    init(info){
-        if(this._formula)
-            return;
-        let toks_vals =  JSON.parse(this.variables);
-        this._formula = ResourceCollection.all[this.formula_id] as Formula;
-        if(this._formula){
-            this._formula.Variables.forEach((v, i)=> {
-                this._values[v.symbol] = new ValueU(toks_vals[i])
-            })
-        }
-    }
-
-    getState() {
-        this.variables = JSON.stringify(this._formula.Variables.map(v => this._values[v.symbol].input));
-        return Object.assign(
-            super.getState(), {
-                formula_id: this._formula.id,
-                variables: this.replaceSpecialChar('DB',this.variables),
-                result:this._result.asString()
-            });
-    }
-
-    loadState(state) {
-        state = state || {};
-        super.loadState(state);
-        this.formula_id = state.formula_id || null;
-        this.variables = this.replaceSpecialChar('MEM', state.variables);
-        this._result = new ValueU(state.result);
-    }
-
-    evaluate(){
-        //If all variable has value
-        let varsWithNoValue = this._formula._variables.filter(v => this._values[v.symbol].input.length == 0)
-        if(varsWithNoValue.length > 0)
-            return null;
-        
-        this._formula._variables.forEach(v => this._values[v.symbol].parse())
-        
-        //Set the nodes of each variable this as value provider
-        try{
-            if(!this._rootNode){
-                this._rootNode = Varval.ps.parse(this._formula.latex); 
-            }
-            Varval.ps.setValueProviderForVarNodes(this._rootNode, this);
-            this._rootNode.type() as number;
-            this._result.setValue(this._rootNode.val.toString());
-            //to update variable
-            this.getState();
-        }
-        catch(exp){
-            throw exp;
-        }
-
-    }
-
-    getValue(token:string):number{
-        let val = 1;
-
-        let v = this._formula._variables.find(v => v.symbol == token);
-        if(v){
-            return this._values[token].getValue(v._measure)
-
-        }
-        else{
-            let g = this._formula._globals.find(g => g._global.symbol == token)
-            if(g)
-                return +g._global.value;
-        }
-        return val;
-    }
-
-    setValue(v:string, value:string){
-        this.evaluate();
-    }
-
-    getTable(){
-        return Varval.table;
-    }
-
-    isUserResource():boolean{
-        return false;
-    }
-
-    replaceSpecialChar(to:string, val:string):string{
-        let items = (to == 'DB')?Varval.magicStingDB:Varval.magicStingMEM;
-        items.forEach(i => {
-            if(val && val.length > 0)
-                val = val.replace(i[0] as RegExp,i[1] as string);    
-        })
-        return val;
     }
 }
 
@@ -1108,77 +984,6 @@ export class Variable extends BaseResource {
 
     isChildResource():boolean{
         return true;
-    }
-}
-
-export class FG extends BaseResource {
-    formula_id: string;
-    global_id: string;
-    static table: string = "fgs"
-
-    _formula: Formula;
-    _global: Global;
-    constructor(state: any = null) {
-        super(state)
-        if (!state)
-            this.setDefault();
-    }
-
-
-    setDefault() {
-        this.formula_id = null;
-        this.global_id = null;
-    }
-
-    init(info) {
-        if (info.formula) {
-            this._formula = info.formula;
-            this._global = info.global;
-        }
-    }
-
-    getTable() {
-        return FG.table;
-    }
-
-
-    getState() {
-        this.formula_id = this._formula.id
-        this.global_id = this._global.id
-        var state = Object.assign(super.getState(),
-            {
-                formula_id: this.formula_id,
-                global_id: this.global_id
-            });
-        return state;
-    }
-
-    loadState(state) {
-        state = state || {};
-        super.loadState(state);
-        this.formula_id = state.formula_id || null;
-        this.global_id = state.global_id || null;
-    }
-
-    get Formula() {
-        return this._formula;
-    }
-
-    set Formula(f) {
-        this._formula = f;
-    }
-
-
-    get Global() {
-        return this._global;
-    }
-
-    set Global(g) {
-        this._global = g;
-    }
-
-    isUserResource():boolean{
-        return false;
     }
 }
 

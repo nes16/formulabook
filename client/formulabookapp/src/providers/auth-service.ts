@@ -1,13 +1,12 @@
 import { Injectable, Inject } from '@angular/core';
-import { Headers } from '@angular/http';
-import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
+import { Http, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer'; 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { Events } from 'ionic-angular';
-
-import { JwtHttp } from "./jwtHttp";
+import { Store } from '@ngrx/store';
+import * as rootStore from '../reducers'
+import { AuthActions } from '../actions';
 
 export interface AuthData {
   action:string;
@@ -17,13 +16,11 @@ export interface AuthData {
 }
 
 @Injectable()
-export class MyTokenAuth {
+export class AuthService {
   header:any = null;
   user:any = {};
-  mustResetPassword:boolean = false;
   listener:any = null;
-  observable: ConnectableObservable<any> = null;
-  observer: Observer<any> = null;
+  mustResetPassword:boolean = false;
   requestCredentialsPollingTimer: any = null;
   firstTimeLogin:any = null;
   oauthRegistration:any = null;
@@ -31,6 +28,7 @@ export class MyTokenAuth {
   _hasSessionStorage:boolean = false;
   _hasLocalStorage:boolean = false;
   guestUser:any = {uid:"guest@sangamsoftech.com", id:-1, name:'Guest'};
+  jsonHeader = {headers : new Headers({'Content-Type': 'application/json'})}
   config:any = {
         apiUrl: this.apiEndpoint,
         signOutUrl: '/auth/sign_out.json',
@@ -90,10 +88,9 @@ export class MyTokenAuth {
         }
       }
 
-  constructor(public http: JwtHttp, public events: Events
-    , @Inject('ApiEndpoint') public apiEndpoint: string
+  constructor(public http: Http, public store: Store<rootStore.State>, public authActions: AuthActions,
+     @Inject('ApiEndpoint') public apiEndpoint: string
     ) {
-    this.http.setAuth(this);
     this.initializeListeners();
     
      
@@ -138,7 +135,6 @@ export class MyTokenAuth {
       oauthRegistration = ev.data.oauth_registration;
       delete ev.data.oauth_registration;
       this.handleValidAuth(ev.data, true);
-      this.events.publish('login', {action:'login', result:'success'});
       // if (oauthRegistration) {
       //   this.observer.next({ event: 'auth:oauth-registration', data: ev.data });
       // }
@@ -149,156 +145,120 @@ export class MyTokenAuth {
         errors: [ev.data.error]
       };
       this.cancel(error);
-      this.events.publish('login', {action:'login', result:'failed'});
     }
   }
 
   //service interfaces
-  signup(params, opts) {
-    var successUrl;
-    if (opts == null) {
-      opts = {};
-    }
-    successUrl = this.getResultOrValue(this.config.confirmationSuccessUrl);
-    var param1 = Object.assign(JSON.parse(params), {
-      confirm_success_url: successUrl,
-    });
-    params = JSON.stringify(param1);
+  signup(params, opts:any={}) {
+    let successUrl = this.getResultOrValue(this.config.confirmationSuccessUrl);
+    let param = JSON.stringify(Object.assign(JSON.parse(params), {confirm_success_url: successUrl}));
     this.http.post(this.config.apiUrl + this.config.emailRegistrationPath, params, null)
-      .map(resp => {
-        this.events.publish('auth', {action:'signup', result:'success'});
-        })
-      .catch(error => {
-        ('auth', {action:'signup', result:'failed'});
-        return Observable.throw(error);
-      }).subscribe();
+               .subscribe(resp => this.handleSuccessSignup(resp), error => this.handleFailedSignup(error))
   }
 
-  login(params, opts) {
-    if (opts == null) {
-      opts = {};
-    }
-        var headers = {headers : new Headers({
-          'Content-Type': 'application/json'
-        })}
+  handleSuccessSignup(resp){
 
-
-    this.http.post(this.config.apiUrl + this.config.emailSignInPath, params, headers)
-      .map(resp => {
-        var authData;
-        authData = this.config.handleLoginResponse(resp.json().data);
-        this.handleValidAuth(authData, null);
-        this.events.publish('auth', {action:'login', result:'success'});
-      })
-      .catch(error => {
-        this.events.publish('auth', {action:'login', result:'failed'});
-        return Observable.throw(error);
-      }).subscribe();
   }
 
+  handleFailedSignup(error){
+
+  }
+
+
+  login(params, opts:any = {}) {
+    this.http.post(this.config.apiUrl + this.config.emailSignInPath, params, this.jsonHeader)
+    .subscribe(resp => this.handleSuccessLogin(resp), error => this.handleFailedLogin(error))
+  }
+
+  handleSuccessLogin(resp){
+    this.store.dispatch(this.authActions.userLogin(resp))
+  }
+
+  handleFailedLogin(error){
+
+  }
   
   logout() {
-    var headers = {headers : new Headers({
-      'Content-Type': 'application/json'
-    })}
-    this.http["delete"](this.config.apiUrl + this.config.signOutUrl,  headers)
-      .map(resp => {
-        this.invalidateTokens();
-        this.events.publish('auth', {action:'logout', result:'success'});
-       })
-      .catch(error => {
-        console.log(JSON.stringify(error));
-        this.invalidateTokens();
-        this.events.publish('auth', {action:'logout', result:'failed'});
-        return Observable.throw(error);
-       })
+    this.http["delete"](this.config.apiUrl + this.config.signOutUrl,  this.jsonHeader)
+        .subscribe(resp => this.handleSuccessLogout(resp), error => this.handleFailedLogout(error))
   }
 
-  requestPasswordReset(params, opts) {
-    var successUrl;
-    if (opts == null) {
-      opts = {};
-    }
-    successUrl = this.config.passwordResetSuccessUrl;
+  handleSuccessLogout(resp){
+
+  }
+
+  handleFailedLogout(error){
+
+  }
+
+  requestPasswordReset(params, opts:any = {}) {
+    let successUrl = this.config.passwordResetSuccessUrl;
     params.redirect_url = successUrl;
     this.http.post(this.config.apiUrl + this.config.passwordResetPath, params, null)
-      .map(resp => {
-        this.events.publish('auth', {action:'forgotpwd', result:'success'});
-      
-      })
-      .catch(error => {
-        this.events.publish('auth', {action:'forgotpwd', result:'failed'});
-        return Observable.throw(error);
-      }).subscribe();
+        .subscribe(resp => this.handleSuccessPwdReset(resp), error => this.handleFailedPwdReset(error))
   }
 
-  updatePassword(params) {
+  handleSuccessPwdReset(resp){
+
+  }
+
+  handleFailedPwdReset(error){
+
+  }
+
+  chgPassword(params) {
     this.http.put(this.config.apiUrl + this.config.passwordUpdatePath, params, null)
-      .map(resp => {
-        this.events.publish('auth', {action:'chpwd', result:'success'});
-      })
-      .catch(error => {
-        this.events.publish('auth', {action:'chpwd', result:'failed'});
-        return Observable.throw(error);
-      }).subscribe();
+      .subscribe(resp => this.handleSuccessChgPwd(resp), error => this.handleFailedChgPwd(error))
+  }
+
+  handleSuccessChgPwd(resp){
+
+  }
+
+  handleFailedChgPwd(error){
+
   }
 
 
 
   updateAccount(params) {
    this.http.put(this.config.apiUrl + this.config.accountUpdatePath, params, null)
-      .map(resp => {
-        var curHeaders, key, newHeaders, updateResponse, val, _ref;
-        updateResponse = this.config.handleAccountUpdateResponse(resp);
-        curHeaders = this.retrieveData('auth_headers');
-        Object.assign(this.user, updateResponse);
-        if (curHeaders) {
-          newHeaders = {};
-          _ref = this.config.tokenFormat;
-          for (key in _ref) {
-            val = _ref[key];
-            if (curHeaders[key] && updateResponse[key]) {
-              newHeaders[key] = updateResponse[key];
-            }
-          }
-          this.setAuthHeaders(newHeaders);
-        }
-        this.events.publish('auth', {action:'account', result:'success'});
-        })
-      .catch(error => {
-        this.events.publish('auth', {action:'account', result:'failed'});
-        return Observable.throw(error);
-      }).subscribe();
+      .subscribe(resp => this.handleSuccessAccoutUpdate(resp), error => this.handleFailedAccoutUpdate(error))
+  }
+
+  handleSuccessAccoutUpdate(resp){
+
+  }
+
+  handleFailedAccoutUpdate(error){
+
   }
 
   destroyAccount(params) {
     this.http["delete"](this.config.apiUrl + this.config.accountUpdatePath, params)
-      .map(resp => {
-        this.invalidateTokens();
-        this.events.publish('auth', {action:'delete', result:'success'});
-      })
-      .catch(error => {
-        this.events.publish('auth', {action:'delete', result:'failed'});
-        return Observable.throw(error);
-      }).subscribe();
+      .subscribe(resp => this.handleSuccessAccoutDelete(resp), error => this.handleFailedAccoutDelete(error))
   }
 
-  authenticate(provider, opts) {
-    if (opts == null) {
-      opts = {};
-    }
+  handleSuccessAccoutDelete(resp){
+
+  }
+
+  handleFailedAccoutDelete(error){
+
+  }
+
+  authenticate(provider, opts:any={}) {
     this.openAuthWindow(provider, opts);
   }
   
   
   userIsAuthenticated() {
-    //return this.retrieveData('auth_headers') && this.user.signedIn && !this.tokenHasExpired();
     return (this.retrieveData('auth_headers') != null) && !this.tokenHasExpired();
   }
 
   //Helper function
-  openAuthWindow(provider, opts){
-    var authUrl, omniauthWindowType;
+  openAuthWindow(provider, opts:any={}){
+    let authUrl, omniauthWindowType;
     omniauthWindowType = this.config.omniauthWindowType;
     authUrl = this.buildAuthUrl(omniauthWindowType, provider, opts);
     if (omniauthWindowType === 'newWindow') {
@@ -312,15 +272,14 @@ export class MyTokenAuth {
     }
   }
 
-  visitUrl(url) {
+  visitUrl(url:string) {
     return window.location.replace(url);
   }
 
-  buildAuthUrl(omniauthWindowType, provider, opts) {
-    var authUrl, key, params, val;
-    if (opts == null) {
-      opts = {};}
-    authUrl = this.config.apiUrl;
+  buildAuthUrl(omniauthWindowType, provider, opts:any={}) {
+    let  key, params, val;
+
+    let authUrl = this.config.apiUrl;
     authUrl += this.config.authProviderPaths[provider];
     authUrl += '?auth_origin_url=' + encodeURIComponent(window.location.href);
     params = Object.assign({}, opts.params || {}, {
@@ -414,7 +373,7 @@ export class MyTokenAuth {
   }
 
   validateUser() {
-    var clientId, expiry, params, token, uid, url, token_type;
+    let clientId, expiry, params, token, uid, url, token_type;
     
     if (this.userIsAuthenticated()) {
       //resolve
@@ -462,10 +421,8 @@ export class MyTokenAuth {
     }
   }
 
-  validateToken(opts) {
-    if (opts == null) {
-      opts = {};
-    }
+  validateToken(opts:any = {}) {
+
     if (!this.tokenHasExpired()) {
       return this.http.get(this.config.apiUrl + this.config.tokenValidationPath, null)
         .map(resp => {
@@ -530,10 +487,8 @@ export class MyTokenAuth {
   }
 
   
-  handleValidAuth(user, setHeader) {
-    if (setHeader == null) {
-      setHeader = false;
-    }
+  handleValidAuth(user, setHeader:boolean = false) {
+
     if (this.requestCredentialsPollingTimer != null) {
       clearTimeout(this.requestCredentialsPollingTimer);
       setTimeout(() => this.requestCredentialsPollingTimer = null, 0);

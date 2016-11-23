@@ -39,21 +39,21 @@ import { createUniqueNameValidator } from '../validators/custom.validators'
 	selector: 'fl-category',
 	templateUrl: 'category.html',
 })
-export class CategoryComponent extends BaseComponent {
+export class CategoryComponent  {
 	expand: boolean = false;
 	children:Category[] = [];
 	detailPage: any;
 	add:boolean =false;
 	childResource:Category = null;
 	childForm:FormGroup;
-	constructor(dataService: DataService,
+	form:FormGroup;
+	constructor(public dataService: DataService,
 			     app: App,
 				 nav: NavController,
 				 public el: ElementRef,
 				 public uiStateService: UIStateService,
 				 public viewController: ViewController
 				 ) {
-		super(app, dataService, nav, uiStateService);
 		this.detailPage = DetailPage;
 	}
 
@@ -69,7 +69,6 @@ export class CategoryComponent extends BaseComponent {
 	@Input() filter:boolean = false;
 	
 	ngOnInit() {
-		super.ngOnInit();
 		if (this.expand)
 			this.children = this.resource.children;
 		else

@@ -2,10 +2,10 @@ import { Component, ElementRef, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NavController, App } from 'ionic-angular';
 
-import { Variable, Global, FG } from '../../lib/types/standard';
+import { Variable, Global } from '../../lib/types/standard';
 import { DataService } from '../../providers/data-service';
 import { UIStateService } from '../../providers/ui-state-service';
-import { LatexParserService } from '../../providers/latex-parser-service';
+import { LatexParser } from '../../lib/latex-parser';
 import { BaseComponent } from '../base-component'
 import { DetailPage } from '../../pages/detail/detail';
 import { symbolValidator, createMeasureValidator, createFormulaValidator,  createUniqueNameValidator, createUniqueSymbolValidator  } from '../validators/custom.validators'
@@ -22,13 +22,12 @@ export class FormulaComponent extends BaseComponent {
 	value: any;
 	detailPage: any;
 	form:FormGroup;
-		
+    viewType:string = 'Definition'
 
 	constructor(dataService: DataService,
 			     app: App,
 				 nav: NavController,
 				 public el: ElementRef,
-				 public parser: LatexParserService,
 				 public uiStateService: UIStateService
 				 ) {
 		super(app, dataService, nav, uiStateService);
@@ -59,6 +58,21 @@ export class FormulaComponent extends BaseComponent {
 				measure: new FormControl(this.resource.Measure, [Validators.required
 											,createMeasureValidator(false, false)])
 			})
+
+			this.form = new FormGroup({
+				name: new FormControl(vv.name, [ Validators.minLength(2)
+											, Validators.maxLength(30)]),
+                value: new FormControl(vv._result)
+            })
+            vv._formula.Variables.forEach((v,i) => {
+				let fc = new FormControl(vv._values[v.symbol], [Validators.required]) as FormControl;
+				this.form.addControl("Var"+i, fc );
+				//fc.registerOnChange(this.evaluate);
+				// fc.registerOnChange(val => {
+				// 	if(this.form.valid)
+				// 		vv.evaluate();
+				// })
+            })
 		}
 	}
 
@@ -94,6 +108,18 @@ export class FormulaComponent extends BaseComponent {
 			
 		}
 	}
+
+	selectedViewType(type){
+        if(type == 'Definition'){
+            
+        }
+        else if(type == 'Run'){
+            
+        }
+        else if(type == 'History'){
+            
+        }
+    }
 
 	createGlobal(state){
 		var g = new Global(state);
@@ -150,4 +176,11 @@ export class FormulaComponent extends BaseComponent {
 		super.edit(evt);
 	}
 
+	evaluate(evt){
+		if(evt.srcElement.changeTimeout)
+       	 	clearTimeout(evt.srcElement.changeTimeout);
+		evt.srcElement.changeTimeout = setTimeout(() => {
+			this.resource.evaluate();
+        }, 600);
+	}
 }

@@ -6,8 +6,9 @@ class CreateFormulas < ActiveRecord::Migration
   	  t.string :latex
   	  t.uuid :unit_id
   	  t.uuid :property_id
-      
+      t.text :variables
       t.boolean :shared
+      t.boolean :shared_changed
 	    t.belongs_to  :user, index: true
 
       t.datetime :deleted, index: true
@@ -16,4 +17,6 @@ class CreateFormulas < ActiveRecord::Migration
       t.timestamps null: false
     end
   end
+
+
 end

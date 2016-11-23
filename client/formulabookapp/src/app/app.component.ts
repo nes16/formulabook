@@ -2,10 +2,13 @@ import { Component, ViewChild } from '@angular/core';
 import { App, Events, MenuController, Nav, Platform } from 'ionic-angular';
 import { Splashscreen, StatusBar } from 'ionic-native';
 
-import { UserPage } from '../pages/user/user';
 import { TabsPage } from '../pages/tabs/tabs';
 import { TutorialPage } from '../pages/tutorial/tutorial';
-import { MyTokenAuth } from '../providers/token-auth/auth-service'
+
+
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Rx';
+import * as fromRoot from '../reducers';
 
 export interface PageObj {
   title: string;
@@ -28,26 +31,15 @@ export class FormulaApp {
   // the login page disables the left menu
   appPages: PageObj[] = [
     { title: 'Units', component: TabsPage, icon: 'calendar' },
-    { title: 'Globals', component: TabsPage, index: 1, icon: 'contacts' },
-    { title: 'Formulas', component: TabsPage, index: 2, icon: 'map' },
-    { title: 'Categories', component: TabsPage, index: 4, icon: 'map' },
   ];
-  loggedInPages: PageObj[] = [
-    { title: 'change Passwrod', component: UserPage, icon: 'person', params:{option:'chpwd'} },
-    { title: 'Logout', component: TabsPage, icon: 'log-out' }
-  ];
-  loggedOutPages: PageObj[] = [
-    { title: 'Login', component: UserPage, icon: 'log-in', params:{option:'login'} },
-    { title: 'Signup', component: UserPage, icon: 'person-add', params:{option:'signup'} }
-  ];
+  
 
   rootPage: any = TabsPage;
+  showLoginMenu$: Observable<boolean>;
 
   constructor(
-    public apsignup: App,
-    public events: Events,
+    private store: Store<fromRoot.State>,
     public menu: MenuController,
-    public auth: MyTokenAuth,
     platform: Platform
   ) {
     // Call any initial plugins when ready
@@ -56,15 +48,12 @@ export class FormulaApp {
       Splashscreen.hide();
     });
 
-    // decide which menu items should be hidden by current login status stored in local storage
-    this.enableMenu(this.auth.userIsAuthenticated());
     if(!localStorage.getItem("tutShown")){
       this.rootPage = TutorialPage;
       localStorage.setItem("tutShown", "1");
       
     }
 
-    this.listenToLoginEvents();
   }
 
   openPage(page: PageObj) {
@@ -82,30 +71,6 @@ export class FormulaApp {
     } else {
       this.nav.setRoot(page.component, page.params);
     }
-
-    if (page.title === 'Logout') {
-      // Give the menu time to close before changing to logged out
-      setTimeout(() => {
-        this.auth.logout()
-      }, 1000);
-    }
-  }
-
-  
-  listenToLoginEvents() {
-    this.auth.events.subscribe('auth', (evt) => {
-      if(evt.action == 'login' && evt.result == 'success'){
-        this.enableMenu(true);
-      }
-      if(evt.action == 'logout' && evt.result == 'success'){
-        this.enableMenu(false);
-      }
-    });
-  }
-
-  enableMenu(loggedIn) {
-    this.menu.enable(loggedIn, 'loggedInMenu');
-    this.menu.enable(!loggedIn, 'loggedOutMenu');
   }
 }
 

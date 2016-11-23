@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { MyTokenAuth } from './token-auth/auth-service';
+import { AuthService } from './auth-service';
 import { UIStateService } from './ui-state-service';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -10,7 +10,7 @@ export class BaseService{
 
 	http: any = null;
 
-	constructor(public auth:MyTokenAuth, public uiService:UIStateService
+	constructor(public auth:AuthService, public uiService:UIStateService
 		, @Inject('ApiEndpoint') public apiEndpoint: string){
 		this.http = auth.getJwtHttp();
 	}
