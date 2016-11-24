@@ -1,64 +1,50 @@
-import { Component, ElementRef, Input } from '@angular/core';
+import { Component, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NavController, App } from 'ionic-angular';
-
-import { Variable, Global } from '../../lib/types/standard';
 import { DataService } from '../../providers/data-service';
 import { UIStateService } from '../../providers/ui-state-service';
-import { LatexParser } from '../../lib/latex-parser';
 import { BaseComponent } from '../base-component'
 import { DetailPage } from '../../pages/detail/detail';
-import { symbolValidator, createMeasureValidator, createFormulaValidator,  createUniqueNameValidator, createUniqueSymbolValidator  } from '../validators/custom.validators'
-import { ErrorHandler } from '../../lib/types/standard';
+import { symbolValidator, numberValidator, createMeasureValidator, createUniqueNameValidator, createUniqueSymbolValidator } from '../validators/custom.validators'
+import * as std from '../../lib/types/standard';
+import { Formula } from '../../reducers/resource'
+
 
 @Component({
-	selector: 'fl-formula',
-	templateUrl: 'formula.html',
+	selector: 'fl-global',
+	templateUrl: 'global.html',
 })
-export class FormulaComponent extends BaseComponent {
-	
-	rootNode: any;
-	timer: any;
-	value: any;
-	detailPage: any;
+export class GlobalComponent {
+	fobj:std.Formula;
 	form:FormGroup;
     viewType:string = 'Definition'
 
-	constructor(dataService: DataService,
-			     app: App,
-				 nav: NavController,
-				 public el: ElementRef,
-				 public uiStateService: UIStateService
-				 ) {
-		super(app, dataService, nav, uiStateService);
-		this.detailPage = DetailPage;
+	constructor(public el: ElementRef,
+				 app:App,
+				 nav: NavController) {
 	}
-
+	@Input() showChkbox:boolean = false;
 	@Input() resource;
-	//@ViewChildren(UnitComponent) unitForm: QueryList<UnitComponent>
 	@Input() mode = 'list';
-	@Input() query;
-	@Input() units;
-	@Input() onlyProp = false;
-	@Input() index = null;
-	@Input() last = null;
-	@Input() filter:boolean = false;
+	@Output() save : EventEmitter<Formula> = new EventEmitter<Formula>();
+	@Output() check : EventEmitter<any> = new EventEmitter<any>();
+	@Output() unit : EventEmitter<any> = new EventEmitter<any>();
 
 	ngOnInit() {
-		super.ngOnInit();
 		if(this.mode == 'edit'){
-			this.form = new FormGroup({
-				name: new FormControl(this.resource.name, [Validators.required
-											, Validators.minLength(2)
-											, Validators.maxLength(30)],createUniqueNameValidator(this.dataService, this)),
-				symbol: new FormControl(this.resource.symbol, [Validators.required
-											,symbolValidator], createUniqueSymbolValidator(this.dataService, this)),
-				latex: new FormControl(this.resource.latex, [Validators.required
-											,createFormulaValidator(this.resource)]),
-				measure: new FormControl(this.resource.Measure, [Validators.required
+		this.fobj = new std.Formula(this.resource);
+		this.form = new FormGroup({
+			name: new FormControl(this.fobj.name, [Validators.required
+										, Validators.minLength(2)
+										, Validators.maxLength(30)]),
+			symbol: new FormControl(this.fobj.symbol, [Validators.required
+										,symbolValidator]),
+			latex: new FormControl(this.fobj.latex, [Validators.required
+										,createFormulaValidator(this.fobj)]),
+			measure: new FormControl(this.fobj.Measure, [Validators.required
 											,createMeasureValidator(false, false)])
 			})
-
+			
 			this.form = new FormGroup({
 				name: new FormControl(vv.name, [ Validators.minLength(2)
 											, Validators.maxLength(30)]),
@@ -72,9 +58,28 @@ export class FormulaComponent extends BaseComponent {
 				// 	if(this.form.valid)
 				// 		vv.evaluate();
 				// })
-            })
+            })	
 		}
 	}
+
+    onSave(){
+        this.save.emit(this.fobj.getState());
+	}
+
+	onSelect(evt){
+		this.check.emit({resource:this.resource, checked:evt.checked});
+	}
+	
+
+	@Input() resource;
+	//@ViewChildren(UnitComponent) unitForm: QueryList<UnitComponent>
+	@Input() mode = 'list';
+	@Input() query;
+	@Input() units;
+	@Input() onlyProp = false;
+	@Input() index = null;
+	@Input() last = null;
+	@Input() filter:boolean = false;
 
 	moveToVariable(global:FG){
 		var [symbol, index] = [global.Global.symbol
@@ -157,10 +162,6 @@ export class FormulaComponent extends BaseComponent {
 	    }
 	}
 
-	evaluate(){
-
-	}
-
 	edit(evt){
 		//Ser formula reference in child object		
 		this.resource.Globals.forEach(fg => fg.Formula = this.resource);
@@ -183,4 +184,9 @@ export class FormulaComponent extends BaseComponent {
 			this.resource.evaluate();
         }, 600);
 	}
+
+	get diagnostic() { return JSON.stringify(this.fobj) 
+
+						+ '\n'+JSON.stringify(this.form.valid);}
+
 }

@@ -35,7 +35,7 @@ import { combineReducers } from '@ngrx/store';
 
 
 // reducers
-import { resources, Resource, Property, Unit } from './resource';
+import { resources, Resource, Property, Unit, Global, Formula } from './resource';
 import { uiState, UIState } from './uistate';
 import { authState, AuthState } from './auth';
 import { ResourceActions } from '../actions'
@@ -143,6 +143,19 @@ export function getUnits(state$:Observable<State>){
   })
 }
 
+export function getGlobals(state$:Observable<State>){
+  return state$.map(state => {  
+    let globals = (state.resources as Global[]).filter(r => r.type == 'globals')    
+    return globals;
+  })
+}
+
+export function getFomulas(state$: Observable<State>) {
+  return state$.map(state => {  
+    let formulas = (state.resources as Formula[]).filter(r => r.type == 'formulas')    
+    return formulas;
+  })
+}
 
 export function getCurrentProperty(state$:Observable<State>){
   return state$.map(state => state.uiState.current_property)    

@@ -40,7 +40,7 @@ export let uiState: ActionReducer<UIState> = (state = initialState, action: Acti
         switch (action.type) {
             case UIStateActions.PUSH_RESOURCES:
                 newState={
-                    active_tab_index:1,
+                    active_tab_index:3,
                     detail_nav_stake:[...state.detail_nav_stake, action.payload],
                     detail_currResource:action.payload,
                 }
@@ -49,7 +49,7 @@ export let uiState: ActionReducer<UIState> = (state = initialState, action: Acti
             case UIStateActions.POP_RESOURCES:
                 let stake = [...state.detail_nav_stake];
                 let newResource = stake.pop();
-                let active_tab_index = stake.length == 0?0:1; 
+                let active_tab_index = stake.length == 0?0:3; 
                 newState={
                     active_tab_index:active_tab_index,
                     detail_nav_stake:stake,

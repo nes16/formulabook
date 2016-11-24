@@ -103,9 +103,9 @@ export let resources:ActionReducer<Resource[]> = (state=initialState, action:Act
         }
 
         case ResourceActions.DELETE_RESOURCE_SUCCESS:{
-            const resource = action.payload;
+            const id = action.payload;
 
-            return state.filter(r => r.id !== resource.id)
+            return state.filter(r => r.id !== id)
         }
 
 
@@ -120,21 +120,6 @@ export let resources:ActionReducer<Resource[]> = (state=initialState, action:Act
         }
 
         case ResourceActions.EDIT_RESOURCES_FAIL: {
-
-            return state;
-        }
-
-        case ResourceActions.SELECT_RESOURCE: {
-
-            return state;
-        }
-
-        case ResourceActions.UNSELECT_RESOURCE: {
-
-            return state;
-        }
-
-        case ResourceActions.TOGGLE_SELECTION: {
 
             return state;
         }

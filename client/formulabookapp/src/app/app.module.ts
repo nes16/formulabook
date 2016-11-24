@@ -14,6 +14,8 @@ import { TabsPage } from '../pages/tabs/tabs'
 import { TutorialPage } from '../pages/tutorial/tutorial'
 import { PropertyListPage } from '../pages/property-list'
 import { UnitListPage } from '../pages/unit-list'
+import { GlobalListPage } from '../pages/global-list'
+import { FormulaListPage } from '../pages/formula-list'
 import { FormulaApp } from './app.component'
 //components
 import { AuthService } from '../providers/auth-service'
@@ -40,13 +42,17 @@ import { ResourceActions, UIStateActions, AuthActions } from '../actions';
     TabsPage,
     TutorialPage,
     PropertyListPage,
-    UnitListPage
+    UnitListPage,
+    GlobalListPage,
+    FormulaListPage
   ],
   imports: [
     HttpModule,
     FormsModule,
     ComponentsModule,
-    IonicModule.forRoot(FormulaApp),
+    IonicModule.forRoot(FormulaApp,{
+      tabsHideOnSubPages:false  
+    }),
   /**
      * StoreModule.provideStore is imported once in the root module, accepting a reducer
      * function or object map of reducer functions. If passed an object of
@@ -89,6 +95,8 @@ import { ResourceActions, UIStateActions, AuthActions } from '../actions';
     TutorialPage,
     PropertyListPage,
     UnitListPage,
+    GlobalListPage,
+    FormulaListPage,
     FormulaApp
   ],
   providers: [

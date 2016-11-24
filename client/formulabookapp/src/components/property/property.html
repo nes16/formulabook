@@ -3,7 +3,8 @@
         <ion-item>
             {{resource.name}}
             <ion-checkbox *ngIf="showChkbox" (ionChange)="onSelect($event)"></ion-checkbox>
-            <button royal ion-button item-right (click)="onUnitClick($event)">Units...</button>
+
+            <button *ngIf="!showChkbox" royal ion-button item-right (click)="onUnitClick($event)">Units...</button>
         </ion-item>
     </template>
     <template [ngSwitchCase]="'edit'"> 

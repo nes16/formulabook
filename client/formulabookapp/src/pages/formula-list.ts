@@ -2,36 +2,35 @@ import { NavParams, NavController } from 'ionic-angular';
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { DetailPage } from '../pages/detail/detail';
 import { CategoryPage } from './category/category';
+import { UnitListPage } from './unit-list';
 import { Store } from '@ngrx/store';
 
 import { Observable } from 'rxjs/Rx';
 import * as fromRoot from '../reducers';
-import {Property, Unit} from '../reducers/resource'
+import {Formula} from '../reducers/resource'
 import {ResourceActions} from '../actions'
 import {UIStateActions} from '../actions'
 import { UUID } from 'angular2-uuid';
 import * as std from '../lib/types/standard';
+'
 @Component({
-    templateUrl: 'unit-list.html',
+    templateUrl: 'formula-list.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class UnitListPage  {
+export class FormulaListPage {
     args:any;
     /*For listing units*/
     viewType:string = 'All'
-	units$:Observable<Unit[]>;
-    property:Property;
-    listMode:string = 'List';
-    selectedItems:Resource[] = [];
+	formulas$:Observable<Formula[]>;
+    selectedItems:Formula[] = [];
     listMode:string = 'List';
     constructor(public store: Store<fromRoot.State>,
 				public navParams: NavParams, 
               public nav: NavController,
               public actions:ResourceActions,
               public uiActions:UIStateActions) {
-		this.units$ = store.let(fromRoot.getUnits);
-		store.let(fromRoot.getCurrentProperty).subscribe(p => this.property = p);
+		this.formulas$ = store.let(fromRoot.getFomulas) as Observable<Formula[]>
     }
 
     ngOnInit(){
@@ -41,28 +40,29 @@ export class UnitListPage  {
     }
 
 	type():string{
-		return 'properties';
+		return 'formulas';
 	}
 
     onClick(res){
-        this.store.dispatch(this.uiActions.pushResources(res))
+       this.store.dispatch(this.uiActions.pushResources(res))
     }
 
     onPress(evt){
         this.listMode= 'Select';
-    }
+    }                   
 
     onCheck(evt){
         if(evt.checked)
-            this.store.dispatch(this.uiActions.selectResource(evt.resource))
+            this.selectedItems.push(evt.resource);
         else{
-            this.store.dispatch(this.uiActions.unselectResource(evt.resource))
+            let index = this.selectedItems.findIndex(evt.resource);
+            if(index > -1)
+                this.selectedItems.splice(index,1);
         }
     }
 
     onActionCmd(cmd:string){
         let flag=true;
-        let resources = this.store.let(fromRoot.getSelectedResources)         
         switch(cmd){
             
             case 'Done':{
@@ -70,11 +70,11 @@ export class UnitListPage  {
                 return;
             }
             case 'Delete':{
-                this.store.dispatch(this.actons.deleteResource(resources))
+                this.store.dispatch(this.actions.deleteResource(this.selectedItems.map(r => r.id)))
                 return;
             }
             case 'Share':{
-                let newresources = resources.map(r => Object.assign({},r,{shared:flag}))
+                let newresources = this.selectedItems.map(r => Object.assign({},r,{shared:flag}))
                 return;
             }
             case 'Categorize':{
@@ -82,13 +82,12 @@ export class UnitListPage  {
                 return;
             }
             case 'Favourite':{
-                let newresources = resources.map(r => Object.assign({},r,{shared:true}))
+                let newresources = this.selectedItems.map(r => Object.assign({},r,{favourite:true}))
                 return;
             }
             case 'Add':{
-                let pobj = new std.Property(this.property);
-                let uobj = pobj.newUnit(true);
-                this.store.dispatch(this.uiActions.pushResources(Object.assign({},uobj.getState())))
+              let fobj = new std.Formula();
+                this.store.dispatch(this.uiActions.pushResources(fobj.getState()))
                 return;
             }
             default:{

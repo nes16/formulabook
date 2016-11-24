@@ -97,27 +97,5 @@ export class ResourceActions {
             payload:resource
         }
     }
-
-    static SELECT_RESOURCE = '[Resource] Select resouce';
-    selectResource(resource): Action {
-        return {
-            type: ResourceActions.SELECT_RESOURCE,
-            payload:{resource}
-        }
-    }
-
-    static UNSELECT_RESOURCE = '[Resource] Unselect resouce';
-    unselectResource(resource): Action {
-        return {
-            type: ResourceActions.UNSELECT_RESOURCE,
-            payload:{resource}
-        }
-    }
-
-    static TOGGLE_SELECTION = '[Resource] Toggle selection';
-    toggleSelection(): Action {
-        return {
-            type: ResourceActions.TOGGLE_SELECTION
-        }
-    }
+ 
 }

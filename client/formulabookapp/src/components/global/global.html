@@ -5,11 +5,11 @@
         </ion-item-divider>
         <ion-item  (click)="onClick($event)">
             <div>
-                <span>{{resource.name}}</span>
-                <span>(<mathq [(ngModel)]="resource.symbol"></mathq>)</span>
+                <span>{{gobj.name}}</span>
+                <span>(<mathq [(ngModel)]="gobj.symbol"></mathq>)</span>
             </div>
             <div>
-                <span>{{resource.value}}</span>
+                <span>{{gobj.value}}</span>
             </div>
         </ion-item>
         <ion-item-divider *ngIf="last" danger>
@@ -19,16 +19,16 @@
     <template [ngSwitchCase]="'row'">
         <ion-row (click)="onClick($event)">
             <ion-col >
-                <span>{{resource.name}}</span>
+                <span>{{gobj.name}}</span>
             </ion-col>
             <ion-col >
-                <span><mathq [(ngModel)]="resource.symbol"></mathq></span>
+                <span><mathq [(ngModel)]="gobj.symbol"></mathq></span>
             </ion-col>
             <ion-col>
-                <span>{{resource.value}}</span>
+                <span>{{gobj.value}}</span>
             </ion-col>
             <ion-col>
-                <fl-unit-sel [(ngModel)]="resource.Measure" [mode]='list'></fl-unit-sel>
+                <fl-unit-sel [(ngModel)]="gobj.Measure" [mode]='list'></fl-unit-sel>
             </ion-col>
         </ion-row>
     </template>
@@ -38,23 +38,23 @@
             <ion-list>
                 <ion-item>
                     <ion-label>Name</ion-label>
-                    <ion-input type="text" formControlName="name" [(ngModel)]="resource.name"></ion-input>
+                    <ion-input type="text" formControlName="name" [(ngModel)]="gobj.name"></ion-input>
                 </ion-item>
                 <fb-error [fcontrol]="form.controls.name"></fb-error>
                 <ion-item>
                     <ion-label>Symbol</ion-label>
-                    <mathq [editable]="true"  item-right formControlName="symbol" [(ngModel)]="resource.symbol"></mathq>
+                    <mathq [editable]="true"  item-right formControlName="symbol" [(ngModel)]="gobj.symbol"></mathq>
                 </ion-item>
                 <fb-error [fcontrol]="form.controls.symbol"></fb-error>
                 <ion-item>
                     <ion-label>Value</ion-label>
-                    <ion-input type="text" formControlName="value" [(ngModel)]="resource.value"></ion-input>
+                    <ion-input type="text" formControlName="value" [(ngModel)]="gobj.value"></ion-input>
                 </ion-item>
                 <fb-error [fcontrol]="form.controls.measure"></fb-error>
                 <ion-item>
                         <ion-label>Measure</ion-label>
                         
-                        <fl-unit-sel item-right  formControlName="measure" [(ngModel)]="resource.Measure" [mode]="'edit'"></fl-unit-sel>
+                        <fl-unit-sel item-right  formControlName="measure" [(ngModel)]="gobj.Measure" [mode]="'edit'"></fl-unit-sel>
                         
                 </ion-item>
                 <fb-error [fcontrol]="form.controls.measure"></fb-error>

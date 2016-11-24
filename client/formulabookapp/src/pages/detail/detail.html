@@ -20,6 +20,11 @@
                 <fl-unit [mode]="'edit'" (save)="onSave($event)" [property]="(uiState$ | async)?.current_property" [resource]="(uiState$ | async)?.detail_currResource"></fl-unit>
             </ion-list>
         </template>
+        <template [ngSwitchCase]="'globals'">
+            <ion-list>
+                <fl-global [mode]="'edit'" (save)="onSave($event)"  [resource]="(uiState$ | async)?.detail_currResource"></fl-global>
+            </ion-list>
+        </template>
     </div>   
 </ion-content>
 <ion-footer [class.fl-hidden]="(uiState$ | async)?.showKB">

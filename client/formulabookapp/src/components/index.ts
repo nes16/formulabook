@@ -7,9 +7,14 @@ import { FlNavBar } from './fl-nav-bar/fl-nav-bar'
 import { CategoryComponent } from './category/category'
 import { PropertyComponent } from './property/property'
 import { UnitComponent } from './unit/unit'
+import { GlobalComponent } from './global/global'
+import { FormulaComponent } from './formula/formula'
 import { MathKeypad } from './keys/keypad'
 import { MathQ } from './mathquill'
 import { MathQValueAccessor } from './mathquill-accessor'
+import { UnitSelector } from './selectors/unit'
+import { UnitValueAccessor } from './selectors/unit-accessor'
+
 import { FBError } from './fb-error'
 
 
@@ -19,9 +24,13 @@ export const COMPONENTS = [
     CategoryComponent,
     PropertyComponent,
     UnitComponent,
+    GlobalComponent,
+    FormulaComponent,
     MathKeypad,
     MathQ,
     MathQValueAccessor,
+    UnitSelector,
+    UnitValueAccessor,
     FBError
 ];
 

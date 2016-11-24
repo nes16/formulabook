@@ -1,5 +1,5 @@
 <ion-header>
-	<fl-nav-bar [listMode]="listMode"  [title]="'Properties'"  (actionCmd)="onActionCmd($event)"  (filterChange)="onFilterChange($event)"></fl-nav-bar>
+	<fl-nav-bar [listMode]="listMode"  [title]="'Globals'"  (actionCmd)="onActionCmd($event)"  (filterChange)="onFilterChange($event)"></fl-nav-bar>
 </ion-header>
 <ion-content>
 	<ion-segment [(ngModel)]="viewType">
@@ -13,5 +13,5 @@
 	        Library
 	    </ion-segment-button>
 	</ion-segment>
-	<fl-property *ngFor="let res of properties$ | async"  [showChkbox]="listMode == 'Select'" (unit)="onUnitClick($event)" (check)="onCheck($event)" [resource]="res" (press)="onPress($event)" (click)=onClick(res)></fl-property>
+	<fl-global *ngFor="let res of globals$ | async"  [showChkbox]="listMode == 'Select'"  (check)="onCheck($event)" [resource]="res" (press)="onPress($event)" (click)=onClick(res)></fl-global>
 </ion-content>

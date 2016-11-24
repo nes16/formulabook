@@ -5,12 +5,12 @@
         </ion-item-divider>
         <ion-item  (click)="onClick($event)">
             <div>
-                <h3>{{resource.name}}</h3>
+                <h3>{{fobj.name}}</h3>
                 <p>
-                <span><mathq [(ngModel)]="resource.symbol"></mathq> = <mathq [(ngModel)]="resource.latex"></mathq></span>
+                <span><mathq [(ngModel)]="fobj.symbol"></mathq> = <mathq [(ngModel)]="fobj.latex"></mathq></span>
                 </p>
                 <p>
-                <fl-unit-sel [(ngModel)]="resource.Measure" [mode]='list'></fl-unit-sel>
+                <fl-unit-sel [(ngModel)]="fobj.Measure" [mode]='list'></fl-unit-sel>
                 </p>
             </div>
         </ion-item>
@@ -34,19 +34,19 @@
             <ion-list>
                 <ion-item>
                     <ion-label>Name</ion-label>
-                    <ion-input type="text" formControlName="name" [(ngModel)]="resource.name"></ion-input>
+                    <ion-input type="text" formControlName="name" [(ngModel)]="fobj.name"></ion-input>
                 </ion-item>
                 <fb-error [fcontrol]="form.controls.name"></fb-error>
 
                 <ion-item>
                     <ion-label>Formula</ion-label>
-                        <span item-right><mathq [editable]="true" formControlName="symbol" [(ngModel)]="resource.symbol"></mathq> = <mathq [editable]="true" formControlName="latex" (change)="updateVariables($event)" [(ngModel)]="resource.latex"></mathq></span>
+                        <span item-right><mathq [editable]="true" formControlName="symbol" [(ngModel)]="fobj.symbol"></mathq> = <mathq [editable]="true" formControlName="latex" (change)="updateVariables($event)" [(ngModel)]="fobj.latex"></mathq></span>
                 </ion-item>
                 <fb-error [fcontrol]="form.controls.symbol"></fb-error>
 
                 <ion-item>
                     <ion-label>Measure</ion-label>
-                        <fl-unit-sel item-right formControlName="measure" [(ngModel)]="resource.Measure" [mode]="'edit'"></fl-unit-sel>
+                        <fl-unit-sel item-right formControlName="measure" [(ngModel)]="fobj.Measure" [mode]="'edit'"></fl-unit-sel>
                 </ion-item>
                 <fb-error [fcontrol]="form.controls.measure"></fb-error>
 

@@ -21,7 +21,7 @@ export class PropertyComponent {
 	@Input() resource;
 	@Input() mode = 'list';
 	@Output() save : EventEmitter<Property> = new EventEmitter<Property>();
-	@Output() select : EventEmitter<any> = new EventEmitter<any>();
+	@Output() check : EventEmitter<any> = new EventEmitter<any>();
 	@Output() unit : EventEmitter<any> = new EventEmitter<any>();
 	ngOnInit() {
 		if(this.mode == 'edit'){
@@ -39,7 +39,7 @@ export class PropertyComponent {
 	}
 
 	onSelect(evt){
-		this.select.emit({resource:this.resource, checked:evt.checked});
+		this.check.emit({resource:this.resource, checked:evt.checked});
 	}
 	
 	onUnitClick(evt){

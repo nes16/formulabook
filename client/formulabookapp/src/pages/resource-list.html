@@ -1,0 +1,30 @@
+<ion-header>
+	<fl-nav-bar [listMode]="listMode"  [title]="'Properties'"  (actionCmd)="onActionCmd($event)"  (filterChange)="onFilterChange($event)"></fl-nav-bar>
+</ion-header>
+<ion-content>
+	<ion-segment [(ngModel)]="viewType">
+	    <ion-segment-button value="All" (ionSelect)="selectedViewType('All')" >
+	        All
+	    </ion-segment-button>
+	    <ion-segment-button value="Favourites" (ionSelect)="selectedViewType('Favourites')" >
+	        Favourites
+	    </ion-segment-button>
+	    <ion-segment-button value="Library" (ionSelect)="selectedViewType('Library')" >
+	        Library
+	    </ion-segment-button>
+	</ion-segment>
+	<div *ngSwitch="type">
+		<ion-list *ngSwitchCase='properties'>
+			<fl-property *ngFor="let res of properties$ | async"  [showChkbox]="listMode == 'Select'" (unit)="onUnitClick($event)" (check)="onCheck($event)" [resource]="res" (press)="onPress($event)" (click)=onClick(res)></fl-property>
+		</ion-list>
+		<ion-list *ngSwitchCase='units'>
+				<fl-unit *ngFor="let res of units$ | async"  [showChkbox]="listMode == 'Select'" (check)="onCheck($event)" [resource]="res" [property]="(property$ | async)" (press)="onPress($event)" (click)="onClick(res)"></fl-unit>
+		</ion-list>
+		<ion-list *ngSwitchCase="globals">
+				<fl-global *ngFor="let res of globals$ | async"  [showChkbox]="listMode == 'Select'"  (check)="onCheck($event)" [resource]="res" (press)="onPress($event)" (click)=onClick(res)></fl-global>
+		</ion-list>
+		<ion-list *ngSwitchCase="formulas">
+			<fl-formula *ngFor="let res of formulas$ | async"  [showChkbox]="listMode == 'Select'"  (check)="onCheck($event)" [resource]="res" (press)="onPress($event)" (click)=onClick(res)></fl-formula>
+		</ion-list>			
+	</div>
+</ion-content>
