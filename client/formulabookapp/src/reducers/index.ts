@@ -150,7 +150,7 @@ export function getGlobals(state$:Observable<State>){
   })
 }
 
-export function getFomulas(state$: Observable<State>) {
+export function getFormulas(state$: Observable<State>) {
   return state$.map(state => {  
     let formulas = (state.resources as Formula[]).filter(r => r.type == 'formulas')    
     return formulas;

@@ -6,75 +6,75 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Rx';
 import * as fromRoot from '../reducers';
 
-import {Property, Unit, Global, Formula} from '../reducers/resource'
+import {Resource, Property, Unit, Global, Formula} from '../reducers/resource'
 import {ResourceActions} from '../actions'
 import {UIStateActions} from '../actions'
 import { UUID } from 'angular2-uuid';
 import * as std from '../lib/types/standard';
 
+export interface ResourceInfo {
+    title:string;
+    ole:Observable<Resource[]>;
+    type:string;
+};
+
 @Component({
     templateUrl: 'resource-list.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-interface ResourceInfo {
-    title:string;
-    ole:Observable<Resource>;
-    type:string;
-}
 export class ResourceListPage  {
     type:string;
+    listMode:string = 'List';
+    selectedItems:Resource[] = [];
     properties$:Observable<Property[]>;
-    units$:Observable<Unit[]>;=store.let(fromRoot.getUnits)
-    globals$:Observable<Global[]>;=store.let(fromRoot.getGlobals)
-    formulas$:Observable<Formula[]>;=store.let(fromRoot.getFormulas)
-        
-    /*For listing units*/
-	properties$:Observable<Property[]>;
-    static resourceInfos= {[type:string]:ResourceInfo};
+    units$:Observable<Unit[]>;
+    globals$:Observable<Global[]>;
+    formulas$:Observable<Formula[]>;
+    static resourceInfos:{[type:string]:ResourceInfo;} = {};
+
     constructor(public store: Store<fromRoot.State>,
 				public navParams: NavParams, 
               public nav: NavController,
               public actions:ResourceActions,
               public uiActions:UIStateActions) {
         this.type = navParams.get('type');
-        if(this.type == 'properties'){
-            this.property = navParams.get('property');
-        }
 
-        this.properties$  = store.let(fromRoot.getProperties)
-        this.unit$ = store.let(fromRoot.getUnits)
+        this.properties$  = store.let(fromRoot.getProperties) as Observable<Property[]>;
+        this.units$ = store.let(fromRoot.getUnits)
         this.globals$ = store.let(fromRoot.getGlobals)
-        this.formulas$ = store.let(fromRoot.getFormulas)
+        this.formulas$ = store.let(fromRoot.getFormulas) as Observable<Formula[]>;
         
-        if(ResourceListPage.resourceInfos == null){
-    	    resourceInfos['properties']={
+        if(ResourceListPage.resourceInfos['properties'] == null){
+    	    ResourceListPage.resourceInfos['properties']={
                 title:'Properties',
-                ole:this.properties$,
+                ole:this.properties$ as Observable<Resource[]>,
                 type:'properties'}
-            resourceInfos['units']={
+            ResourceListPage.resourceInfos['units']={
                 title:'Units - {{}}',
-                ole:this.units$,
+                ole:this.units$ as Observable<Resource[]>,
                 type:'units'}
-            resourceInfo['globals']={
+            ResourceListPage.resourceInfos['globals']={
                 title:'Globals',
-                ole:this.globals$,
+                ole:this.globals$ as Observable<Resource[]>,
                 type:'globals'}
-            resourceInfo['formulas']={
+            ResourceListPage.resourceInfos['formulas']={
                 title:'Formulas',
-                ole:this.formulas$,
+                ole:this.formulas$ as Observable<Resource[]>,
                 type:'formulas'}
-            }
         }
     }
 
     ngOnInit(){
     }
 
+    getInfo(){
+        return ResourceListPage.resourceInfos[this.type];
+    }
     selectedViewType(type){
     }
 
-	type():string{
-		return 'properties';
+	getType():string{
+		return this.type;
 	}
 
     onClick(res){

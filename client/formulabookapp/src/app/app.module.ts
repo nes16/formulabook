@@ -12,10 +12,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { DetailPage } from '../pages/detail/detail'
 import { TabsPage } from '../pages/tabs/tabs'
 import { TutorialPage } from '../pages/tutorial/tutorial'
-import { PropertyListPage } from '../pages/property-list'
-import { UnitListPage } from '../pages/unit-list'
-import { GlobalListPage } from '../pages/global-list'
-import { FormulaListPage } from '../pages/formula-list'
+import { ResourceListPage } from '../pages/resource-list'
 import { FormulaApp } from './app.component'
 //components
 import { AuthService } from '../providers/auth-service'
@@ -41,10 +38,7 @@ import { ResourceActions, UIStateActions, AuthActions } from '../actions';
     DetailPage,
     TabsPage,
     TutorialPage,
-    PropertyListPage,
-    UnitListPage,
-    GlobalListPage,
-    FormulaListPage
+    ResourceListPage,
   ],
   imports: [
     HttpModule,
@@ -93,10 +87,7 @@ import { ResourceActions, UIStateActions, AuthActions } from '../actions';
     DetailPage,
     TabsPage,
     TutorialPage,
-    PropertyListPage,
-    UnitListPage,
-    GlobalListPage,
-    FormulaListPage,
+    ResourceListPage,
     FormulaApp
   ],
   providers: [

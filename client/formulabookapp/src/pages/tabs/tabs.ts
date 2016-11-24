@@ -1,9 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { NavParams, Tabs } from 'ionic-angular';
-import { PropertyListPage } from '../property-list';
+import { ResourceListPage } from '../resource-list';
 import { DetailPage } from '../detail/detail';
-import { GlobalListPage } from '../global-list';
-import { FormulaListPage } from '../formula-list';
 
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Rx';
@@ -15,24 +13,27 @@ const TAB_INDEX_DETAIL:number = 3;
 @Component({
   template: `
   <ion-tabs tabbarPlacement="bottom" #myTabs>
-    <ion-tab [root]="rootInfo[0].page"  [rootParams]="rootInfo[0].params" tabTitle="Units" tabIcon="map"></ion-tab>
-    <ion-tab [root]="rootInfo[1].page"  [rootParams]="rootInfo[1].params" tabTitle="Global" tabIcon="map"></ion-tab>
-    <ion-tab [root]="rootInfo[2].page"  [rootParams]="rootInfo[2].params" tabTitle="Formula" tabIcon="map"></ion-tab>
-    <ion-tab [root]="rootInfo[4].page"  [rootParams]="rootInfo[3].params" show="false" tabTitle="Details" tabIcon="information-circle"></ion-tab>
+    <ion-tab [root]="rootInfo0.page"  [rootParams]="rootInfo0.params" tabTitle="Units" tabIcon="map"></ion-tab>
+    <ion-tab [root]="rootInfo1.page"  [rootParams]="rootInfo1.params" tabTitle="Global" tabIcon="map"></ion-tab>
+    <ion-tab [root]="rootInfo2.page"  [rootParams]="rootInfo2.params" tabTitle="Formula" tabIcon="map"></ion-tab>
+    <ion-tab [root]="rootInfo3.page"  [rootParams]="rootInfo3.params" show="false" tabTitle="Details" tabIcon="information-circle"></ion-tab>
   </ion-tabs>
   `
 })
 
 export class TabsPage {
   // set the root pages for each tab
-  rootInfo: any[] = [
-                      {page:ResourceListPage, params={type:'properties'}},
-                      {page:ResourceListPage, params={type:'globals'}},
-                      {page:ResourceListPage, params={type:'formulas'}},
-                      {page:DetailListPage,   params={}},
-                    ]
+  rootInfo0:any;
+  rootInfo1:any;
+  rootInfo2:any;
+  rootInfo3:any;
   constructor(public store: Store<fromRoot.State>, 
               navParams: NavParams) {
+    this.rootInfo0 =  {page:ResourceListPage, params:{type:'properties'}},
+    this.rootInfo1 = {page:ResourceListPage, params:{type:'globals'}},
+    this.rootInfo2 = {page:ResourceListPage, params:{type:'formulas'}},
+    this.rootInfo3 = {page:DetailPage,   params:{}},
+
     this.store.let(fromRoot.getTabStatus).subscribe(status => {
         if(status.active_index == TAB_INDEX_DETAIL && status.nav_length > 0){
           if(this.tabRef){
