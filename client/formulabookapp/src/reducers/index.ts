@@ -101,6 +101,9 @@ export function reducer(state: any, action: any) {
  * ```
  *
  */
+export function getState(state$: Observable<State>){
+  return state$.select(state => state);
+}
 export function getProperties(state$: Observable<State>) {
   return state$.select(state => state.resources.filter(r => r.type=="properties"));
 }
@@ -131,32 +134,39 @@ export function getTabStatus(state$:Observable<State>){
 
 
 export function getSelectedResources(state$:Observable<State>){
-  return state$.map(state => 
-    state.uiState.list_selection
-  )
+  return state$.map(state => {
+    if(state.uiState.selection && state.uiState.selection.length > 0) 
+      return state.uiState.selection[0]
+    else
+      return null;
+  })
 } 
 
 export function getUnits(state$:Observable<State>){
   return state$.map(state => {  
     let units = (state.resources as Unit[]).filter(r => r.type == 'units' && r.property_id == state.uiState.current_property.id)    
-    return units;
+    return units as Resource[];
   })
 }
 
 export function getGlobals(state$:Observable<State>){
   return state$.map(state => {  
-    let globals = (state.resources as Global[]).filter(r => r.type == 'globals')    
+    let globals = (state.resources).filter(r => r.type == 'globals')    
     return globals;
   })
 }
 
+export function getCurrentResource(state$: Observable<State>){
+  return state$.map(state => state.uiState.detail_currResource).distinct()
+}
+
 export function getFormulas(state$: Observable<State>) {
   return state$.map(state => {  
-    let formulas = (state.resources as Formula[]).filter(r => r.type == 'formulas')    
+    let formulas = (state.resources).filter(r => r.type == 'formulas')    
     return formulas;
   })
 }
 
 export function getCurrentProperty(state$:Observable<State>){
-  return state$.map(state => state.uiState.current_property)    
+  return state$.map(state => state.uiState.current_property).distinct()
 }

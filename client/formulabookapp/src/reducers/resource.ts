@@ -10,16 +10,18 @@ export interface Resource{
     name:string;
     user_id:number;
     shared:boolean;
+    favourite:boolean;
     version:number;
+
+    
 }
 
 export interface Property extends Resource {
-    default_unit_id:string;
 }
 
 export interface Unit extends Resource {
     property_id:string;
-    factor:number;
+    factor:string;
     symbol:string;
     system:string;
 }
@@ -35,8 +37,10 @@ export interface Variables {
     values: ValueU[];
 }
 export interface Global extends Resource {
-    unit_id:string;
-    value:number;
+    unit_id?:string;
+    value:string;
+    symbol:string;
+
 }
 
 export interface Formula extends Resource {
@@ -114,8 +118,15 @@ export let resources:ActionReducer<Resource[]> = (state=initialState, action:Act
         }
 
         case ResourceActions.EDIT_RESOURCES_SUCCESS: {
-            const resource = action.payload.resource;
-            
+            const resource = action.payload;
+            let index = _.findIndex(state, {id: resource.id});
+            if (index >= 0) {
+                return [
+                    ...state.slice(0, index),
+                    resource,
+                    ...state.slice(index + 1)
+                ];
+            }
             return state;
         }
 

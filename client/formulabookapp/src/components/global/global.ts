@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NavController, App } from 'ionic-angular';
-import { DataService } from '../../providers/data-service';
+import { NewDataService } from '../../providers/new-data-service';
 import { UIStateService } from '../../providers/ui-state-service';
 import { BaseComponent } from '../base-component'
 import { DetailPage } from '../../pages/detail/detail';
@@ -17,44 +17,43 @@ import { Global } from '../../reducers/resource'
 export class GlobalComponent {
 	gobj:std.Global;
 	form:FormGroup;
-
-	constructor(public el: ElementRef,
+	temp:Global;
+	unit_id:string;
+	constructor(public nds:NewDataService,
+				public el: ElementRef,
 				 app:App,
 				 nav: NavController) {
 	}
-	@Input() showChkbox:boolean = false;
 	@Input() resource;
-	@Input() mode = 'list';
 	@Output() save : EventEmitter<Global> = new EventEmitter<Global>();
-	@Output() check : EventEmitter<any> = new EventEmitter<any>();
-	@Output() unit : EventEmitter<any> = new EventEmitter<any>();
+
 	ngOnInit() {
-		if(this.mode == 'edit'){
-		this.gobj = new std.Global(this.resource);
+		console.log('Oninit called');
+		this.temp = Object.assign({},this.resource);
+		if(!this.temp.unit_id)
+			this.temp.unit_id = "";
 		this.form = new FormGroup({
-			name: new FormControl(this.gobj.name, [Validators.required
+			name: new FormControl(this.temp.name, [Validators.required
 											, Validators.minLength(2)
 											, Validators.maxLength(30)]),
-				value: new FormControl(this.gobj.value, [Validators.required
+				value: new FormControl(this.temp.value, [Validators.required
 											, numberValidator]),
-				symbol: new FormControl(this.gobj.symbol, [Validators.required
+				symbol: new FormControl(this.temp.symbol, [Validators.required
 											, symbolValidator]),
-				measure: new FormControl(this.gobj.Measure, [createMeasureValidator(false, true)]),
-			})
-			
+				unit_id: new FormControl(this.temp.unit_id, [Validators.required])
+		})
+		this.form.valueChanges.subscribe(r => {
+			console.log(JSON.stringify(r));
+		})
 				
-		}
 	}
 
-    onSave(){
-        this.save.emit(this.gobj.getState());
+    onSave(evt){
+        this.save.emit(this.temp);
 	}
 
-	onSelect(evt){
-		this.check.emit({resource:this.resource, checked:evt.checked});
-	}
-	
-	get diagnostic() { return JSON.stringify(this.gobj) 
+	get diagnostic() { return JSON.stringify(this.resource) 
+
 
 						+ '\n'+JSON.stringify(this.form.valid);}
 

@@ -1,10 +1,12 @@
 import { Component, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable, Observer, Subscription } from 'rxjs/Rx';
+import * as fromRoot from '../../reducers';
 import { ViewController, NavController } from 'ionic-angular';
-
-import { DataService } from '../../providers/data-service'
-import { UIStateService } from '../../providers/ui-state-service'
-import { Measure } from '../../lib/types/standard';
+import { NewDataService } from '../../providers/new-data-service'
+import { ResourceListPage } from '../../pages/resource-list'
 import { ErrorHandler } from '../../lib/types/standard';
+import { Resource, Unit } from '../../reducers/resource'
 
 
 @Component({
@@ -12,7 +14,7 @@ import { ErrorHandler } from '../../lib/types/standard';
 	//<input  type="text" class="mathelem" id="mathelem"/>
 	template: `
 	<template [ngIf]="mode != 'edit'">
-		<mathq *ngIf="latex?.length" [(ngModel)]="latex">Test</mathq>
+		<mathq *ngIf="latex?.length" [latex]="latex"></mathq>
 		<span  *ngIf="name?.length">{{name}}</span>
 	</template>
 	
@@ -29,32 +31,50 @@ export class UnitSelector {
 	name: string ="None";
 	latex: string = "";
 	errorMessage: string;
-
+	selection$:Observable<Resource>;
+	subscription:Subscription;
 	constructor(public el: ElementRef,
 		public viewCtrl: ViewController,
-		public dataService: DataService,
-		public nav: NavController, 
-		public uiStateService: UIStateService) {
+		public nds: NewDataService,
+		public nav: NavController,
+		public store: Store<fromRoot.State>
+		) {
 
+			this.selection$ = store.let(fromRoot.getSelectedResources);
+			this.subscription = this.selection$.subscribe(r => {
+				if(!r)
+					return;
+				let unit;
+				if(r.type == 'properties'){
+					unit = nds.getDefaultUnit(r);
+				}
+				else
+					unit = r;
+
+				this.writeValue(unit.id);
+				this.change.emit(unit.id);
+				console.log('emitting -' + unit.id + '--')
+		})
 	}
 
-	@Input() measure;
 	@Input() mode;
 	@Output('change') change = new EventEmitter();
 
 	ngOnInit() {
-		if (this.measure)
-			this._writeValue(this.measure);
 	}
 
+	 ngOnDestroy(){
+		this.subscription.unsubscribe();
+	}
 
 	writeValue(obj: any) {
 		this._writeValue(obj);
 	}
 	_writeValue(obj: any): void {
-		if(obj){
-			this.latex = obj.Latex;//TODO:Fix design issue
-			this.name = obj.Name;
+		if(obj && obj != ""){
+			let u = this.nds.getResource(obj) as Unit;
+			this.latex = this.nds.getLatex(u.symbol);
+			this.name = u.name;
 		}
 	}
 
@@ -63,28 +83,30 @@ export class UnitSelector {
 		this.latex = "";
 		evt.stopPropagation();
         evt.preventDefault();
-		this.change.emit(new Measure(null)) 
+		//this.change.emit(null) 
 	}
 
 	select() {
-		var type = UIStateService.event_types.resource_selected;
-		var subscribtion = this.uiStateService.ole.subscribe(sel => {
-			if(sel.type == type)
-			{
-				if(sel.status == 'success'){
-					var measure = new Measure(sel.resource)
-					this.writeValue(measure); 
-					this.change.emit(measure) 
-				}
-				subscribtion.unsubscribe();
-			}
-		}, error=>{
-			ErrorHandler.handle(error, "UnitSelector::select", true);
-		}, ()=>{
-			console.log('Subscribtion completed in select')
-		});
-		this.uiStateService.inSelectMode = true;
-		this.uiStateService.tabsPage.setResourcePage("properties");
+		// var type = UIStateService.event_types.resource_selected;
+		// var subscribtion = this.uiStateService.ole.subscribe(sel => {
+		// 	if(sel.type == type)
+		// 	{
+		// 		if(sel.status == 'success'){
+		// 			var unit = new unit(sel.resource)
+		// 			this.writeValue(unit); 
+		// 			this.change.emit(unit) 
+		// 		}
+		// 		subscribtion.unsubscribe();
+		// 	}
+		// }, error=>{
+		// 	ErrorHandler.handle(error, "UnitSelector::select", true);
+		// }, ()=>{
+		// 	console.log('Subscribtion completed in select')
+		// });
+		// this.uiStateService.inSelectMode = true;
+		// this.ssetResourcePage("properties");
+		this.nav.push(ResourceListPage, {type:'properties', mode:'select'})
 	}
+
 }
 

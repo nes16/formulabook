@@ -16,9 +16,7 @@ export interface UIState{
     detail_nav_stake:Resource[];
     detail_currResource?:Resource;
     filter_type:string;
-    list_selection:Resource[];
-    nav_all:string;
-    nav_mode:string;
+    selection:Resource[];
     showKB:boolean;
     view_type:string;
 }
@@ -27,9 +25,7 @@ let initialState:UIState = {
     active_tab_index:0,
     detail_nav_stake:[],
     filter_type:'All',
-    list_selection:[],
-    nav_all:'Select All',
-    nav_mode:'List',
+    selection:[],
     showKB:false,
     view_type:'Uncategorized',
 };
@@ -38,7 +34,7 @@ let initialState:UIState = {
 export let uiState: ActionReducer<UIState> = (state = initialState, action: Action) => {
         let newState:any;
         switch (action.type) {
-            case UIStateActions.PUSH_RESOURCES:
+            case UIStateActions.PUSH_RESOURCES:{
                 newState={
                     active_tab_index:3,
                     detail_nav_stake:[...state.detail_nav_stake, action.payload],
@@ -46,7 +42,8 @@ export let uiState: ActionReducer<UIState> = (state = initialState, action: Acti
                 }
                 state = Object.assign({},state, newState);
                 return state;
-            case UIStateActions.POP_RESOURCES:
+            }
+            case UIStateActions.POP_RESOURCES:{
                 let stake = [...state.detail_nav_stake];
                 let newResource = stake.pop();
                 let active_tab_index = stake.length == 0?0:3; 
@@ -57,49 +54,12 @@ export let uiState: ActionReducer<UIState> = (state = initialState, action: Acti
                 }
                 state = Object.assign({},state, newState);
                 return state;
-            case UIStateActions.SWITCH_SELECT_MODE:{
-                let ns={
-                    nav_select_mode:true
-                }
-                state=Object.assign({},ns,state);
-                return state;
             }
-            
-            case UIStateActions.RETURN_TO_LIST_MODE:{
-                let ns={
-                    nav_select_mode:false
-                }
-                state=Object.assign({},ns,state);
-                return state;
-            }
-
-            case UIStateActions.TOGGLE_SELECT_ALL:{
-                let ns={
-                  nav_all:state.nav_all == 'Select All'?'Clear All':'Select All'
-                }
-                state=Object.assign({},ns,state);
-                return state;
-            }
-
             case UIStateActions.SELECT_RESOURCE:{
                 let ns={
-                  list_selection:[...state.list_selection, action.payload]
+                  selection:[action.payload]
                 }
-                state=Object.assign({},ns,state);
-                return state;
-
-            }
-
-            case UIStateActions.UNSELECT_RESOURCE:{
-                const resource = action.payload;
-                let index = _.findIndex(state.list_selection, {id: resource.id});
-                if (index >= 0) {
-                    let ns = [
-                        ...state.list_selection.slice(0, index),
-                        ...state.list_selection.slice(index + 1)
-                    ];
-                    return state=Object.assign({},ns,state);
-                }
+                state=Object.assign({},state, ns);
                 return state;
             }
 
@@ -107,7 +67,7 @@ export let uiState: ActionReducer<UIState> = (state = initialState, action: Acti
                 let ns={
                   current_property:action.payload
                 }
-                state=Object.assign({},ns,state);
+                state=Object.assign({},state, ns);
                 return state;
             }
 

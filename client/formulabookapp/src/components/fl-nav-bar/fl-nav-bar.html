@@ -1,13 +1,10 @@
-    <ion-navbar *ngIf="listMode == 'List'" no-border-bottom>
+    <ion-navbar *ngIf="!editMode" no-border-bottom>
         <button ion-button   menuToggle>
             <ion-icon name="menu"></ion-icon>
         </button>
         <ion-title small>{{title}}</ion-title>
         <ion-buttons end>
-            <button royal ion-button icon-only>
-                <ion-icon ios="ios-options-outline" md="md-options"></ion-icon>
-            </button>
-            <button royal ion-button icon-only  (click)="onActionCmd('Add')">
+            <button royal ion-button icon-only  (click)="onActionCmd('Add', $event)">
                 <ion-icon name="add"></ion-icon>
             </button>
             <button royal ion-button icon-only  (click)="searchBar=!searchBar">
@@ -18,26 +15,34 @@
             </button>
         </ion-buttons>
     </ion-navbar>
- <ion-navbar *ngIf="listMode == 'Select'" no-border-bottom>
+ <ion-navbar *ngIf="editMode" no-border-bottom>
             <ion-buttons left>
-                    <button ion-button icon-only (click)="onActionCmd('Done')">
+                    <button ion-button icon-only (click)="onActionCmd('Done', $event)">
                         Done
                     </button>
-                    <button ion-button icon-only (click)="onActionCmd('ToggleSelect')">
+                    <button ion-button icon-only (click)="onActionCmd('ToggleSelect', $event)">
                         {{all$ | async}}
                     </button>
             </ion-buttons>
             <ion-buttons right>
-                    <button ion-button icon-only (click)="onActionCmd('Favourite')">
-                        <ion-icon name="heart"></ion-icon>
-                    </button>
-                    <button ion-button icon-only (click)="onActionCmd('Delete')">
+                    <button ion-button icon-only (click)="onActionCmd('Delete', $event)">
                         <ion-icon name="trash"></ion-icon>
                     </button>
-                    <button ion-button icon-only (click)="onActionCmd('Categorize')">
+                    <button ion-button icon-only (click)="onActionCmd('Categorize', $event)">
                         <ion-icon name="folder"></ion-icon>
                     </button>
-                    <button ion-button icon-only (click)="onActionCmd('Share')">
+                    <template [ngIf]="selectionStatus?.favourite?.enable_button">
+                    <button  ion-button icon-only  (click)="onActionCmd('Favourite', $event)">
+                        <ion-icon color="primary" name="heart"></ion-icon>
+                    </button>
+                    </template>
+                    <button *ngIf="selectionStatus?.favourite?.disable_button" ion-button icon-only (click)="onActionCmd('Unfavourite', $event)">
+                        <ion-icon name="heart"></ion-icon>
+                    </button>
+                    <button ion-button *ngIf="selectionStatus?.share?.enable_button" icon-only (click)="onActionCmd('Share', $event)">
+                        <ion-icon color="primary" name="share"></ion-icon>
+                    </button>
+                    <button ion-button *ngIf="selectionStatus?.share?.disable_button" icon-only (click)="onActionCmd('Unshare', $event)">
                         <ion-icon name="share"></ion-icon>
                     </button>
             </ion-buttons>

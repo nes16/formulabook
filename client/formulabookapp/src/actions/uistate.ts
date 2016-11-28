@@ -48,41 +48,10 @@ export class UIStateActions {
         };
     }
 
-    static SWITCH_SELECT_MODE = '[UIState] Switch to select';
-    switchToSelect(): Action {
-        return {
-            type: UIStateActions.SWITCH_SELECT_MODE
-        };
-    }
-
-    static RETURN_TO_LIST_MODE = '[UIState] Return to list';
-    returnToList(): Action {
-        return {
-            type: UIStateActions.RETURN_TO_LIST_MODE
-        };
-    }           
-
-
-    static TOGGLE_SELECT_ALL = '[UIState] Toggle select all';
-    toggleSelectAll(): Action {
-        return {
-            type: UIStateActions.TOGGLE_SELECT_ALL
-        };
-    } 
-
     static SELECT_RESOURCE = '[UIState] Select resource'
     selectResource(resource){
         return{
             type:UIStateActions.SELECT_RESOURCE,
-            payload:resource
-        }
-    }   
-
-
-    static UNSELECT_RESOURCE = '[UIState] Unselect resource'
-    unselectResource(resource){
-        return{
-            type:UIStateActions.UNSELECT_RESOURCE,
             payload:resource
         }
     }   

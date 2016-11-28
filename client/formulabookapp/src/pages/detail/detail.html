@@ -9,24 +9,24 @@
 	</ion-navbar>
 </ion-header>l
 <ion-content id="detail-page">
-    <div  [ngSwitch] = "(uiState$ | async)?.detail_currResource.type">
+    <div  [ngSwitch] = "(curRes$ | async)?.type">
         <template [ngSwitchCase]="'properties'">
             <ion-list>
-                <fl-property [mode]="'edit'" (save)="onSave($event)" [resource]="(uiState$ | async)?.detail_currResource"></fl-property>
+                <fl-property  (save)="onSave($event)" [resource]="(curRes$ | async)"></fl-property>
             </ion-list>
         </template>
         <template [ngSwitchCase]="'units'">
             <ion-list>
-                <fl-unit [mode]="'edit'" (save)="onSave($event)" [property]="(uiState$ | async)?.current_property" [resource]="(uiState$ | async)?.detail_currResource"></fl-unit>
+                <fl-unit  (save)="onSave($event)" [property]="(Property$ | async)" [resource]="(curRes$ | async)"></fl-unit>
             </ion-list>
         </template>
         <template [ngSwitchCase]="'globals'">
             <ion-list>
-                <fl-global [mode]="'edit'" (save)="onSave($event)"  [resource]="(uiState$ | async)?.detail_currResource"></fl-global>
+                <fl-global  (save)="onSave($event)"  [resource]="(curRes$ | async)"></fl-global>
             </ion-list>
         </template>
     </div>   
 </ion-content>
-<ion-footer [class.fl-hidden]="(uiState$ | async)?.showKB">
+<ion-footer [class.fl-hidden]="(curRes$ | async)?.showKB">
 <keypad parent=""></keypad>
 </ion-footer>

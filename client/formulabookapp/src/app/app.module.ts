@@ -17,6 +17,7 @@ import { FormulaApp } from './app.component'
 //components
 import { AuthService } from '../providers/auth-service'
 import { DataService } from '../providers/data-service'
+import { NewDataService } from '../providers/new-data-service'
 import { BaseService } from '../providers/base-service'
 import { MQService } from '../providers/mq-service'
 import { RemoteService } from '../providers/remote-service'
@@ -97,6 +98,7 @@ import { ResourceActions, UIStateActions, AuthActions } from '../actions';
     {provide:'ApiEndpoint', useValue: 'api/v1'},
     AuthService,
     DataService,
+    NewDataService,
     BaseService,
     MQService,
     RemoteService,

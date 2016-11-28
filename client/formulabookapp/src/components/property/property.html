@@ -1,23 +1,11 @@
-<div [ngSwitch]="mode">
-    <template [ngSwitchCase]="'list'">
-        <ion-item>
-            {{resource.name}}
-            <ion-checkbox *ngIf="showChkbox" (ionChange)="onSelect($event)"></ion-checkbox>
-
-            <button *ngIf="!showChkbox" royal ion-button item-right (click)="onUnitClick($event)">Units...</button>
-        </ion-item>
-    </template>
-    <template [ngSwitchCase]="'edit'"> 
-            <form [formGroup]="form" (ngSubmit)="onSave($event)">
-	            <ion-list>
-                    <ion-item >
-                    <ion-label>Name</ion-label> 
-                    <ion-input type="text" formControlName="name" [(ngModel)]="er.name"></ion-input >
-                    </ion-item>
-                    <ion-item>
-                       <button ion-button  type="submit" [disabled]="!form.valid">Save</button>
-	                </ion-item>
-	            </ion-list>
-	        </form>
-    </template>
-</div>
+<form [formGroup]="form" (ngSubmit)="onSave($event)">
+	<ion-list>
+		<ion-item>
+			<ion-label>Name</ion-label>
+			<ion-input type="text" formControlName="name" [(ngModel)]="er.name"></ion-input>
+		</ion-item>
+		<ion-item>
+			<button ion-button type="submit" [disabled]="!form.valid">Save</button>
+		</ion-item>
+	</ion-list>
+</form>

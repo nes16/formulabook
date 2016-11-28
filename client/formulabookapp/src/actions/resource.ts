@@ -75,10 +75,10 @@ export class ResourceActions {
     }
 
     static EDIT_RESOURCES = '[Resource] Edit resources';
-    editResourceFlag(resources): Action {
+    editResources(resources): Action {
         return {
             type: ResourceActions.EDIT_RESOURCES,
-            payload:{resources}
+            payload:resources
         }
     }
 

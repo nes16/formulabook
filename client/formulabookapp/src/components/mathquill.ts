@@ -26,10 +26,14 @@ export class MathQ {
 	}
 
 	@Input() editable = false;
+	@Input('latex') staticLatex:string;
 	@Output('change') change = new EventEmitter();
 	@ViewChild('mq') spanElem;	
 	
 	ngOnInit() {
+		if(this.staticLatex != null){
+			this.latex = this.staticLatex;
+		}
 		
 	}
 	//updATE units set factor="\left(x+459.67\right)\cdot\frac{5}{9}" where id=489

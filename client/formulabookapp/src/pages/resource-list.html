@@ -1,5 +1,6 @@
 <ion-header>
-	<fl-nav-bar [listMode]="listMode" [title]="getInfo().title" (actionCmd)="onActionCmd($event)" (filterChange)="onFilterChange($event)"></fl-nav-bar>
+	<fl-nav-bar [editMode]="editMode" [selectionStatus]="selectionStatus$ | async" [title]="info.title | async" (actionCmd)="onActionCmd($event)"
+		(filterChange)="onFilterChange($event)"></fl-nav-bar>
 </ion-header>
 <ion-content>
 	<ion-segment [(ngModel)]="viewType">
@@ -13,28 +14,44 @@
 			Library
 		</ion-segment-button>
 	</ion-segment>
-	<template [ngIf]="type == 'properties'">
-		<ion-list>
-			<fl-property *ngFor="let res of properties$ | async" [showChkbox]="listMode == 'Select'" (unit)="onUnitClick($event)" (check)="onCheck($event)"
-				[resource]="res" (press)="onPress($event)" (click)=onClick(res)></fl-property>
-		</ion-list>
-	</template>
-	<template [ngIf]="type == 'units'">
-		<ion-list>
-			<fl-unit *ngFor="let res of units$ | async" [showChkbox]="listMode == 'Select'" (check)="onCheck($event)" [resource]="res"
-				[property]="(property$ | async)" (press)="onPress($event)" (click)="onClick(res)"></fl-unit>
-		</ion-list>
-	</template>
-	<template [ngIf]="type == 'globals'">
-		<ion-list>
-			<fl-global *ngFor="let res of globals$ | async" [showChkbox]="listMode == 'Select'" (check)="onCheck($event)" [resource]="res"
-				(press)="onPress($event)" (click)=onClick(res)></fl-global>
-		</ion-list>
-	</template>
-	<template [ngIf]="type == 'formulas'">
-		<ion-list>
-			<fl-formula *ngFor="let res of formulas$ | async" [showChkbox]="listMode == 'Select'" (check)="onCheck($event)" [resource]="res"
-				(press)="onPress($event)" (click)=onClick(res)></fl-formula>
-		</ion-list>
-	</template>
+	<ion-list>
+		<ion-item *ngFor="let r of resources$ | async" (press)="onPress($event)" (click)="onClick(r, $event)">
+			<ion-label>
+				<h2>{{r.name}}</h2>
+				<p  *ngIf="type == 'units' && nds.isDefaultUnit(r)">
+					DefaultUnit <mathq [latex]="nds.getLatex(r.symbol)"></mathq>  
+				</p>
+				<p  *ngIf="type == 'units' && !nds.isDefaultUnit(r)">
+					<mathq [latex]="nds.getLatex(r.symbol)"></mathq>  
+				</p>
+			</ion-label>
+			<ion-checkbox *ngIf="editMode" (ionChange)="onCheck(r, $event)"></ion-checkbox>
+			<button *ngIf="!editMode && type == 'properties'" royal ion-button item-right (click)="onUnitClick(r, $event)">Units...</button>
+			<ion-label *ngIf="type == 'units' && !nds.isDefaultUnit(r)">
+				<h4>Conversion Formula</h4>
+				<div *ngIf="nds.isFormulaFactor(r)">
+					<span>
+						x  <mathq  [latex]="nds.getLatex(r.symbol)"></mathq> = <mathq  [latex]="r.factor"></mathq>
+						<mathq  [latex]="nds.getLatex(nds.getDefaultUnit(property))"></mathq>
+					</span>
+				</div>
+				<div *ngIf="!r.formula">
+					<span>
+						1<mathq  [latex]="nds.getLatex(r)"></mathq> = <span>{{r.factor}}</span>
+						<mathq  [latex]="nds.getLatex(nds.getDefaultUnit(property))"></mathq>
+					</span>
+				</div>
+			</ion-label>
+			<template [ngIf]="type == 'globals'">
+				<span><mathq [latex]="r.symbol"></mathq> = <span>{{r.value}}</span><mathq [latex]="nds.getLatex(nds.getResource(r.unit_id)?.symbol)"></mathq></span>
+			</template>
+			<template [ngIf]="type == 'formulas'">
+				<span><mathq [latex]="nds.getLatex(r.symbol)"></mathq> = <mathq [latex]="nds.getLatex(r.symbol)"></mathq><mathq [latex]="nds.getLatex(nds.getResource(r.unit_id)?.symbol)"></mathq></span>
+			</template>
+			<div item-right>
+				<span>Your </span><span *ngIf="r.favourite">Favourite</span>
+				<span *ngIf="!r.favourite">UnFavourite</span>
+			</div>
+		</ion-item>
+	</ion-list>
 </ion-content>

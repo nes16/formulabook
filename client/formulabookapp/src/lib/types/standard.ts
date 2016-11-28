@@ -181,7 +181,7 @@ export class BaseResource {
     error_messages: any;
     user_id: number;
     shared: boolean;
-
+    favourite: boolean;
     //Internal
     deleted: string;
     oldState: any;
@@ -224,6 +224,7 @@ export class BaseResource {
         this.lock_version = state.lock_version || 0;
         this.user_id = state.user_id || -1;
         this.shared = state.shared || false;
+        this.favourite = state.favourite || false;
         this.error_messages = JSON.parse(state.error_messages || "null");
     }
 
@@ -1546,4 +1547,22 @@ export class ErrorHandler {
             stack.stack.push(msg);
         }
     }
+}
+
+export function createNewProperty():Property{
+    return new Property();
+}
+
+
+export function createNewUnit(store):Unit{
+    return new Unit();
+}
+
+
+export function createNewGlobal():Global{
+    return new Global();
+}
+
+export function createNewFormula():Formula{
+    return new Formula();
 }

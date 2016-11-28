@@ -24,10 +24,12 @@ export class FlNavBar {
 	}
 	@Input() searchDelay: number = 2000;
 	@Input() title;
-	@Input() listMode:string='List';//$:Observable<string>;
+	@Input() editMode:boolean=false;
+	@Input() selectionStatus:any;
 	@Output() filterChange = new EventEmitter();
 	@Output() filterCancel = new EventEmitter();
 	@Output() actionCmd = new EventEmitter();
+
 
 
 	onSearchInput(evt) {
@@ -47,7 +49,9 @@ export class FlNavBar {
 
 	}
 
-	onActionCmd(cmd:string){
+	onActionCmd(cmd:string, e){
+		e.stopPropagation();
 		this.actionCmd.emit(cmd);
+
 	}
 }

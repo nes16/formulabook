@@ -5,7 +5,7 @@ import * as  rootStore  from '../../reducers'
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Rx';
 import { UIState } from '../../reducers/uistate'
-import { Resource } from '../../reducers/resource'
+import { Resource, Property } from '../../reducers/resource'
 import {ResourceActions} from '../../actions'
 import {UIStateActions} from '../../actions'
 
@@ -16,8 +16,8 @@ import {UIStateActions} from '../../actions'
 })
 
 export class DetailPage {
-    uiState$:Observable<UIState>;
     curRes$:Observable<Resource>;
+    curProperty$:Observable<Property>;
     navMode:boolean = false;
     static root:DetailPage = null;
     constructor(public app:App, 
@@ -27,8 +27,8 @@ export class DetailPage {
                 public uiactions:UIStateActions, 
                 public store: Store<rootStore.State>){
 
-        this.uiState$ = this.store.select(state => state.uiState);
-        
+        this.curRes$ = this.store.let(rootStore.getCurrentResource);
+        this.curProperty$ = this.store.let(rootStore.getCurrentProperty);
     }
 
     @ViewChild(Content) content: Content;

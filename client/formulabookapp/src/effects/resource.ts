@@ -81,7 +81,7 @@ export class ResourceEffects {
     .ofType(ResourceActions.EDIT_RESOURCES)
     .map((action: Action) => action.payload)
     .mergeMap(resources =>
-      this.db.executeWrite('resources', 'insert', resources)
+      this.db.executeWrite('resources', 'put', resources)
         .map((resource) => this.ractions.editResourcesSuccess(resource))
         .catch((error) => of(this.ractions.editResourcesFail(error)))
     );
