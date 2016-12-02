@@ -14,6 +14,8 @@ import { TabsPage } from '../pages/tabs/tabs'
 import { TutorialPage } from '../pages/tutorial/tutorial'
 import { ResourceListPage } from '../pages/resource-list'
 import { FormulaApp } from './app.component'
+import { RunHistoryTab } from '../components/formula/formula';
+import { FormulaTab } from '../components/formula/formula';
 //components
 import { AuthService } from '../providers/auth-service'
 import { DataService } from '../providers/data-service'
@@ -40,6 +42,8 @@ import { ResourceActions, UIStateActions, AuthActions } from '../actions';
     TabsPage,
     TutorialPage,
     ResourceListPage,
+    RunHistoryTab,
+    FormulaTab
   ],
   imports: [
     HttpModule,
@@ -89,7 +93,9 @@ import { ResourceActions, UIStateActions, AuthActions } from '../actions';
     TabsPage,
     TutorialPage,
     ResourceListPage,
-    FormulaApp
+    FormulaApp,
+    RunHistoryTab,
+    FormulaTab
   ],
   providers: [
     ResourceActions,

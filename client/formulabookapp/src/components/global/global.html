@@ -2,22 +2,22 @@
 	<ion-list>
 		<ion-item>
 			<ion-label>Name</ion-label>
-			<ion-input type="text" formControlName="name" [(ngModel)]="temp.name"></ion-input>
+			<ion-input type="text" formControlName="name" [(ngModel)]="resource.name"></ion-input>
 		</ion-item>
 		<fb-error [fcontrol]="form.controls.name"></fb-error>
 		<ion-item>
 			<ion-label>Symbol</ion-label>
-			<mathq [editable]="true" item-right formControlName="symbol" [(ngModel)]="temp.symbol"></mathq>
+			<mathq [editable]="true" item-right formControlName="symbol" [(ngModel)]="resource.symbol"></mathq>
 		</ion-item>
 		<fb-error [fcontrol]="form.controls.symbol"></fb-error>
 		<ion-item>
 			<ion-label>Value</ion-label>
-			<ion-input type="text" formControlName="value" [(ngModel)]="temp.value"></ion-input>
+			<ion-input type="text" formControlName="value" [(ngModel)]="resource.value"></ion-input>
 		</ion-item>
 		<ion-item>
-			<ion-label>Measure</ion-label>
+			<ion-label>Unit</ion-label>
 
-			<fl-unit-sel item-right formControlName="unit_id"  [(ngModel)]="temp.unit_id" [mode]="'edit'"></fl-unit-sel>
+			<fl-unit-sel item-right formControlName="unit_id"  [(ngModel)]="resource.unit_id" [editMode]="true"></fl-unit-sel>
 
 		</ion-item>
 		<ion-item>

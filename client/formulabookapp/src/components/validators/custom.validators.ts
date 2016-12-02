@@ -99,7 +99,7 @@ export function createFormulaValidator(formula:Formula){
     return null;
   }
 }
-export function createMeasureValidator(required:boolean, onlyUnit:boolean=false){
+export function createUnitValidator(required:boolean, onlyUnit:boolean=false){
   return function(control):any {
     if(!control.value)
       return null;

@@ -1,20 +1,20 @@
-    <ion-navbar *ngIf="!editMode" no-border-bottom>
-        <button ion-button   menuToggle>
-            <ion-icon name="menu"></ion-icon>
+<ion-navbar *ngIf="!editMode" no-border-bottom>
+    <button ion-button   menuToggle>
+        <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title small>{{title}}</ion-title>
+    <ion-buttons end>
+        <button *ngIf="!isSelectionList" royal ion-button icon-only  (click)="onActionCmd('Add', $event)">
+            <ion-icon name="add"></ion-icon>
         </button>
-        <ion-title small>{{title}}</ion-title>
-        <ion-buttons end>
-            <button royal ion-button icon-only  (click)="onActionCmd('Add', $event)">
-                <ion-icon name="add"></ion-icon>
-            </button>
-            <button royal ion-button icon-only  (click)="searchBar=!searchBar">
-                <ion-icon name="search"></ion-icon>
-            </button>
-            <button royal ion-button icon-only   (click)="onMore($event)">
-                <ion-icon name="more"></ion-icon>
-            </button>
-        </ion-buttons>
-    </ion-navbar>
+        <button royal ion-button icon-only  (click)="searchBar=!searchBar">
+            <ion-icon name="search"></ion-icon>
+        </button>
+        <button *ngIf="!isSelectionList" royal ion-button icon-only   (click)="onMore($event)">
+            <ion-icon name="more"></ion-icon>
+        </button>
+    </ion-buttons>
+</ion-navbar>
  <ion-navbar *ngIf="editMode" no-border-bottom>
             <ion-buttons left>
                     <button ion-button icon-only (click)="onActionCmd('Done', $event)">

@@ -1,0 +1,28 @@
+<ion-header>
+	<fl-nav-bar [editMode]="editMode"  [title]="'Run History'" (actionCmd)="onActionCmd($event)" ></fl-nav-bar>
+	<ion-list>
+		<ion-item>
+			<ion-label>
+				{{resource?.name}} => <mathq [latex]="resource?.symbol"></mathq> =>
+			</ion-label>
+			<ion-label>
+				<mathq [latex]="resource?.formula"></mathq>
+			</ion-label>
+		</ion-item>
+	</ion-list>
+</ion-header>
+<ion-content>
+	<h1>Run History</h1>
+	<ion-row class="header">
+		<ion-col>
+			<span>Name</span>
+		</ion-col>
+		<ion-col *ngFor="let v of resource.variables">
+            <span><mathq [latex]="v.name" [isText]="true"></mathq><br/><mathq [latex]="v.symbol"></mathq></span>
+        </ion-col>
+		<ion-col>
+			<span>Result</span>
+		</ion-col>
+	</ion-row>
+    <fl-run *ngFor="let r of resource.runs" [resource]="r" [formula]="resource"></fl-run>
+</ion-content>

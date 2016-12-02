@@ -6,8 +6,8 @@
         "**/.hg": true,
         "**/.DS_Store": true,
         "**/.tmp/**/*":true,
-        "**/www/**/*":true,
+        "**/www/**/*":false,
         "**/plugins/**/*":true,
-        "**/node_modules/**/*":true,
+        "**/node_modules/**/*":false,
     }
 }

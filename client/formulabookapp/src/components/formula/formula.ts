@@ -1,70 +1,163 @@
-import { Component, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+import { Component,  Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Tabs, NavParams } from 'ionic-angular';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { NavController, App } from 'ionic-angular';
-import { DataService } from '../../providers/data-service';
-import { UIStateService } from '../../providers/ui-state-service';
-import { BaseComponent } from '../base-component'
-import { DetailPage } from '../../pages/detail/detail';
+import { NewDataService } from '../../providers/new-data-service';
 import {
-	symbolValidator, numberValidator, createMeasureValidator
+	symbolValidator, numberValidator, createUnitValidator
 	, createUniqueNameValidator, createUniqueSymbolValidator
 	, createFormulaValidator
 } from '../validators/custom.validators'
-import * as std from '../../lib/types/standard';
-import { Formula } from '../../reducers/resource'
+import { Formula, Variable, Global, FormulaRun, ValueU } from '../../reducers/resource'
+import { LatexParserService } from '../../../providers/latex-parser-service';
+import { Observable, Observer } from 'rxjs/Rx';
 
 
 @Component({
+	templateUrl:'runs.html'
+})
+
+export class RunHistoryTab{
+	@Input() resource:Formula;
+    selectedItems: FormulaRun[] = [];
+	editMode:boolean = false;
+	constructor(public nds:NewDataService,
+				public navParams:NavParams){
+		this.resource= this.navParams.get('resource')
+
+	}
+
+	ngOnInit(){
+		console.log('NgInit RunHistoryTab');
+	}
+
+
+    // onPress(run, evt) {
+	// 	let runRow = evt.target;
+    //     run.editMode = true;
+    // }
+
+    onCheck(resource, evt) {
+        if (evt.checked == true)
+            this.selectedItems.push(resource);
+        else {
+            let i = this.selectedItems.indexOf(resource);
+            if (i > -1) {
+                this.selectedItems.splice(i, 1);
+            }
+        }
+    }
+
+
+    onActionCmd(cmd: string) {
+        this.editMode = false;
+               
+        switch (cmd) {
+            case 'Delete': {
+                break;
+            }
+            case 'Add': {
+				let fr = this.nds.createNewRun(this.resource);
+				this.resource.runs.push(fr);
+                break;
+            }
+            case 'Done':
+            default: {
+
+            }
+        }
+        this.selectedItems = []; 
+    }
+}
+
+
+@Component({
+	templateUrl:'formula.html'
+})
+export class FormulaTab{
+
+	form:FormGroup;
+	resource:Formula;
+	rootNode:any;
+	constructor(public navParams:NavParams
+				,public nds:NewDataService){
+		
+		this.resource= this.navParams.get('resource')
+	}
+	ngOnInit(){
+		console.log('Form tab init - ' + JSON.stringify(this.resource));
+		
+		this.form = new FormGroup({
+			name: new FormControl(this.resource.name, [Validators.required
+				, Validators.minLength(2)
+				, Validators.maxLength(30)]),
+			symbol: new FormControl(this.resource.symbol, [Validators.required
+				, symbolValidator]),
+			formula: new FormControl(this.resource.formula),
+			unit_id: new FormControl(this.resource.unit_id, [Validators.required
+				, createUnitValidator(false, false)])
+		})
+
+		this.form.controls["formula"].valueChanges.subscribe(r => {
+			console.log('Formula changed ' + this.resource.formula);
+			this.updateVariables(this.resource.formula);
+			console.log(JSON.stringify(this.resource))
+		})
+	}
+
+	get diagnostic() {
+		return JSON.stringify(this.resource)
+			+ '\n' + JSON.stringify(this.form.valid);
+	}
+
+	updateVariables(latex) {
+	    try {
+			this.rootNode = this.nds.parse(latex);
+			this.nds.updateVariablesAndGlobals(this.rootNode, this.resource);
+	    } catch (e) {
+			console.log('Error occured while parsing')
+	        this.rootNode = null;
+	        //throw (e);
+	    }
+	}
+}
+
+@Component({
 	selector: 'fl-formula',
-	templateUrl: 'formula.html',
+	template: `
+	<ion-tabs tabbarPlacement="top" #formulaTabs>
+		<ion-tab [root]="formulaTab" [rootParams]="formulaParam" tabTitle="Formula" tabIcon="map"></ion-tab>
+		<ion-tab [root]="runTab" [rootParams]="formulaParam"  tabTitle="Run" tabIcon="map"></ion-tab>
+	</ion-tabs>
+ `
 })
 export class FormulaComponent {
-	fobj: std.Formula;
-	form: FormGroup;
-	viewType: string = 'Definition'
-
-	constructor(public el: ElementRef,
-		app: App,
-		nav: NavController) {
+	runTab:any = RunHistoryTab;
+	formulaTab:any = FormulaTab;
+	formulaParam:any;
+	constructor(public nds:NewDataService) {
+		console.log('In cons - ' + JSON.stringify(this.resource));
 	}
+
 	@Input() resource;
 	@Output() save: EventEmitter<Formula> = new EventEmitter<Formula>();
 
 	ngOnInit() {
-		this.fobj = new std.Formula(this.resource);
-		this.form = new FormGroup({
-			name: new FormControl(this.fobj.name, [Validators.required
-				, Validators.minLength(2)
-				, Validators.maxLength(30)]),
-			symbol: new FormControl(this.fobj.symbol, [Validators.required
-				, symbolValidator]),
-			latex: new FormControl(this.fobj.latex, [Validators.required
-				, createFormulaValidator(this.fobj)]),
-			measure: new FormControl(this.fobj.Measure, [Validators.required
-				, createMeasureValidator(false, false)])
-		})
+		console.log('In init - ' + JSON.stringify(this.resource));
+		this.formulaParam =  {resource:this.resource}
 
 	}
+
+	@ViewChild('formulaTabs') tabRef: Tabs;
 
 	onSave(evt) {
-		this.save.emit(this.fobj.getState());
+		this.save.emit(this.resource);
 	}
 
-	selectedViewType(type) {
-		if (type == 'Definition') {
+	onMoveToVariable(gid, evt){
 
-		}
-		else if (type == 'Run') {
-
-		}
-		else if (type == 'History') {
-
-		}
 	}
 
-	get diagnostic() {
-		return JSON.stringify(this.fobj)
-			+ '\n' + JSON.stringify(this.form.valid);
-	}
+	onMoveToGlobal(v, evt){
 
+	}
 }

@@ -30,6 +30,12 @@ let initialState:UIState = {
     view_type:'Uncategorized',
 };
 
+let TabIndex_Page:{[type:string]:number}={
+    'properties':0,
+    'units':0,
+    'globals':1,
+    'formulas':2
+}
 
 export let uiState: ActionReducer<UIState> = (state = initialState, action: Action) => {
         let newState:any;
@@ -45,8 +51,11 @@ export let uiState: ActionReducer<UIState> = (state = initialState, action: Acti
             }
             case UIStateActions.POP_RESOURCES:{
                 let stake = [...state.detail_nav_stake];
+                let oldResource = stake.pop();
                 let newResource = stake.pop();
-                let active_tab_index = stake.length == 0?0:3; 
+                if(newResource)
+                    stake.push(newResource);
+                let active_tab_index = TabIndex_Page[oldResource.type] 
                 newState={
                     active_tab_index:active_tab_index,
                     detail_nav_stake:stake,

@@ -1,6 +1,5 @@
 import { Component, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import { NavController, App } from 'ionic-angular';
-import { UIStateService } from '../../providers/ui-state-service'
 import { MoreOptionsPage } from '../../pages/more-options/more-options';
 import { PopoverController } from 'ionic-angular';
 import * as  rootStore  from '../../reducers'
@@ -17,15 +16,15 @@ export class FlNavBar {
 	constructor(public app: App
 			    , public el: ElementRef
 				, public nav: NavController
-				, public uiStateService: UIStateService
 				, public popoverCtrl: PopoverController,
 				public store: Store<rootStore.State>) {
 		
 	}
-	@Input() searchDelay: number = 2000;
-	@Input() title;
-	@Input() editMode:boolean=false;
-	@Input() selectionStatus:any;
+	@Input() searchDelay=2000;
+	@Input() title="FormulaLib";
+	@Input() editMode=false;
+	@Input() selectionStatus=null;
+	@Input() isSelectionList=false;
 	@Output() filterChange = new EventEmitter();
 	@Output() filterCancel = new EventEmitter();
 	@Output() actionCmd = new EventEmitter();

@@ -13,15 +13,17 @@ import { Resource, Unit } from '../../reducers/resource'
 	selector: 'fl-unit-sel',
 	//<input  type="text" class="mathelem" id="mathelem"/>
 	template: `
-	<template [ngIf]="mode != 'edit'">
-		<mathq *ngIf="latex?.length" [latex]="latex"></mathq>
+	<template [ngIf]="!editMode">
+		<mathq *ngIf="latex?.length" [latex]="latex" [isUnit]="true"></mathq>
 		<span  *ngIf="name?.length">{{name}}</span>
 	</template>
 	
-	<div *ngIf="mode == 'edit'" type="input" (click)="select()">
-		<mathq *ngIf="latex?.length" [(ngModel)]="latex"></mathq>
+	<div *ngIf="editMode" (click)="select($event)">
+		<mathq *ngIf="latex?.length" [isUnit]="true" [(ngModel)]="latex"></mathq>
 		<span *ngIf="name?.length">{{name}}</span>
-		<button ion-button small clear  type="input" (click)="clear($event)"><ion-icon icon-small name="close"></ion-icon>
+		<button ion-button small clear  type="input" (click)="clear($event)">
+			<ion-icon icon-small name="close">
+			</ion-icon>
 		</button>
 	</div>
 	`
@@ -57,7 +59,7 @@ export class UnitSelector {
 		})
 	}
 
-	@Input() mode;
+	@Input() editMode:boolean = false;
 	@Output('change') change = new EventEmitter();
 
 	ngOnInit() {
@@ -70,10 +72,11 @@ export class UnitSelector {
 	writeValue(obj: any) {
 		this._writeValue(obj);
 	}
+
 	_writeValue(obj: any): void {
 		if(obj && obj != ""){
 			let u = this.nds.getResource(obj) as Unit;
-			this.latex = this.nds.getLatex(u.symbol);
+			this.latex = u.symbol;
 			this.name = u.name;
 		}
 	}
@@ -83,29 +86,10 @@ export class UnitSelector {
 		this.latex = "";
 		evt.stopPropagation();
         evt.preventDefault();
-		//this.change.emit(null) 
 	}
 
-	select() {
-		// var type = UIStateService.event_types.resource_selected;
-		// var subscribtion = this.uiStateService.ole.subscribe(sel => {
-		// 	if(sel.type == type)
-		// 	{
-		// 		if(sel.status == 'success'){
-		// 			var unit = new unit(sel.resource)
-		// 			this.writeValue(unit); 
-		// 			this.change.emit(unit) 
-		// 		}
-		// 		subscribtion.unsubscribe();
-		// 	}
-		// }, error=>{
-		// 	ErrorHandler.handle(error, "UnitSelector::select", true);
-		// }, ()=>{
-		// 	console.log('Subscribtion completed in select')
-		// });
-		// this.uiStateService.inSelectMode = true;
-		// this.ssetResourcePage("properties");
-		this.nav.push(ResourceListPage, {type:'properties', mode:'select'})
+	select(evt) {
+		this.nav.push(ResourceListPage, {type:'properties'})
 	}
 
 }

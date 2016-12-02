@@ -15,7 +15,8 @@ import * as std from '../lib/types/standard';
 
 export interface ButtonStatus {
     share?: { enable_button: boolean, disable_button: boolean },
-    favourite?: { enable_button: boolean, disable_button: boolean }
+    favourite?: { enable_button: boolean, disable_button: boolean },
+    folder?:{enable_button:boolean, disable_button:boolean}
 }
 
 
@@ -43,8 +44,7 @@ export class ResourceListPage {
     currentProperty$: Observable<Property>;
     info: ResourceInfo;
     static resourceInfos: { [type: string]: ResourceInfo; } = {};
-    mode:string;
-
+    selectMode:boolean = false;
     constructor(public store: Store<fromRoot.State>,
         public nds:NewDataService,
         public navParams: NavParams,
@@ -52,7 +52,7 @@ export class ResourceListPage {
         public actions: ResourceActions,
         public uiActions: UIStateActions) {
         this.type = navParams.get('type');
-        this.mode = navParams.get('mode');
+        this.selectMode = navParams.get('selectMode');
         this.currentProperty$ = store.let(fromRoot.getCurrentProperty);
 
         if (ResourceListPage.resourceInfos['formulas'] == null) {
@@ -91,6 +91,8 @@ export class ResourceListPage {
 
    
     ngOnInit() {
+        if(this.nds.isCurrentlyEdititng())
+            this.selectMode = true;
     }
 
     ngAfterViewInit(){
@@ -99,7 +101,7 @@ export class ResourceListPage {
 
     onClick(res, e) {
         e.stopPropagation();
-        if(this.mode == 'select'){
+        if(this.selectMode){
             this.store.dispatch(this.uiActions.selectResource(res));
             this.nav.pop();
             return;
@@ -108,7 +110,7 @@ export class ResourceListPage {
     }
 
     onPress(evt) {
-        if(this.mode == 'select')
+        if(this.selectMode)
             return;
         this.editMode = true;
         this.updateSelectionStatus();

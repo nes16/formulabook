@@ -1,0 +1,25 @@
+ion-row.header {
+  background-color:lightgrey;
+}
+
+ion-row.edit {
+  background-color:dodgerblue;
+}
+
+ion-col {
+  border: solid 1px grey;
+  border-bottom-style: none;
+  border-right-style: none;
+}
+
+ion-row ion-input{
+    background: blue;
+}
+
+ion-col:last-child {
+  border-right: solid 1px grey;
+}
+
+ion-row:last-child ion-col {
+  border-bottom: solid 1px grey;
+}

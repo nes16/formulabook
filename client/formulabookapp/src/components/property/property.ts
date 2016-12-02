@@ -22,14 +22,14 @@ export class PropertyComponent {
 	ngOnInit() {
 		this.er = Object.assign({}, this.resource)
 		this.form = new FormGroup({
-			name: new FormControl(this.er.name, [Validators.required
+			name: new FormControl(this.resource.name, [Validators.required
 				, Validators.minLength(2)
 				, Validators.maxLength(30)])
 		})
 	}
 
 	onSave() {
-		this.save.emit(this.er);
+		this.save.emit(this.resource);
 	}
 
 	get diagnostic() {

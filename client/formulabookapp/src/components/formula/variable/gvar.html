@@ -1,0 +1,12 @@
+<ion-row (dblclick)="onDblClick($event)">
+    <ion-col>
+        <span>{{resource.name}}</span>
+    </ion-col>
+    <ion-col>
+        <mathq [latex]="resource.symbol"></mathq>
+    </ion-col>
+    <ion-col>
+        <span>{{resource.value}}in</span>
+        <mathq [latex]="nds.getResource(resource.unit_id)?.symbol" [isUnit]="true"></mathq>
+    </ion-col>
+</ion-row>

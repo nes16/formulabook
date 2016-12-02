@@ -1,0 +1,11 @@
+<ion-row (press)="onPress($event)" [class]={edit:editModein}>   
+    <ion-col>
+        <span>{{resource.name}}</span>
+    </ion-col>
+    <ion-col  *ngFor="let v of getKeys()">
+        <fl-val [resource]="resource.values[v]" [editMode]="editModein"></fl-val>
+    </ion-col>
+    <ion-col>
+            <fl-val [resource]="resource.result" [editMode]="false"></fl-val>
+    </ion-col>
+</ion-row>

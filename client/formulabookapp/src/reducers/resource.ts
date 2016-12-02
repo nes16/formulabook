@@ -12,8 +12,6 @@ export interface Resource{
     shared:boolean;
     favourite:boolean;
     version:number;
-
-    
 }
 
 export interface Property extends Resource {
@@ -31,10 +29,17 @@ export interface ValueU {
     unit_id:string;
     result:string;
 }
-export interface Variables {
+
+export interface FormulaRun{
+    name:string;
+    values:{[var_index: number]:ValueU};
+    result:ValueU;
+}
+export interface Variable {
+    index:number;
     name?:string;
     symbol:string;
-    values: ValueU[];
+    unit_id:string;
 }
 export interface Global extends Resource {
     unit_id?:string;
@@ -46,8 +51,10 @@ export interface Global extends Resource {
 export interface Formula extends Resource {
     symbol:string;
     unit_id:string;
-    variables:Variables[]
-    results?:ValueU[]
+    formula:string;
+    variables:Variable[]
+    global_ids:string[];
+    runs:FormulaRun[];
 }
 
 export interface Favourite{

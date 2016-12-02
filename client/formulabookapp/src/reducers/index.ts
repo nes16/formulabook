@@ -158,6 +158,24 @@ export function getGlobals(state$:Observable<State>){
 
 export function getCurrentResource(state$: Observable<State>){
   return state$.map(state => state.uiState.detail_currResource).distinct()
+               .map(res => {
+                 let no = Object.assign({}, res)
+                 //clone formula object
+                 if(no.type == 'formulas'){
+                   let res1 = res as Formula;
+                   let fo = no as Formula;
+                   fo.runs = []
+                   res1.runs.forEach(r => {
+                     let nr = Object.assign({}, r);
+                     nr.values = {};
+                     Object.keys(r.values).forEach(k => {
+                       nr.values[k]= Object.assign({}, r.values[k])
+                     })
+                     fo.runs.push(nr);
+                   })
+                 }
+                 return no;
+               })
 }
 
 export function getFormulas(state$: Observable<State>) {

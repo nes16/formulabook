@@ -2,33 +2,33 @@
 	<ion-list>
 		<ion-item>
 			<ion-label>Name</ion-label>
-			<ion-input type="text" formControlName="name" [(ngModel)]="uobj.name"></ion-input>
+			<ion-input type="text" formControlName="name" [(ngModel)]="resource.name"></ion-input>
 		</ion-item>
 		<fb-error [fcontrol]="form.controls.name"></fb-error>
 		<ion-item>
 			<ion-label>Description</ion-label>
-			<ion-input type="text" formControlName="description" [(ngModel)]="uobj.description"></ion-input>
+			<ion-input type="text" formControlName="description" [(ngModel)]="resource.description"></ion-input>
 		</ion-item>
 		<fb-error [fcontrol]="form.controls.description"></fb-error>
 		<ion-item>
 			<ion-label>System</ion-label>
-			<ion-select [(ngModel)]="uobj.system" [ngModelOptions]="{standalone: true}" required.>
+			<ion-select [(ngModel)]="resource.system" [ngModelOptions]="{standalone: true}" required.>
 				<ion-option *ngFor="let p of systems" [value]="p">{{p}}</ion-option>
 			</ion-select>
 		</ion-item>
 		<ion-item>
 			<ion-label>Symbol</ion-label>
-			<ion-input type="text" formControlName="symbol" [(ngModel)]="uobj.Symbol"></ion-input>
+			<ion-input type="text" formControlName="symbol" [(ngModel)]="resource.Symbol"></ion-input>
 		</ion-item>
 		<fb-error [fcontrol]="form.controls.symbol"></fb-error>
 		<template [ngIf]="!uobj.IsDefaultUnit">
 			<ion-item class="item-input">
 				<ion-label>Factor</ion-label>
-				<mathq item-right [editable]="true" formControlName="factor" [(ngModel)]="uobj.factor"></mathq>
+				<mathq item-right [editable]="true" formControlName="factor" [(ngModel)]="resource.factor"></mathq>
 			</ion-item>
 			<ion-item input>
 				<ion-label> Approximate</ion-label>
-				<ion-checkbox item-right formControlName="approx" [(ngModel)]="uobj.approx"></ion-checkbox>
+				<ion-checkbox item-right formControlName="approx" [(ngModel)]="resource.approx"></ion-checkbox>
 			</ion-item>
 		</template>
 

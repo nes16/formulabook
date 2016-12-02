@@ -1548,21 +1548,3 @@ export class ErrorHandler {
         }
     }
 }
-
-export function createNewProperty():Property{
-    return new Property();
-}
-
-
-export function createNewUnit(store):Unit{
-    return new Unit();
-}
-
-
-export function createNewGlobal():Global{
-    return new Global();
-}
-
-export function createNewFormula():Formula{
-    return new Formula();
-}

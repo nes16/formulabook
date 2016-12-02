@@ -16,7 +16,8 @@ const TAB_INDEX_DETAIL:number = 3;
     <ion-tab [root]="rootInfo0.page"  [rootParams]="rootInfo0.params" tabTitle="Units" tabIcon="map"></ion-tab>
     <ion-tab [root]="rootInfo1.page"  [rootParams]="rootInfo1.params" tabTitle="Global" tabIcon="map"></ion-tab>
     <ion-tab [root]="rootInfo2.page"  [rootParams]="rootInfo2.params" tabTitle="Formula" tabIcon="map"></ion-tab>
-    <ion-tab [root]="rootInfo3.page"  [rootParams]="rootInfo3.params" show="false" tabTitle="Details" tabIcon="information-circle"></ion-tab>
+    <ion-tab [root]="rootInfo3.page"  [rootParams]="rootInfo3.params" show="false" tabTitle="Details" tabIcon="information-circle">
+    </ion-tab>
   </ion-tabs>
   `
 })

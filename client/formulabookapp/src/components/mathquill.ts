@@ -27,14 +27,20 @@ export class MathQ {
 
 	@Input() editable = false;
 	@Input('latex') staticLatex:string;
+	@Input() isText=false;
+	@Input() isUnit=false;
 	@Output('change') change = new EventEmitter();
 	@ViewChild('mq') spanElem;	
 	
 	ngOnInit() {
 		if(this.staticLatex != null){
-			this.latex = this.staticLatex;
+			if(this.isUnit) 
+				this.latex = this.getLatex(this.staticLatex);
+			else if(this.isText)
+				this.latex = this.makeText(this.staticLatex);
+			else
+				this.latex = this.staticLatex;
 		}
-		
 	}
 	//updATE units set factor="\left(x+459.67\right)\cdot\frac{5}{9}" where id=489
 	//select factor from units where id=489
@@ -83,6 +89,47 @@ export class MathQ {
 		if(this.editable)
 			this.init();
 	}
+
+	makeText(latex){
+		return "\\text{" + latex + "}"
+	}
+
+
+    getLatex(symbol: string) {
+        let [latex, s1, s] = ["", "", symbol];
+        if (s) {
+            if (s.length == 1) {
+                return "\\text{" + s + "}";
+            }
+            //replace H2o as H_2o
+            s1 = s.replace('H2O', 'H_2O');
+            //replace ([a-zA-A])([1-9]) with g1^g2
+            let [p, s2] = [/([A-Za-z])([1-9])/, '']
+            while (s1 != s2) {
+                s2 = s1;
+                s1 = s1.replace(p, "$1^$2")
+            }
+            //replace ((a-zA-A )*) with \text{g1}
+            let p2 = /([A-Za-z /]+)/
+            s2 = ''
+            let part1 = '';
+            while (s1 != s2) {
+                s2 = s1;
+                s1 = s1.replace(p2, "\\text{$1}")
+                if (s1 != s2) {
+                    part1 += s1.slice(0, s1.lastIndexOf('}') + 1)
+                    s1 = s1.slice(s1.lastIndexOf('}') + 1);
+                }
+                else {
+                    part1 += s1;
+                }
+            }
+            s1 = part1;
+            return s1;
+        }
+        return s1
+    }
+
 
 	scrollTo() {
 	let content = this.uiStateService.Content;

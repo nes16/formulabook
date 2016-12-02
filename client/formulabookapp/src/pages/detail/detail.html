@@ -1,6 +1,6 @@
-<ion-header>
+<ion-header *ngIf="(curRes$ | async)?.type != 'formulas'">
     <ion-navbar no-border-bottom>
-		<ion-title small>{{title}}</ion-title>
+		<ion-title small>{{(curRes$ | async)?.name}}</ion-title>
 		<ion-buttons right>
 			<button royal ion-button icon-only  (click)="onClose($event)">
 				<ion-icon name="close"></ion-icon>
@@ -8,7 +8,7 @@
 		</ion-buttons>
 	</ion-navbar>
 </ion-header>l
-<ion-content id="detail-page">
+<ion-content *ngIf="(curRes$ | async)?.type != 'formulas'" id="detail-page">
     <div  [ngSwitch] = "(curRes$ | async)?.type">
         <template [ngSwitchCase]="'properties'">
             <ion-list>
@@ -25,8 +25,11 @@
                 <fl-global  (save)="onSave($event)"  [resource]="(curRes$ | async)"></fl-global>
             </ion-list>
         </template>
+        <template [ngSwitchCase]="'formulas'">
+            <ion-list>
+                <fl-formula  (save)="onSave($event)"  [resource]="(curRes$ | async)"></fl-formula>
+            </ion-list>
+        </template>
     </div>   
 </ion-content>
-<ion-footer [class.fl-hidden]="(curRes$ | async)?.showKB">
-<keypad parent=""></keypad>
-</ion-footer>
+<fl-formula  *ngIf="(curRes$ | async)?.type == 'formulas'"  (save)="onSave($event)"  [resource]="(curRes$ | async)"></fl-formula>
