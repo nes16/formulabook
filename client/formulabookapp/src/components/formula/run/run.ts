@@ -1,9 +1,7 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NewDataService } from '../../../providers/new-data-service'
-import { symbolValidator, createMeasureValidator } from '../validators/custom.validators'
-import { Formula, Variable, Global, FormulaRun, ValueU } from '../../../reducers/resource'
-import { combineAll } from 'rxjs/observable/combineAll';
+import { Formula, FormulaRun } from '../../../reducers/resource'
 import { Observable } from 'rxjs/Observable';
 
 @Component({
@@ -34,7 +32,7 @@ export class RunComponent{
 	form:FormGroup;
     editModein:boolean = false;
 	valueChange$:Observable<any>;
-	constructor(nds: NewDataService) {
+	constructor(public nds: NewDataService) {
 
 	}
 	@Input() resource:FormulaRun;
@@ -56,7 +54,7 @@ export class RunComponent{
 			this.valueChange$ = Observable.from(vals$)
 			.map(i => i)
 			.combineAll(r => {
-				this.nnds.evaluateFormula(this.formula, this.resource);
+				this.nds.evaluateFormula(this.resource, this.formula);
 			})
 
 			
@@ -73,18 +71,5 @@ export class RunComponent{
          this.editModein = !this.editModein;
     }
 
-	evaluate(){
-		this.nds.evaluate(this.resource);
-        }, 600);
-	}
-
-	getVariables():Variable[]{
-		let r = this.resource as Varval;
-		return r._formula._variables;
-	}
-
-	getFormatedValues(){
-		return this.resource.variables;
-}
     
 }
