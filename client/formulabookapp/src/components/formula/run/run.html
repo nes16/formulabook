@@ -4,10 +4,10 @@
             <span >{{resource.name}}</span>
         </ion-col>
         <ion-col  *ngFor="let v of getKeys()">
-            <fl-val [resource]="resource.values[v]" [editMode]="false"></fl-val>
+            <fl-val [(ngModel)]="resource.values[v]" [editMode]="false"></fl-val>
         </ion-col>
         <ion-col>
-                <fl-val [resource]="resource.result" [editMode]="false"></fl-val>
+                <fl-val [(ngModel)]="resource.result" [editMode]="false"></fl-val>
         </ion-col>
     </ion-row>
 </template>
@@ -17,11 +17,11 @@
             <ion-col>
                 <ion-input  type="text" formControlName="name" [(ngModel)]="resource.name"></ion-input>
             </ion-col>
-            <ion-col  *ngFor="let v of getKeys()" >
-                <fl-val [(ngModel)]="resource.values[v]" formControlName="name" [editMode]="true"></fl-val>
+            <ion-col *ngFor="let v of getKeys(); let i=index">
+                <fl-val [(ngModel)]="resource.values[v]"  [editMode]="true" [formControl]="form.controls['Var'+i]" ></fl-val>
             </ion-col>
             <ion-col>
-                <fl-val [(ngModel)]="resource.result" [editMode]="false"></fl-val>
+                <fl-val [ngModelOptions]="{standalone: true}"  [(ngModel)]="resource.result" [editMode]="false"></fl-val>
             </ion-col>
         </ion-row>
     </form>

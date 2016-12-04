@@ -41,7 +41,7 @@ export class LatexParser {
         return Object.keys(list);
     }
 
-    static setValueProviderForVarNodes(root:MathNode, vp:ValueProvider){
+    static setValueProviderForVarNodes(root:MathNode, vp:{[symbol:string]: number}){
         if(!LatexParser.initComplete){
             console.log('Please call init first');
             return;
@@ -49,8 +49,8 @@ export class LatexParser {
         let list = {};
         MathNode.prototype.traverseNode(root, list);
         let symbols = Object.keys(list);
-        symbols.forEach(a => {
-            list[a].nodes.forEach(n => n.vp = vp)
+        symbols.forEach(s => {
+            list[s].nodes.forEach(n => n.input = vp[s])
         })
     }
 }

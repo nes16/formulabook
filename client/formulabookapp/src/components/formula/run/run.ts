@@ -1,26 +1,67 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NewDataService } from '../../../providers/new-data-service'
-import { Formula, FormulaRun } from '../../../reducers/resource'
+import { Formula, FormulaRun, ValueU } from '../../../reducers/resource'
 import { Observable } from 'rxjs/Observable';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import { Directive, forwardRef } from '@angular/core';
 
 @Component({
 	selector: 'fl-val',
 	templateUrl: 'val.html',
 })
 
+
+
 export class ValComponent {
+	input:ValueU={input:"",unit_id:null, result:"" };
 	constructor(nds: NewDataService) {
 
 	}
-	@Input() resource;
+	
 	@Input() editMode: boolean = false;
+	@Output('change') change = new EventEmitter();
 
 
 	ngOnInit() {
 
 	}
 
+	writeValue(obj: any) {
+		if(obj)
+			this.input.input = obj.input;
+	}
+
+	onChange($evt){
+		this.change.emit(Object.assign({},this.input));
+	}
+}
+
+
+const INPUT_VALUE_ACCESSOR: any = {
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: forwardRef(() => InputValueAccessor),
+    multi: true
+};
+@Directive({
+  selector: 'fl-val',
+  host: { '(change)': 'onChange($event)'/*, '(blur)': 'onTouched()'*/ },
+  providers: [INPUT_VALUE_ACCESSOR]
+})
+export class InputValueAccessor implements ControlValueAccessor {
+  onChange = (_) => {};
+  onTouched = () => {};
+
+  constructor(public host: ValComponent) {
+
+  }
+
+  writeValue(value: any): void {
+    this.host.writeValue(value);
+  }
+ 
+  registerOnChange(fn: (_: any) => void): void { this.onChange = fn; }
+  registerOnTouched(fn: () => void): void { this.onTouched = fn; }
 }
 
 //Global variable used in formula
@@ -30,7 +71,7 @@ export class ValComponent {
 })
 export class RunComponent {
 	form: FormGroup;
-	editModein: boolean = false;
+	editModein: boolean = true;
 	valueChange$: Observable<any>;
 	constructor(public nds: NewDataService) {
 
@@ -54,8 +95,11 @@ export class RunComponent {
 		this.valueChange$ = Observable.from(vals$)
 			.map(i => i)
 			.combineAll(r => {
-				this.nds.evaluateFormula(this.resource, this.formula);
+				return r;
 			})
+		this.valueChange$.subscribe(i => {
+			this.nds.evaluateFormula(this.resource, this.formula);
+		})
 	}
 
 	getKeys() {
@@ -65,7 +109,7 @@ export class RunComponent {
 	onPress(evt) {
 		// 	let runRow = evt.target;
 		console.log('Long press row')
-		this.editModein = !this.editModein;
+		//this.editModein = !this.editModein;
 	}
 
 

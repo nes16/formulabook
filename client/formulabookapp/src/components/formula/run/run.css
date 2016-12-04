@@ -13,7 +13,7 @@ ion-col {
 }
 
 ion-row ion-input{
-    background: blue;
+    background:gray;
 }
 
 ion-col:last-child {

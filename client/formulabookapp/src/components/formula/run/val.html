@@ -1,2 +1,2 @@
-<ion-input *ngIf="editMode" type="text" [(ngModel)]="resource.input"></ion-input>
-<span *ngIf="!editMode">{{resource.input}}</span>
+<ion-input *ngIf="editMode" type="text" (input)="onChange($event)" [(ngModel)]="input.input"></ion-input>
+<span *ngIf="!editMode">{{input.input}}</span>

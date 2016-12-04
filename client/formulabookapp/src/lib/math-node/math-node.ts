@@ -6,7 +6,7 @@ export class MathNode {
     token: string;
     args: any;
     val: any;
-    vp:ValueProvider;
+    input:number;
     constructor(type, args){
         this.type = type;
         this.args = args;
@@ -212,8 +212,8 @@ export class MathNode {
     };
 
     doVar() {
-        if(this.vp)
-            this.val = this.vp.getValue(this.token);
+        if(this.input)
+            this.val = this.input;
     };
 
     isAssign(){

@@ -32,7 +32,7 @@ export interface ValueU {
 
 export interface FormulaRun{
     name:string;
-    values:{[var_index: number]:ValueU};
+    values:{[symbol: string]:ValueU};
     result:ValueU;
 }
 export interface Variable {

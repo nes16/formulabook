@@ -10,7 +10,7 @@ import { UnitComponent } from './unit/unit'
 import { GlobalComponent } from './global/global'
 import { FormulaComponent } from './formula/formula'
 import { VarComponent, GVarComponent } from './formula/variable/variable'
-import { RunComponent, ValComponent } from './formula/run/run'
+import { RunComponent, ValComponent, InputValueAccessor } from './formula/run/run'
 import { MathKeypad } from './keys/keypad'
 import { MathQ } from './mathquill'
 import { MathQValueAccessor } from './mathquill-accessor'
@@ -32,6 +32,7 @@ export const COMPONENTS = [
     GVarComponent,
     RunComponent,
     ValComponent,
+    InputValueAccessor,
     MathKeypad,
     MathQ,
     MathQValueAccessor,

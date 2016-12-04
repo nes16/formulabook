@@ -1,15 +1,12 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs/Rx';
-import { UIStateService } from './ui-state-service'
-import { RemoteService } from './remote-service'
 import { UUID } from 'angular2-uuid';
 
 import { Store } from '@ngrx/store';
 import * as fromRoot from '../reducers';
 import { LatexParser } from '../lib/latex-parser'
 
-import { Resource, Property, Unit, Global, Formula, FormulaRun, ValueU } from '../reducers/resource'
+import { Property, Unit, Global, Formula, FormulaRun, ValueU } from '../reducers/resource'
 
 @Injectable()
 export class NewDataService {
@@ -132,8 +129,32 @@ export class NewDataService {
         return r;
     }
 
+    parseValue(v:ValueU):number{
+        return parseFloat(v.input);
+    }
+
+
     evaluateFormula(run:FormulaRun, f:Formula){
+        //If all variable has value
+        let varsWithNoValue = f.variables.filter(v => run.values[v.symbol].input.length == 0)
+        if(varsWithNoValue.length > 0)
+            return;
         
+        let values:{[symbol:string]: number} = {};
+        f.variables.forEach(v => values[v.symbol]= this.parseValue(run.values[v.symbol]))
+        
+        //Set the nodes of each variable this as value provider
+        try{
+            let rootNode:any;
+            rootNode = this.parse(f.formula);
+            LatexParser.setValueProviderForVarNodes(rootNode, values) 
+            rootNode.type() as number;
+            run.result = rootNode.val.toString();
+        }
+        catch(exp){
+            throw exp;
+        }
+
     }
 
     //UI interface
