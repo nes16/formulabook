@@ -1,2 +1,2 @@
-<ion-input *ngIf="editMode" type="text" (input)="onChange($event)" [(ngModel)]="input.input"></ion-input>
+<ion-input *ngIf="editMode" type="text" (blur)="onChange($event)" [(ngModel)]="input.input"></ion-input>
 <span *ngIf="!editMode">{{input.input}}</span>

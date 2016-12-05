@@ -24,24 +24,26 @@ export class ValComponent {
 
 
 	ngOnInit() {
-
+		console.log('Val component init')
 	}
 
 	writeValue(obj: any) {
 		if(obj)
-			this.input.input = obj.input;
+			this.input=Object.assign({}, obj);
 	}
 
 	onChange($evt){
-		this.change.emit(Object.assign({},this.input));
+		let input = Object.assign({}, this.input)
+		this.writeValue(input)
+		this.change.emit(input);
 	}
 }
-
 
 const INPUT_VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => InputValueAccessor),
     multi: true
+	
 };
 @Directive({
   selector: 'fl-val',

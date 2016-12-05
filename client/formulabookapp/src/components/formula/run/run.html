@@ -21,7 +21,8 @@
                 <fl-val [(ngModel)]="resource.values[v]"  [editMode]="true" [formControl]="form.controls['Var'+i]" ></fl-val>
             </ion-col>
             <ion-col>
-                <fl-val [ngModelOptions]="{standalone: true}"  [(ngModel)]="resource.result" [editMode]="false"></fl-val>
+                <span>{{resource.result.input}}</span>
+                <!--<fl-val [ngModelOptions]="{standalone: true}"  [(ngModel)]="resource.result" [editMode]="true"></fl-val>-->
             </ion-col>
         </ion-row>
     </form>

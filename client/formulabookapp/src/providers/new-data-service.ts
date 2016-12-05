@@ -136,7 +136,7 @@ export class NewDataService {
 
     evaluateFormula(run:FormulaRun, f:Formula){
         //If all variable has value
-        let varsWithNoValue = f.variables.filter(v => run.values[v.symbol].input.length == 0)
+        let varsWithNoValue = f.variables.filter(v => !run.values[v.symbol].input || run.values[v.symbol].input.length == 0)
         if(varsWithNoValue.length > 0)
             return;
         
@@ -149,7 +149,7 @@ export class NewDataService {
             rootNode = this.parse(f.formula);
             LatexParser.setValueProviderForVarNodes(rootNode, values) 
             rootNode.type() as number;
-            run.result = rootNode.val.toString();
+            run.result.input = rootNode.val.toString();
         }
         catch(exp){
             throw exp;
