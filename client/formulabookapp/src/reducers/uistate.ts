@@ -1,7 +1,7 @@
 import {Action, ActionReducer} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {UIStateActions} from '../actions/uistate';
-import {Resource, Property} from './resource'
+import {Resource, Property} from './interfaces'
 import _ from "lodash";
 
 

@@ -3,6 +3,8 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/let';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import  'rxjs/add/operator/map';
+import  'rxjs/add/operator/distinct';
 import { ActionReducer } from '@ngrx/store';
 import { environment } from '../environments/environment';
 /**
@@ -35,7 +37,8 @@ import { combineReducers } from '@ngrx/store';
 
 
 // reducers
-import { resources, Resource, Property, Unit, Global, Formula } from './resource';
+import { Resource, Property, Unit, Global, Formula } from './interfaces';
+import { resources } from './resource';
 import { uiState, UIState } from './uistate';
 import { authState, AuthState } from './auth';
 import { ResourceActions } from '../actions'

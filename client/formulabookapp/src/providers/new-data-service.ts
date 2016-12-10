@@ -1,19 +1,23 @@
-import { Injectable } from '@angular/core';
-
+import { Injectable , Optional} from '@angular/core';
 import { UUID } from 'angular2-uuid';
 
 import { Store } from '@ngrx/store';
 import * as fromRoot from '../reducers';
 import { LatexParser } from '../lib/latex-parser'
+import { ValueParser } from '../lib/value-parser'
+import '../assets/parsers/value-parser'
+import { Property, Unit, Global, Formula, FormulaRun, ValueU, ParsedValue } from '../reducers/interfaces'
 
-import { Property, Unit, Global, Formula, FormulaRun, ValueU } from '../reducers/resource'
 
 @Injectable()
 export class NewDataService {
 
     state: fromRoot.State;
-    constructor(public store: Store<fromRoot.State>) {
-        this.store.let(fromRoot.getState).subscribe(s => this.state = s)
+    constructor(@Optional() public store:Store<fromRoot.State>) {
+        if(this.store)
+            this.store.let(fromRoot.getState).subscribe(s => this.state = s);
+        else
+            this.setupSampleData();
         LatexParser.init();
     }
 
@@ -129,9 +133,10 @@ export class NewDataService {
         return r;
     }
 
-    parseValue(v:ValueU):number{
-        return parseFloat(v.input);
+    parseValue(v:ValueU):ParsedValue{
+        return ValueParser.parse(v.input);
     }
+
 
 
     evaluateFormula(run:FormulaRun, f:Formula){
@@ -155,6 +160,10 @@ export class NewDataService {
             throw exp;
         }
 
+    }
+
+    validateVaue(v:ValueU){
+        let nu = v.input.split(' ');
     }
 
     //UI interface
@@ -200,5 +209,39 @@ export class NewDataService {
         formula.variables = variables;
         formula.global_ids = globals.map(g => g.id);
     }
+
+
+
+    setupSampleData(){
+       this.state  = {
+           resources:[]
+       } as any;
+       let data =[
+            ['Length', 
+                ['meter', 'm', "1"],
+                ['feet', 'ft', "0.2" ]
+            ],
+            ['Area', 
+                ['square meter', 'm2', "1"],
+                ['square feet', 'ft2', "0.04"]
+            ],
+            ['Temperature', 
+                ['Degree kelvin', 'K', "1"],
+                ['Degree celcius', 'C', "0.2"],
+            ]
+       ]
+        data.forEach(i => {
+            let p = i[0] as string;
+            let np = this.createNewProperty();
+            np.name = p;
+            this.state.resources.push(np);
+            i.splice(0).forEach(j => {
+                let u = this.createNewUnit(np);
+                [u.name, u.symbol, u.factor] = [j[0], j[1], j[2]]
+                this.state.resources.push(u);
+            })
+        })
+    }
+
 
 }

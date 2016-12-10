@@ -7,14 +7,17 @@ import {
 	, createUniqueNameValidator, createUniqueSymbolValidator
 	, createFormulaValidator
 } from '../validators/custom.validators'
-import { Formula, Variable, Global, FormulaRun, ValueU } from '../../reducers/resource'
+import { Formula, Variable, Global, FormulaRun, ValueU } from '../../reducers/interfaces'
 import { LatexParserService } from '../../../providers/latex-parser-service';
 import { Observable, Observer } from 'rxjs/Rx';
+
 
 
 @Component({
 	templateUrl:'runs.html'
 })
+
+
 
 export class RunHistoryTab{
 	@Input() resource:Formula;
@@ -68,6 +71,7 @@ export class RunHistoryTab{
         this.selectedItems = []; 
     }
 }
+
 
 
 @Component({

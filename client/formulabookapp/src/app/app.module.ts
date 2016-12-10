@@ -1,4 +1,4 @@
-import { NgModule, } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { IonicApp, IonicModule } from 'ionic-angular';
 import { FormsModule }   from '@angular/forms';
 import { HttpModule }    from '@angular/http';

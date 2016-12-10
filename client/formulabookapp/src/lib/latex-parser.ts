@@ -1,6 +1,5 @@
-import '../assets/latex-parser/latex-parser'
+import '../assets/parsers/latex-parser'
 import { MathNode } from '../lib/math-node/math-node'
-import { ValueProvider } from '../lib/math-node/value'
 
 declare let Parser: any;
 
