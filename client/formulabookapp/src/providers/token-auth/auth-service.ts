@@ -169,7 +169,7 @@ export class MyTokenAuth {
         this.events.publish('auth', {action:'signup', result:'success'});
         })
       .catch(error => {
-        ('auth', {action:'signup', result:'failed'});
+        this.events.publish('auth', {action:'signup', result:'failed'});
         return Observable.throw(error);
       }).subscribe();
   }
