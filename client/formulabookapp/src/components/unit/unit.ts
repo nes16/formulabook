@@ -1,7 +1,7 @@
 import { Component,  Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NewDataService } from '../../providers/new-data-service';
-import { Property, Unit } from '../../reducers/resource'
+import { Property, Unit } from '../../reducers/interfaces'
 
 import { symbolValidator, factorValidator, createUniqueNameValidator, createUniqueSymbolValidator } from '../validators/custom.validators'
 

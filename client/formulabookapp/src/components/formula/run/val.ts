@@ -13,7 +13,7 @@ import { Directive, forwardRef } from '@angular/core';
     `
 })
 export class ValComponent {
-	input:ValueU={input:"",unit_id:null, result:"", parsedValue:{numeric:"", symbol:"", power:""} };
+	input:ValueU={input:"",inunit_id:null, result:"", parsedValue:{numeric:"", symbol:"", power:""} };
 	constructor(public nds: NewDataService) {
 
 	}

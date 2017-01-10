@@ -22,7 +22,7 @@ import { NewDataService } from '../providers/new-data-service'
 })
 export class UnitApp{
     measure:std.Property;
-    val:std.ValueU={input:"",unit_id:null,result:"", parsedValue:{numeric:"", symbol:"", power:""} };
+    val:std.ValueU={input:"",inunit_id:null,result:"", parsedValue:{numeric:"", symbol:"", power:""} };
     constructor(public nds:NewDataService){
 
     }

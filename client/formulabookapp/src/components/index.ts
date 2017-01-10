@@ -13,10 +13,8 @@ import { VarComponent, GVarComponent } from './formula/variable/variable'
 import { RunComponent } from './formula/run/run'
 import { ValComponent, InputValueAccessor } from './formula/run/val'
 import { MathKeypad } from './keys/keypad'
-import { MathQ } from './mathquill'
-import { MathQValueAccessor } from './mathquill-accessor'
-import { UnitSelector } from './selectors/unit'
-import { UnitValueAccessor } from './selectors/unit-accessor'
+import { MathQ, MathQValueAccessor } from './mathquill'
+import { UnitSelector, UnitValueAccessor } from './selectors/unit'
 
 import { FBError } from './fb-error'
 

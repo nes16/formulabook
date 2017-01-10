@@ -8,7 +8,11 @@ export interface Resource{
     version:number;
 }
 
+
 export interface Property extends Resource {
+    base:boolean;
+    dim?:string;
+    combinables?:string;
 }
 
 export interface SingleUnit {
@@ -18,12 +22,30 @@ export interface SingleUnit {
     power?:number;
 }
 
+export interface UnitSystem  extends Resource{
+    country?:string;
+    year?:number;
+    application?:string;
+}
+
+export interface SearchKey {
+    key:string;
+    weightage:number;
+}
+export let prefixes:string = "n,m,m,c,h,k,M,G,T";
+export let prefixes_power:number[] = [];
+
 export interface Unit extends Resource {
     property_id:string;
     factor:string;
+    offset:string;
     symbol:string;
     system:string;
-    definition:SingleUnit[];
+    definition?:SingleUnit[];
+    allias?:boolean;
+    main_id?:string;
+    prefixes_allowed?:string
+    searchKeys?:SearchKey[];
 }
 
 export interface ParsedValue {
@@ -31,11 +53,14 @@ export interface ParsedValue {
     symbol:string;
     power:string;
 }
+
+
 export interface ValueU {
     input:string;
-    unit_id:string;
+    inunit_id:string;
     result:string;
     parsedValue?:ParsedValue;
+    outunit_id?:string;
 }
 
 export interface FormulaRun{
@@ -43,12 +68,14 @@ export interface FormulaRun{
     values:{[symbol: string]:ValueU};
     result:ValueU;
 }
+
 export interface Variable {
     index:number;
     name?:string;
     symbol:string;
     unit_id:string;
 }
+
 export interface Global extends Resource {
     unit_id?:string;
     value:string;

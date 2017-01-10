@@ -9,6 +9,17 @@
 			<ion-label>Description</ion-label>
 			<ion-input type="text" formControlName="description" [(ngModel)]="resource.description"></ion-input>
 		</ion-item>
+		
+		<ion-item>
+			<ion-label>Allias</ion-label>
+			<ion-toggle  formControlName="allias" [(ngModel)]="resource.allias"></ion-toggle>
+		</ion-item>
+		<ion-item *ngIf="resource.allias">
+			<ion-label>Allias for</ion-label>
+			<ion-select [(ngModel)]="resource.main_id" required>
+				<ion-option *ngFor="let u of resource.property.units" [value]="u.id">{{u.name}}</ion-option>
+			</ion-select>
+		</ion-item>
 		<fb-error [fcontrol]="form.controls.description"></fb-error>
 		<ion-item>
 			<ion-label>System</ion-label>
@@ -19,6 +30,12 @@
 		<ion-item>
 			<ion-label>Symbol</ion-label>
 			<ion-input type="text" formControlName="symbol" [(ngModel)]="resource.Symbol"></ion-input>
+		</ion-item>
+		<ion-item *ngIf="resource.system == 'SI'">
+			<ion-label>Allowed Prefixes</ion-label>
+			<ion-select [(ngModel)]="allowed_prefixes"  required.>
+				<ion-option  *ngFor="let p of prefixes" [value]="p">{{p.name}}</ion-option>
+			</ion-select>
 		</ion-item>
 		<fb-error [fcontrol]="form.controls.symbol"></fb-error>
 		<template [ngIf]="!uobj.IsDefaultUnit">

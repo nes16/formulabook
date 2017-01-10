@@ -152,6 +152,13 @@ export function getUnits(state$:Observable<State>){
   })
 }
 
+export function getUnitsForPropery(state$:Observable<State>, p:Property){
+  return state$.map(state => {  
+    let units = (state.resources as Unit[]).filter(r => r.type == 'units' && r.property_id == p.id)    
+    return units as Resource[];
+  })
+}
+
 export function getGlobals(state$:Observable<State>){
   return state$.map(state => {  
     let globals = (state.resources).filter(r => r.type == 'globals')    

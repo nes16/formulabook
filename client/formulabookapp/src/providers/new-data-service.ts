@@ -6,7 +6,8 @@ import * as fromRoot from '../reducers';
 import { LatexParser } from '../lib/latex-parser'
 import { ValueParser } from '../lib/value-parser'
 import '../assets/parsers/value-parser'
-import { Property, Unit, Global, Formula, FormulaRun, ValueU, ParsedValue } from '../reducers/interfaces'
+import { Property, Unit, Global, Formula, FormulaRun, ValueU, ParsedValue, SearchKey, prefixes, SingleUnit
+     } from '../reducers/interfaces'
 
 
 @Injectable()
@@ -30,6 +31,7 @@ export class NewDataService {
             version: 1
         }
     }
+
     getResource(id) {
         return this.state.resources.find(i => i.id == id);
     }
@@ -37,10 +39,12 @@ export class NewDataService {
     //Property interface
     createNewProperty(): Property {
         return Object.assign(this.createBaseResource(), {
+            base: false,
             name: 'New Property',
             type: 'properties'
         })
     }
+    
     getDefaultUnit(p: Property) {
         return this.state.resources.find(i => {
             let k = i as Unit;
@@ -49,6 +53,23 @@ export class NewDataService {
         )
     }
 
+    findUnit(p:Property, pv: ParsedValue){
+        let symbol = this.getUnitSymbolFromParsedValue(pv);
+        let units:Unit[] = (this.state.resources as Unit[]).filter(r => r.type == 'units' && r.property_id == p.id && r.symbol ==  symbol)
+        if(units.length == 1)
+            return units[0];
+        return null;
+    }
+
+    //ft factor = 0.304
+    convert(val:number, fu:Unit, tu:Unit):number{
+        if(val && val != NaN){
+            if(!this.isFormulaFactor(fu) && !this.isFormulaFactor(tu))
+                return val * (+fu.factor/+tu.factor)
+            else if(this.isFormulaFactor(tu) && this.isFormulaFactor(tu))
+                return ((+fu.offset - +tu.offset) + val*+fu.factor) / +tu.factor;
+        }
+    }
     //Unit interface
     createNewUnit(property): Unit {
         return Object.assign(this.createBaseResource(), {
@@ -57,7 +78,8 @@ export class NewDataService {
             property_id: property ? property.id : this.state.uiState.current_property.id,
             factor: "1",
             system: "SI",
-            type: 'units'
+            type: 'units',
+            offset:"0"
         })
     }
 
@@ -81,9 +103,34 @@ export class NewDataService {
         return u.factor.indexOf('x') != -1;
     }
 
+
+
+    getUnitSymbolFromParsedValue(pv:ParsedValue):string{
+        let symbol = "";
+        return pv.symbol+pv.power;
+    }
+
     isDefaultUnit(u: Unit) {
         return this.getFactor(u) == 1;
     }
+
+    getSearchKeys(u:Unit, p:string):any{
+        //Symbol
+        //match ^p | ' p'
+        let bFound = u.symbol.search(/^p| p/);
+        if(bFound > 0)
+            return {unit:u , weightage:10, location:bFound};
+        //Name
+        bFound = u.name.search(/^p| p/);
+        if(bFound > 0)
+            return {unit:u , weightage:8, location:bFound};
+        
+        //check prefix
+        if(p.length == 1){
+            return {unit:u, wightage:5}    
+        }
+    }
+
 
 
     //Global interface
@@ -125,10 +172,10 @@ export class NewDataService {
         let r:FormulaRun = {
             name: 'run1',
             values:{},
-            result: {input:"", result:"", unit_id:f.unit_id,}
+            result: {input:"", result:"", inunit_id:f.unit_id,}
         }
         f.variables.forEach(v => {
-            r.values[v.symbol]={input:"", result:"", unit_id:v.unit_id,}
+            r.values[v.symbol]={input:"", result:"", inunit_id:v.unit_id,}
         })
         return r;
     }
@@ -137,8 +184,6 @@ export class NewDataService {
         return ValueParser.parse(v.input);
     }
 
-
-
     evaluateFormula(run:FormulaRun, f:Formula){
         //If all variable has value
         let varsWithNoValue = f.variables.filter(v => !run.values[v.symbol].input || run.values[v.symbol].input.length == 0)
@@ -146,7 +191,7 @@ export class NewDataService {
             return;
         
         let values:{[symbol:string]: number} = {};
-        f.variables.forEach(v => values[v.symbol]= this.parseValue(run.values[v.symbol]))
+        f.variables.forEach(v => {this.parseValue(run.values[v.symbol]); values[v.symbol]= parseInt(run.values[v.symbol].result)})
         
         //Set the nodes of each variable this as value provider
         try{
@@ -170,7 +215,6 @@ export class NewDataService {
     isCurrentlyEdititng(): boolean {
         return this.state.uiState.detail_currResource != null
     }
-
 
     //Parsing interfaces
     parse(latex: string) {
@@ -209,8 +253,6 @@ export class NewDataService {
         formula.variables = variables;
         formula.global_ids = globals.map(g => g.id);
     }
-
-
 
     setupSampleData(){
        this.state  = {

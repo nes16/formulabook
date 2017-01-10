@@ -5,6 +5,18 @@
 			<ion-input type="text" formControlName="name" [(ngModel)]="resource.name"></ion-input>
 		</ion-item>
 		<ion-item>
+			<ion-label>Base Measure</ion-label>
+			<ion-toggle  formControlName="base" [(ngModel)]="resource.base"></ion-toggle>
+		</ion-item>
+		<ion-item *ngIf="!resource.base">
+			<ion-label>Dimension</ion-label>
+			<ion-input type="text" formControlName="dim" [(ngModel)]="resource.dim"></ion-input>
+		</ion-item>
+		<ion-item>
+			<ion-label>Cominable Units</ion-label>
+			<ion-input type="text" formControlName="name" [(ngModel)]="resource.combinables"></ion-input>
+		</ion-item>
+		<ion-item>
 			<button ion-button type="submit" [disabled]="!form.valid">Save</button>
 		</ion-item>
 	</ion-list>
