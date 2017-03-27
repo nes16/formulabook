@@ -3,6 +3,9 @@
   "author": "Ionic Framework",
   "homepage": "http://ionicframework.com/",
   "private": true,
+  "engines": {
+    "node": "6.9.4"
+  },
   "scripts": {
     "ionic:build": "ionic-app-scripts build",
     "ionic:ngc": "ionic-app-scripts ngc",
