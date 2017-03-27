@@ -1,8 +1,8 @@
-/// <reference path="../../typings/globals/localforage/index.d.ts" />
 import {default as localForage} from "localforage"
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { CacheService, BaseResource } from '../lib/types/standard' 
+
 
 @Injectable()
 export class LFCacheService implements CacheService{
