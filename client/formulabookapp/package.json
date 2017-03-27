@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "ionic:build": "ionic-app-scripts build",
+    "ionic:ngc": "ionic-app-scripts ngc",
     "ionic:serve": "ionic-app-scripts serve"
   },
 

@@ -89,9 +89,14 @@ export function factorValidator(control) {
     return !valid ? {invalidFactor: true }:null;
 }
 
+export function offsetValidator(control) {
+    var valid = /^([+-]?\d+(\.\d+(e[+-]\d+)?)?(e[+-]\d+)?)$/.test(control.value);
+    return !valid ? {invalidOffset: true }:null;
+}
+
 export function numberValidator(control){
   var valid = /^([+-]?\d+(\.\d+(e[+-]\d+)?)?(e[+-]\d+)?)$/.test(control.value);
-  return !valid ? {invalidFactor: true }:null;
+  return !valid ? {invalidNumber: true }:null;
 } 
 
 export function createFormulaValidator(formula:Formula){
@@ -99,6 +104,7 @@ export function createFormulaValidator(formula:Formula){
     return null;
   }
 }
+
 export function createUnitValidator(required:boolean, onlyUnit:boolean=false){
   return function(control):any {
     if(!control.value)

@@ -8,6 +8,7 @@ class CreateUnit < ActiveRecord::Migration
       t.string :symbol
       t.boolean :approx
       t.string :factor
+      t.string :offset
       
       t.boolean :shared
       t.boolean :shared_changed

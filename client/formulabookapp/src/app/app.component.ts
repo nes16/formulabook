@@ -5,10 +5,7 @@ import { Splashscreen, StatusBar } from 'ionic-native';
 import { TabsPage } from '../pages/tabs/tabs';
 import { TutorialPage } from '../pages/tutorial/tutorial';
 
-
-import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Rx';
-import * as fromRoot from '../reducers';
 
 export interface PageObj {
   title: string;
@@ -21,6 +18,7 @@ export interface PageObj {
 @Component({
   templateUrl: 'app.template.html'
 })
+
 export class FormulaApp {
   // the root nav is a child of the root app component
   // @ViewChild(Nav) gets a reference to the app's root nav
@@ -38,7 +36,6 @@ export class FormulaApp {
   showLoginMenu$: Observable<boolean>;
 
   constructor(
-    private store: Store<fromRoot.State>,
     public menu: MenuController,
     platform: Platform
   ) {

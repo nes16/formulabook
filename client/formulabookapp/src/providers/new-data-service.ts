@@ -44,6 +44,20 @@ export class NewDataService {
             type: 'properties'
         })
     }
+
+    getAllProperties():Property[]{
+        let properties:Property[] = (this.state.resources as Property[]).filter(r => r.type == 'properties')
+        return properties;
+        
+    }
+
+    getPropertyUnits(p:Property):Unit[]{
+        if(!p)
+            return [];
+        let units:Unit[] = (this.state.resources as Unit[]).filter(r => r.type == 'units' && r.property_id == p.id)
+        return units;
+    }
+
     
     getDefaultUnit(p: Property) {
         return this.state.resources.find(i => {
@@ -64,9 +78,9 @@ export class NewDataService {
     //ft factor = 0.304
     convert(val:number, fu:Unit, tu:Unit):number{
         if(val && val != NaN){
-            if(!this.isFormulaFactor(fu) && !this.isFormulaFactor(tu))
+            if(!fu.offset && !tu.offset )
                 return val * (+fu.factor/+tu.factor)
-            else if(this.isFormulaFactor(tu) && this.isFormulaFactor(tu))
+            else if(fu.offset && tu.offset)
                 return ((+fu.offset - +tu.offset) + val*+fu.factor) / +tu.factor;
         }
     }
@@ -83,35 +97,16 @@ export class NewDataService {
         })
     }
 
-    getFactor(u: Unit) {
-        if (!u.factor || this.isFormulaFactor(u))
-            return null;
-        else
-            return parseFloat(u.factor);
-    }
-
-    getFormulaFactor(u: Unit) {
-        if (this.isFormulaFactor(u))
-            return u.factor;
-        else
-            return null;
-    }
-
-    isFormulaFactor(u: Unit): boolean {
-        if (!u.factor)
-            return false;
-        return u.factor.indexOf('x') != -1;
-    }
-
-
 
     getUnitSymbolFromParsedValue(pv:ParsedValue):string{
-        let symbol = "";
-        return pv.symbol+pv.power;
+        if(pv.power)
+            return pv.symbol+pv.power;
+        else
+            return pv.symbol;
     }
 
     isDefaultUnit(u: Unit) {
-        return this.getFactor(u) == 1;
+        return +u.factor == 1;
     }
 
     getSearchKeys(u:Unit, p:string):any{
@@ -172,16 +167,21 @@ export class NewDataService {
         let r:FormulaRun = {
             name: 'run1',
             values:{},
-            result: {input:"", result:"", inunit_id:f.unit_id,}
+            result: {input:"", result:"",}
         }
         f.variables.forEach(v => {
-            r.values[v.symbol]={input:"", result:"", inunit_id:v.unit_id,}
+            r.values[v.symbol]={input:"", result:""}
         })
         return r;
     }
 
     parseValue(v:ValueU):ParsedValue{
-        return ValueParser.parse(v.input);
+        try{
+            return ValueParser.parse(v.input);
+        }
+        catch(exp){
+            console.log('Expection - ', exp);
+        }
     }
 
     evaluateFormula(run:FormulaRun, f:Formula){

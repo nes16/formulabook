@@ -12,6 +12,8 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { DetailPage } from '../pages/detail/detail'
 import { TabsPage } from '../pages/tabs/tabs'
 import { TutorialPage } from '../pages/tutorial/tutorial'
+import { ModalsPage } from '../pages/modals/modals'
+import { MoreOptionsPage } from '../pages/more-options/more-options'
 import { ResourceListPage } from '../pages/resource-list'
 import { FormulaApp } from './app.component'
 import { RunHistoryTab } from '../components/formula/formula';
@@ -39,6 +41,8 @@ import { ResourceActions, UIStateActions, AuthActions } from '../actions';
   declarations: [
     FormulaApp,
     DetailPage,
+    ModalsPage,
+    MoreOptionsPage,
     TabsPage,
     TutorialPage,
     ResourceListPage,
@@ -90,12 +94,14 @@ import { ResourceActions, UIStateActions, AuthActions } from '../actions';
   bootstrap: [IonicApp],
   entryComponents: [
     DetailPage,
+    ModalsPage,
     TabsPage,
     TutorialPage,
     ResourceListPage,
     FormulaApp,
     RunHistoryTab,
-    FormulaTab
+    FormulaTab,
+    MoreOptionsPage
   ],
   providers: [
     ResourceActions,

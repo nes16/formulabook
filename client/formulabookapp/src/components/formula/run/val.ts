@@ -13,7 +13,7 @@ import { Directive, forwardRef } from '@angular/core';
     `
 })
 export class ValComponent {
-	input:ValueU={input:"",inunit_id:null, result:"", parsedValue:{numeric:"", symbol:"", power:""} };
+	input:ValueU={input:"",result:"", parsedValue:{numeric:"", symbol:"", power:""} };
 	constructor(public nds: NewDataService) {
 
 	}
@@ -30,6 +30,7 @@ export class ValComponent {
 		if(obj)
 			this.input=Object.assign({}, obj);
 	}
+	
 
 	onChange($evt){
 		let input = Object.assign({}, this.input)
@@ -39,7 +40,11 @@ export class ValComponent {
 
 	parse(evt){
 		this.input.input = evt.target.value;
-		Object.assign(this.input.parsedValue, this.nds.parseValue(this.input));
+		let parsedValue = this.nds.parseValue(this.input);
+		if(parsedValue){
+			Object.assign(this.input.parsedValue, parsedValue );
+			this.change.emit(this.input)
+		}
 	}
 }
 

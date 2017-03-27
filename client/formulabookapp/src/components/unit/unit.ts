@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NewDataService } from '../../providers/new-data-service';
 import { Property, Unit } from '../../reducers/interfaces'
 
-import { symbolValidator, factorValidator, createUniqueNameValidator, createUniqueSymbolValidator } from '../validators/custom.validators'
+import { symbolValidator, factorValidator, offsetValidator, createUniqueNameValidator, createUniqueSymbolValidator } from '../validators/custom.validators'
 
 @Component({
 	selector: 'fl-unit',
@@ -34,6 +34,8 @@ export class UnitComponent {
 			symbol: new FormControl(this.resource.symbol, [Validators.required, symbolValidator]),
 			factor: new FormControl(this.resource.factor, [Validators.required
 										, factorValidator]),
+			offset: new FormControl(this.resource.offset, [Validators.required
+										, offsetValidator]),										
 			approx: new FormControl(this.resource.approx)
 		
 		})

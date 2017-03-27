@@ -52,12 +52,12 @@ export interface ParsedValue {
     numeric:string;
     symbol:string;
     power:string;
+    unit_id?:string;
 }
 
 
 export interface ValueU {
     input:string;
-    inunit_id:string;
     result:string;
     parsedValue?:ParsedValue;
     outunit_id?:string;

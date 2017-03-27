@@ -8,6 +8,6 @@
         "**/.tmp/**/*":true,
         "**/www/**/*":true,
         "**/plugins/**/*":true,
-        "**/node_modules/**/*":false,
+        "**/node_modules/**/*":true,
     }
 }

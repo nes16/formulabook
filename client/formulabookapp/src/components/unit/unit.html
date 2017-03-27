@@ -29,7 +29,7 @@
 		</ion-item>
 		<ion-item>
 			<ion-label>Symbol</ion-label>
-			<ion-input type="text" formControlName="symbol" [(ngModel)]="resource.Symbol"></ion-input>
+			<ion-input type="text" formControlName="symbol" [(ngModel)]="resource.symbol"></ion-input>
 		</ion-item>
 		<ion-item *ngIf="resource.system == 'SI'">
 			<ion-label>Allowed Prefixes</ion-label>
@@ -38,10 +38,15 @@
 			</ion-select>
 		</ion-item>
 		<fb-error [fcontrol]="form.controls.symbol"></fb-error>
+		
 		<template [ngIf]="!uobj.IsDefaultUnit">
-			<ion-item class="item-input">
+			<ion-item>
 				<ion-label>Factor</ion-label>
-				<mathq item-right [editable]="true" formControlName="factor" [(ngModel)]="resource.factor"></mathq>
+				<ion-input type="text" formControlName="factor" [(ngModel)]="resource.factor"></ion-input>
+			</ion-item>
+			<ion-item>
+				<ion-label>Offset</ion-label>
+				<ion-input type="text" formControlName="offset" [(ngModel)]="resource.offset"></ion-input>
 			</ion-item>
 			<ion-item input>
 				<ion-label> Approximate</ion-label>
