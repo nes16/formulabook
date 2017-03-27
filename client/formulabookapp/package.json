@@ -38,7 +38,6 @@
     "@types/lodash": "^4.14.39",
     "angular2-uuid": "^1.1.0",
     "jquery": "2.2.3",
-    "localforage": "^1.4.3",
     "lodash": "^4.13.1",
     "ngrx-store-freeze": "^0.1.0",
     "@ionic/app-scripts": "0.0.45",
