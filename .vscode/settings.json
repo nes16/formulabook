@@ -14,7 +14,7 @@
         "**/hooks/**/*":true,
         "**/projects/**/*":true,
         "**/resources/**/*":true,
-        "**/typings/**/*":true,
+        "**/typings/**/*":false,
         "**/www/**/*":true,
     }
 }

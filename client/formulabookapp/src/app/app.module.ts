@@ -94,6 +94,7 @@ import { FavFilterPipe } from '../components/fav-filter';
     ResourceListPage,
     FormulaApp
   ],
+  
   providers: [
     MyTokenAuth,
     JwtHttp,
@@ -109,5 +110,6 @@ import { FavFilterPipe } from '../components/fav-filter';
     {provide:'ApiEndpoint', useValue: 'api/v1'},
     {provide:'CacheService', useClass: LFCacheService},
   ]
+  
 })
 export class AppModule {}
