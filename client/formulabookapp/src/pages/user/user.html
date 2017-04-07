@@ -4,7 +4,7 @@
 <ion-content>
     <div [ngSwitch]="option">
         <template [ngSwitchCase]="'login'">
-            <form  [formGroup]="formLogin" (submit)="login($event, login.value)">
+            <form  [formGroup]="formLogin" (submit)="login($event, formLogin.value)">
                 <ion-list>
                     <div class="logo">
                         <img src="../assets/img/appicon.png">
@@ -37,7 +37,7 @@
         </template>
 
         <template [ngSwitchCase]="'signup'">
-            <form [formGroup]="formSignup" (submit)="signup($event, signup.value)">
+            <form [formGroup]="formSignup" (submit)="signup($event, formSignup.value)">
                 <ion-item>
                     <ion-label stacked>Emailid</ion-label>
                     <ion-input type="text" formControlName="emailId" ></ion-input>
@@ -52,7 +52,7 @@
             </form>
         </template>
         <template [ngSwitchCase]="'forgot'">
-            <form [formGroup]="formForgot" (submit)="forgot($event, forgot.value)">
+            <form [formGroup]="formForgot" (submit)="forgot($event, formForgot.value)">
                 <ion-item>
                     <ion-label stacked>Emailid</ion-label>
                     <ion-input type="text" formControlName="emailId"></ion-input>
@@ -63,7 +63,7 @@
             </form>
         </template>
         <template [ngSwitchCase]="'chpwd'">
-            <form [formGroup]="formChpwd" (submit)="chpwd($event, chpwd.value)">
+            <form [formGroup]="formChpwd" (submit)="chpwd($event, formChpwd.value)">
                 <ion-item>
                     <ion-label stacked>Password</ion-label>
                     <ion-input type="password" formControlName="pwd"></ion-input>
@@ -74,7 +74,7 @@
             </form>
         </template>
         <template [ngSwitchCase]="'setup'">
-            <form [formGroup]="formSetup" (submit)="setup($event, settings.value)">
+            <form [formGroup]="formSetup" (submit)="setup($event, formSetup.value)">
                 <ion-item>
                     <ion-label stacked>Default System</ion-label>
                     <ion-input type="text" formControlName="system"></ion-input>
